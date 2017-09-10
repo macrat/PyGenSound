@@ -257,13 +257,26 @@ class Sound:
         return -- A new Sound that overlay another sound.
 
 
-        >>> s = Sound(numpy.array([0.1, 0.2]), 1)
-        >>> s.overlay(s) == Sound(numpy.array([0.2, 0.4]), 1)
+        >>> a = Sound(numpy.array([0.1, 0.2]), 1)
+        >>> b = Sound(numpy.array([0.1, 0.2, 0.3]), 1)
+        >>> a.overlay(a) == Sound(numpy.array([0.2, 0.4]), 1)
+        True
+        >>> a.overlay(b) == Sound(numpy.array([0.2, 0.4, 0.3]), 1)
+        True
+        >>> b.overlay(a) == Sound(numpy.array([0.2, 0.4, 0.3]), 1)
         True
         """
         assert self.samplerate == other.samplerate
 
-        return Sound(self.data + other.data, self.samplerate)
+        x = self.data
+        y = other.data
+
+        if len(x) > len(y):
+            y = numpy.hstack([y, [0] * (len(x) - len(y))])
+        if len(y) > len(x):
+            x = numpy.hstack([x, [0] * (len(y) - len(x))])
+
+        return Sound(x + y, self.samplerate)
 
     def write(self, file_: typing.Union[str, typing.BinaryIO]) -> None:
         """ Write sound into file or file-like
