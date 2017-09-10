@@ -51,8 +51,8 @@ class Sound:
     >>> alpha = Sound.from_sinwave(440, volume=0.5).repeat(1.0)  # make 440 1sec
     >>> beta = Sound.from_sinwave(880, volume=0.5).repeat(1.0)
     >>> double = alpha.overlay(beta)
-    >>> concat = alpha.concat(beta).concat(double)  # concatenate sounds
-    >>> # concat.write('out.wav')  # save into file
+    >>> concated = concat(alpha, beta, double)  # concatenate sounds
+    >>> # concated.write('out.wav')  # save into file
     """
 
     def __init__(self, data: numpy.array, samplerate: Number) -> None:
@@ -234,6 +234,9 @@ class Sound:
     def concat(self, other: 'Sound') -> 'Sound':
         """ Create a new instance that concatenated another sound
 
+        Recommend using gensound.concat if concatenate many sounds. Because
+        gensound.concat is optimized for many sounds.
+
         other -- The sound that concatenates after of self.
                  Must it has same sampling rate.
 
@@ -251,6 +254,9 @@ class Sound:
 
     def overlay(self, other: 'Sound') -> 'Sound':
         """ Create a new instance that was overlay another sound
+
+        Recommend using gensound.overlay if overlay many sounds. Because
+        gensound.overlay is optimized for many sounds.
 
         other -- The sound that overlay.
 
@@ -301,8 +307,9 @@ def concat(*sounds: Sound) -> Sound:
     >>> concat(a, b, c) == Sound(numpy.array([0.1, 0.2, 0.3, 0.4, 0.5, 0.6]), 1)
     True
     """
+    assert all(sounds[0].samplerate == s.samplerate for s in sounds[1:])
 
-    return functools.reduce(lambda x, y: x.concat(y), sounds)
+    return Sound(numpy.hstack([x.data for x in sounds]), sounds[0].samplerate)
 
 
 def overlay(*sounds: Sound) -> Sound:
@@ -326,12 +333,17 @@ def overlay(*sounds: Sound) -> Sound:
     The second element of this sample isn't 1.2 but 1.0 because of clipping was
     an occurrence.
     """
+    assert all(sounds[0].samplerate == s.samplerate for s in sounds[1:])
 
-    return functools.reduce(lambda x, y: x.overlay(y), sounds)
+    longest = max(len(x.data) for x in sounds)
+    padded = numpy.array([numpy.hstack([x.data, [0] * (longest - len(x.data))])
+                          for x in sounds])
+
+    return Sound(padded.sum(axis=0), sounds[0].samplerate)
 
 
 if __name__ == '__main__':
-    wait = Sound.silence().repeat(0.9)
-    a = Sound.from_sinwave(440, volume=1.0).repeat(0.1).concat(wait)
+    a = Sound.from_sinwave(440, volume=1.0).repeat(0.1)
     b = Sound.from_sinwave(880, volume=1.0).repeat(1.5)
-    a.concat(a).concat(a).concat(b).write('test.wav')
+    wait = Sound.silence().repeat(0.9)
+    concat(a, wait, a, wait, a, wait, b).write('test.wav')
