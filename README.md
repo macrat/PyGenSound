@@ -15,8 +15,8 @@ import gensound
 
 
 wait = gensound.Sound.silence().repeat(0.9)  # Generate 0.9 seconds silence
-a = gensound.Sound.from_sinwave(440, volume=1.0).repeat(0.1).concat(wait)  # Generate 440Hz sin wave 0.1 seconds, and 0.9 seconds silence
-b = gensound.Sound.from_sinwave(880, volume=1.0).repeat(1.5)  # Generate 880Hz sin wave 1.5 seconds
+a = gensound.Sound.from_sinwave(440, duration=0.1, volume=1.0).concat(wait)  # Generate 440Hz sin wave 0.1 seconds, and 0.9 seconds silence
+b = gensound.Sound.from_sinwave(880, duration=1.0, volume=1.0)  # Generate 880Hz sin wave 1 seconds
 
 concat(a, a, a, b).write('test.wav')  # Concatenate those and save to test.wav
 ```

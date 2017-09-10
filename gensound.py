@@ -48,8 +48,8 @@ def _repeat_array(sound: numpy.array, want_length: int) -> numpy.array:
 class Sound:
     """ The class for handling sound
 
-    >>> alpha = Sound.from_sinwave(440, volume=0.5).repeat(1.0)  # make 440 1sec
-    >>> beta = Sound.from_sinwave(880, volume=0.5).repeat(1.0)
+    >>> alpha = Sound.from_sinwave(440, duration=1.0, volume=0.5)  # gen 440Hz
+    >>> beta = Sound.from_sinwave(880, duration=1.0, volume=0.5)
     >>> double = alpha.overlay(beta)
     >>> concated = concat(alpha, beta, double)  # concatenate sounds
     >>> # concated.write('out.wav')  # save into file
@@ -69,13 +69,13 @@ class Sound:
 
     @classmethod
     def from_sinwave(cls, frequency: Number,
+                          duration: float = 1.0,
                           volume: float = 1.0,
                           samplerate: Number = 44100) -> 'Sound':
         """ Generate sin wave sound
 
-        This function returns very very short sound. Please use repeat function.
-
         frequency  -- Frequency of new sound.
+        duration   -- Duration in seconds of new sound.
         volume     -- The volume of new sound.
         samplerate -- Sampling rate of new sound.
 
@@ -83,8 +83,13 @@ class Sound:
         """
 
         wavelength = samplerate / frequency
+
         one_wave = numpy.sin(numpy.arange(wavelength) * 2*numpy.pi / wavelength)
-        return cls(one_wave * volume, samplerate)
+
+        repeat_count = int(numpy.round(duration * samplerate / wavelength))
+        repeated = numpy.repeat(one_wave.reshape([1, -1]), repeat_count, axis=0)
+
+        return cls(repeated.flatten() * volume, samplerate)
 
     @classmethod
     def silence(cls, samplerate: Number = 44100) -> 'Sound':
@@ -343,7 +348,7 @@ def overlay(*sounds: Sound) -> Sound:
 
 
 if __name__ == '__main__':
-    a = Sound.from_sinwave(440, volume=1.0).repeat(0.1)
-    b = Sound.from_sinwave(880, volume=1.0).repeat(1.5)
+    a = Sound.from_sinwave(440, duration=0.1, volume=1.0)
+    b = Sound.from_sinwave(880, duration=1.0, volume=1.0)
     wait = Sound.silence().repeat(0.9)
     concat(a, wait, a, wait, a, wait, b).write('test.wav')
