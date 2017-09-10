@@ -3,6 +3,7 @@
 Read an audio file or generate sound, compute it, and write to file.
 """
 
+import functools
 import typing
 
 import numpy
@@ -246,6 +247,46 @@ class Sound:
         """
 
         soundfile.write(file_, self.data, self.samplerate)
+
+
+def concat(*sounds: Sound) -> Sound:
+    """ Concatenate multiple sounds
+
+    sounds -- Sound instances to concatenate. Must they has some sampling rate.
+
+    return -- A concatenated Sound instance.
+
+
+    >>> a = Sound(numpy.array([0.1, 0.2]), 1)
+    >>> b = Sound(numpy.array([0.3, 0.4]), 1)
+    >>> c = Sound(numpy.array([0.5, 0.6]), 1)
+    >>> numpy.allclose(concat(a, b, c).data, [0.1, 0.2, 0.3, 0.4, 0.5, 0.6])
+    True
+    """
+
+    return functools.reduce(lambda x, y: x.concat(y), sounds)
+
+
+def overlay(*sounds: Sound) -> Sound:
+    """ Overlay multiple sounds
+
+    BE CAREFUL: This function doesn't care about clipping. Perhaps, need to
+                change volume before use this if overlay many sounds.
+
+    sounds -- Sound instances to overlay. Must they has some sampling rate and
+              same duration.
+
+    return -- A Sound instance that overlay all sounds.
+
+
+    >>> a = Sound(numpy.array([0.1, 0.2]), 1)
+    >>> b = Sound(numpy.array([0.3, 0.4]), 1)
+    >>> c = Sound(numpy.array([0.5, 0.6]), 1)
+    # The second element isn't 1.2 but 1.0 because of clipping been occurrence.
+    >>> numpy.allclose(overlay(a, b, c).data, [0.9, 1.0])
+    """
+
+    return functools.reduce(lambda x, y: x.overlay(y), sounds)
 
 
 if __name__ == '__main__':
