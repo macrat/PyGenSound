@@ -129,6 +129,31 @@ class Sound:
 
         return len(self.data) / self.samplerate
 
+    def __eq__(self, another: typing.Any) -> bool:
+        """ Compare with another Sound instance.
+
+        >>> a = Sound(numpy.array([0.1, 0.5]), 1)
+        >>> b = Sound(numpy.array([0.1, 0.5]), 1)
+        >>> c = Sound(numpy.array([-0.1, -0.5]), 1)
+        >>> d = Sound(numpy.array([-0.1, -0.5]), 2)
+        >>> a == b
+        True
+        >>> a == c
+        False
+        >>> b == c
+        False
+        >>> b == d
+        False
+        >>> c == d
+        False
+        """
+
+        if not isinstance(another, Sound):
+            return False
+
+        return (self.samplerate == another.samplerate
+                and numpy.allclose(self.data, another.data))
+
     def volume(self, vol: float) -> 'Sound':
         """ Create a new instance that changed volume
 
@@ -141,13 +166,13 @@ class Sound:
 
 
         >>> s = Sound(numpy.array([0.1, 0.5]), 1)
-        >>> numpy.allclose(s.data, [0.1, 0.5])
+        >>> s == Sound(numpy.array([0.1, 0.5]), 1)
         True
-        >>> numpy.allclose(s.volume(1).data, [0.2, 1.0])
+        >>> s.volume(1) == Sound(numpy.array([0.2, 1.0]), 1)
         True
-        >>> numpy.allclose(s.volume(0.25).data, [0.05, 0.25])
+        >>> s.volume(0.25) == Sound(numpy.array([0.05, 0.25]), 1)
         True
-        >>> numpy.allclose(s.volume(2).data, [0.4, 1.0])
+        >>> s.volume(2) == Sound(numpy.array([0.4, 1.0]), 1)
         True
         """
 
@@ -169,11 +194,11 @@ class Sound:
 
 
         >>> s = Sound(numpy.array([0.1, 0.2, 0.3]), 1)
-        >>> numpy.allclose(s.repeat(6).data, [0.1, 0.2, 0.3, 0.1, 0.2, 0.3])
+        >>> s.repeat(6) == Sound(numpy.array([0.1, 0.2, 0.3, 0.1, 0.2, 0.3]), 1)
         True
-        >>> numpy.allclose(s.repeat(4).data, [0.1, 0.2, 0.3, 0.1])
+        >>> s.repeat(4) == Sound(numpy.array([0.1, 0.2, 0.3, 0.1]), 1)
         True
-        >>> numpy.allclose(s.repeat(2).data, [0.1, 0.2])
+        >>> s.repeat(2) == Sound(numpy.array([0.1, 0.2]), 1)
         True
         """
         assert 0 <= duration
@@ -194,9 +219,9 @@ class Sound:
 
 
         >>> s = Sound(numpy.array([0.1, 0.2, 0.3]), 1)
-        >>> numpy.allclose(s.trim(2).data, [0.1, 0.2])
+        >>> s.trim(2) == Sound(numpy.array([0.1, 0.2]), 1)
         True
-        >>> numpy.allclose(s.trim(3).data, [0.1, 0.2, 0.3])
+        >>> s.trim(3) == Sound(numpy.array([0.1, 0.2, 0.3]), 1)
         True
         """
         assert 0 <= duration <= self.duration
@@ -217,7 +242,7 @@ class Sound:
 
         >>> a = Sound(numpy.array([0.1, 0.2]), 1)
         >>> b = Sound(numpy.array([0.3, 0.4]), 1)
-        >>> numpy.allclose(a.concat(b).data, [0.1, 0.2, 0.3, 0.4])
+        >>> a.concat(b) == Sound(numpy.array([0.1, 0.2, 0.3, 0.4]), 1)
         True
         """
         assert self.samplerate == other.samplerate
@@ -233,7 +258,7 @@ class Sound:
 
 
         >>> s = Sound(numpy.array([0.1, 0.2]), 1)
-        >>> numpy.allclose(s.overlay(s).data, [0.2, 0.4])
+        >>> s.overlay(s) == Sound(numpy.array([0.2, 0.4]), 1)
         True
         """
         assert self.samplerate == other.samplerate
@@ -260,7 +285,7 @@ def concat(*sounds: Sound) -> Sound:
     >>> a = Sound(numpy.array([0.1, 0.2]), 1)
     >>> b = Sound(numpy.array([0.3, 0.4]), 1)
     >>> c = Sound(numpy.array([0.5, 0.6]), 1)
-    >>> numpy.allclose(concat(a, b, c).data, [0.1, 0.2, 0.3, 0.4, 0.5, 0.6])
+    >>> concat(a, b, c) == Sound(numpy.array([0.1, 0.2, 0.3, 0.4, 0.5, 0.6]), 1)
     True
     """
 
@@ -282,8 +307,11 @@ def overlay(*sounds: Sound) -> Sound:
     >>> a = Sound(numpy.array([0.1, 0.2]), 1)
     >>> b = Sound(numpy.array([0.3, 0.4]), 1)
     >>> c = Sound(numpy.array([0.5, 0.6]), 1)
-    # The second element isn't 1.2 but 1.0 because of clipping been occurrence.
-    >>> numpy.allclose(overlay(a, b, c).data, [0.9, 1.0])
+    >>> overlay(a, b, c) == Sound(numpy.array([0.9, 1.0]), 1)
+    True
+
+    The second element of this sample isn't 1.2 but 1.0 because of clipping was
+    an occurrence.
     """
 
     return functools.reduce(lambda x, y: x.overlay(y), sounds)
