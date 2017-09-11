@@ -532,6 +532,60 @@ class LinearFadeOut(MaskEndEffect):
         return 1.0 - numpy.arange(length) / (length - 1)
 
 
+class LowPassFilter(Effect):
+    """ Low pass filter
+
+    >>> a = Sound.from_sinwave(100, duration=0.1, volume=1/3)
+    >>> b = Sound.from_sinwave(200, duration=0.1, volume=1/3)
+    >>> c = Sound.from_sinwave(300, duration=0.1, volume=1/3)
+    >>> filtered = LowPassFilter(210).apply(overlay(a, b, c))
+    >>> sum((filtered.data - overlay(a, b).data) ** 2) < 0.1
+    True
+    """
+
+    def __init__(self, freq: Number) -> None:
+        """
+        freq -- A threshold frequency.
+        """
+
+        self.freq = freq
+
+    def apply(self, sound: Sound) -> Sound:
+        f = numpy.fft.rfft(sound.data)
+        freq = numpy.fft.rfftfreq(len(sound.data))
+
+        f[freq > self.freq / sound.samplerate] = 0
+
+        return Sound(numpy.fft.irfft(f), sound.samplerate)
+
+
+class HighPassFilter(Effect):
+    """ High pass filter
+
+    >>> a = Sound.from_sinwave(100, duration=0.1, volume=1/3)
+    >>> b = Sound.from_sinwave(200, duration=0.1, volume=1/3)
+    >>> c = Sound.from_sinwave(300, duration=0.1, volume=1/3)
+    >>> filtered = HighPassFilter(190).apply(overlay(a, b, c))
+    >>> sum((filtered.data - overlay(b, c).data) ** 2) < 0.1
+    True
+    """
+
+    def __init__(self, freq: Number) -> None:
+        """
+        freq -- A threshold frequency.
+        """
+
+        self.freq = freq
+
+    def apply(self, sound: Sound) -> Sound:
+        f = numpy.fft.rfft(sound.data)
+        freq = numpy.fft.rfftfreq(len(sound.data))
+
+        f[freq < self.freq / sound.samplerate] = 0
+
+        return Sound(numpy.fft.irfft(f), sound.samplerate)
+
+
 if __name__ == '__main__':
     fade_out = LinearFadeOut()
 
