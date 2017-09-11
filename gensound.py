@@ -6,6 +6,7 @@ Read an audio file or generate sound, compute it, and write to file.
 import typing
 
 import numpy
+import scipy.interpolate
 import soundfile
 
 
@@ -67,7 +68,7 @@ class Sound:
         assert 0 < len(data)
 
         self.data = data.clip(-1.0, 1.0)
-        self.samplerate = samplerate
+        self._samplerate = samplerate
 
     @classmethod
     def from_sinwave(cls,
@@ -158,7 +159,7 @@ class Sound:
 
 
         >>> s = Sound.from_array([-0.1, 0.0, 0.1], 3)
-        >>> s.samplerate
+        >>> s.get_samplerate()
         3
         >>> s == Sound.from_array([-0.1, 0.0, 0.1], 3)
         True
@@ -174,12 +175,20 @@ class Sound:
         >>> s = Sound.from_array([0.1, 0.2, 0.3], 1)
         >>> s.duration
         3.0
-        >>> s.samplerate = 2
+        >>> s = Sound.from_array([0.1, 0.2, 0.3], 2)
         >>> s.duration
         1.5
+        >>> s = Sound.from_array([0.1, 0.2, 0.3, 0.4, 0.5, 0.6], 2)
+        >>> s.duration
+        3.0
         """
 
-        return len(self.data) / self.samplerate
+        return len(self.data) / self.get_samplerate()
+
+    def get_samplerate(self) -> float:
+        """ Get sampling rate of this sound """
+
+        return self._samplerate
 
     def __eq__(self, another: typing.Any) -> bool:
         """ Compare with another Sound instance.
@@ -203,10 +212,10 @@ class Sound:
         if not isinstance(another, Sound):
             return False
 
-        return (self.samplerate == another.samplerate
+        return (self.get_samplerate() == another.get_samplerate()
                 and numpy.allclose(self.data, another.data))
 
-    def volume(self, vol: float) -> 'Sound':
+    def volume(self, vol: Number) -> 'Sound':
         """ Create a new instance that changed volume
 
         This volume means the maximum value of the wave.
@@ -230,8 +239,46 @@ class Sound:
 
         return Sound(
             self.data * (vol / numpy.max([-self.data.min(), self.data.max()])),
-            self.samplerate
+            self.get_samplerate()
         )
+
+    def samplerate(self, samplerate: Number) -> 'Sound':
+        """ Create a new instance that changed sampling rate
+
+        samplerate -- New sampling rate.
+
+        return -- A new Sound instance that changed sampling rate.
+
+
+        >>> s = Sound.from_array([0.1, 0.3, 0.5, 0.7], 4)
+        >>> (s.samplerate(7)
+        ...  == Sound.from_array([0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7], 7))
+        True
+        """
+        assert 0 < samplerate
+
+        f = scipy.interpolate.interp1d(numpy.linspace(0, 1, len(self.data)),
+                                       self.data,
+                                       kind='cubic')
+        new_x = numpy.round(len(self.data) * samplerate/self.get_samplerate())
+        return Sound(f(numpy.linspace(0, 1, new_x)), samplerate)
+
+    def speed(self, speed_rate: Number) -> 'Sound':
+        """ Create a new instance that changed speed
+
+        speed_rate -- Speed rate of new sound.
+
+        return -- A new Sound instance that changed speed.
+
+
+        >>> s = Sound.from_array([0.1, 0.3, 0.5, 0.7], 4)
+        >>> (s.speed(4 / 7)
+        ...  == Sound.from_array([0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7], 4))
+        True
+        """
+
+        return Sound(self.samplerate(self.get_samplerate() / speed_rate).data,
+                     self._samplerate)
 
     def repeat(self, duration: Number) -> 'Sound':
         """ Create a new instance that repeated same sound
@@ -257,8 +304,8 @@ class Sound:
 
         return Sound(
             _repeat_array(self.data,
-                          int(numpy.round(duration * self.samplerate))),
-            self.samplerate
+                          int(numpy.round(duration * self.get_samplerate()))),
+            self.get_samplerate(),
         )
 
     def trim(self, duration: Number) -> 'Sound':
@@ -279,8 +326,8 @@ class Sound:
         assert 0 <= duration <= self.duration
 
         return Sound(
-            self.data[:int(numpy.round(duration * self.samplerate))],
-            self.samplerate
+            self.data[:int(numpy.round(duration * self.get_samplerate()))],
+            self._samplerate,
         )
 
     def split(self, duration: Number) -> typing.Tuple['Sound', 'Sound']:
@@ -300,10 +347,10 @@ class Sound:
         """
         assert 0 < duration < self.duration
 
-        pivot = int(numpy.round(duration * self.samplerate))
+        pivot = int(numpy.round(duration * self.get_samplerate()))
 
-        return (Sound(self.data[:pivot], self.samplerate),
-                Sound(self.data[pivot:], self.samplerate))
+        return (Sound(self.data[:pivot], self.get_samplerate()),
+                Sound(self.data[pivot:], self.get_samplerate()))
 
     def concat(self, other: 'Sound') -> 'Sound':
         """ Create a new instance that concatenated another sound
@@ -322,9 +369,10 @@ class Sound:
         >>> a.concat(b) == Sound.from_array([0.1, 0.2, 0.3, 0.4], 1)
         True
         """
-        assert self.samplerate == other.samplerate
+        assert self.get_samplerate() == other.get_samplerate()
 
-        return Sound(numpy.hstack([self.data, other.data]), self.samplerate)
+        return Sound(numpy.hstack([self.data, other.data]),
+                     self.get_samplerate())
 
     def overlay(self, other: 'Sound') -> 'Sound':
         """ Create a new instance that was overlay another sound
@@ -346,7 +394,7 @@ class Sound:
         >>> b.overlay(a) == Sound.from_array([0.2, 0.4, 0.3], 1)
         True
         """
-        assert self.samplerate == other.samplerate
+        assert self.get_samplerate() == other.get_samplerate()
 
         x = self.data
         y = other.data
@@ -356,7 +404,7 @@ class Sound:
         if len(y) > len(x):
             x = numpy.hstack([x, [0] * (len(y) - len(x))])
 
-        return Sound(x + y, self.samplerate)
+        return Sound(x + y, self.get_samplerate())
 
     def write(self, file_: typing.Union[str, typing.BinaryIO]) -> None:
         """ Write sound into file or file-like
@@ -364,7 +412,7 @@ class Sound:
         file_ -- A file name or file-like object to write sound
         """
 
-        soundfile.write(file_, self.data, self.samplerate)
+        soundfile.write(file_, self.data, self.get_samplerate())
 
 
 def concat(*sounds: Sound) -> Sound:
@@ -381,9 +429,11 @@ def concat(*sounds: Sound) -> Sound:
     >>> concat(a, b, c) == Sound.from_array([0.1, 0.2, 0.3, 0.4, 0.5, 0.6], 1)
     True
     """
-    assert all(sounds[0].samplerate == s.samplerate for s in sounds[1:])
+    assert all(sounds[0].get_samplerate() == s.get_samplerate()
+               for s in sounds[1:])
 
-    return Sound(numpy.hstack([x.data for x in sounds]), sounds[0].samplerate)
+    return Sound(numpy.hstack([x.data for x in sounds]),
+                 sounds[0].get_samplerate())
 
 
 def overlay(*sounds: Sound) -> Sound:
@@ -407,13 +457,14 @@ def overlay(*sounds: Sound) -> Sound:
     The second element of this sample isn't 1.2 but 1.0 because of clipping was
     an occurrence.
     """
-    assert all(sounds[0].samplerate == s.samplerate for s in sounds[1:])
+    assert all(sounds[0].get_samplerate() == s.get_samplerate()
+               for s in sounds[1:])
 
     longest = max(len(x.data) for x in sounds)
     padded = numpy.array([numpy.hstack([x.data, [0] * (longest - len(x.data))])
                           for x in sounds])
 
-    return Sound(padded.sum(axis=0), sounds[0].samplerate)
+    return Sound(padded.sum(axis=0), sounds[0].get_samplerate())
 
 
 class Effect:
@@ -488,7 +539,7 @@ class MaskStartEffect(MaskEffect):
     def apply(self, sound: Sound) -> Sound:
         length = len(sound.data)
         if self.duration is not None:
-            length = int(numpy.round(self.duration * sound.samplerate))
+            length = int(numpy.round(self.duration * sound.get_samplerate()))
 
         mask = self.gen_mask(length)
 
@@ -496,7 +547,7 @@ class MaskStartEffect(MaskEffect):
                         sound.data[:length] * mask[:len(sound.data)],
                         sound.data[length:],
                      ]),
-                     sound.samplerate)
+                     sound.get_samplerate())
 
 
 class MaskEndEffect(MaskEffect):
@@ -505,7 +556,7 @@ class MaskEndEffect(MaskEffect):
     def apply(self, sound: Sound) -> Sound:
         length = len(sound.data)
         if self.duration is not None:
-            length = int(numpy.round(self.duration * sound.samplerate))
+            length = int(numpy.round(self.duration * sound.get_samplerate()))
 
         offset = max(0, length - len(sound.data))
         mask = self.gen_mask(length)[offset:]
@@ -514,7 +565,7 @@ class MaskEndEffect(MaskEffect):
                         sound.data[:-length],
                         sound.data[-length:] * mask,
                      ]),
-                     sound.samplerate)
+                     sound.get_samplerate())
 
 
 class LinearFadeIn(MaskStartEffect):
@@ -571,9 +622,9 @@ class LowPassFilter(Effect):
         f = numpy.fft.rfft(sound.data)
         freq = numpy.fft.rfftfreq(len(sound.data))
 
-        f[freq > self.freq / sound.samplerate] = 0
+        f[freq > self.freq / sound.get_samplerate()] = 0
 
-        return Sound(numpy.fft.irfft(f), sound.samplerate)
+        return Sound(numpy.fft.irfft(f), sound.get_samplerate())
 
 
 class HighPassFilter(Effect):
@@ -598,9 +649,9 @@ class HighPassFilter(Effect):
         f = numpy.fft.rfft(sound.data)
         freq = numpy.fft.rfftfreq(len(sound.data))
 
-        f[freq < self.freq / sound.samplerate] = 0
+        f[freq < self.freq / sound.get_samplerate()] = 0
 
-        return Sound(numpy.fft.irfft(f), sound.samplerate)
+        return Sound(numpy.fft.irfft(f), sound.get_samplerate())
 
 
 if __name__ == '__main__':

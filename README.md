@@ -29,6 +29,7 @@ $ mplayer test.wav
 ## requirements
 - python3
 - numpy
+- scipy
 - PySoundFile
 
 ## License
