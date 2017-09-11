@@ -266,6 +266,28 @@ class Sound:
             self.samplerate
         )
 
+    def split(self, duration: Number) -> typing.Tuple['Sound', 'Sound']:
+        """ Spit sound
+
+        duration -- The pivot of sound splitting.
+
+        return -- Splitted sounds.
+
+
+        >>> s = Sound.from_array([0.1, 0.2, 0.3], 1)
+        >>> a, b = s.split(1)
+        >>> a == Sound.from_array([0.1], 1)
+        True
+        >>> b == Sound.from_array([0.2, 0.3], 1)
+        True
+        """
+        assert 0 < duration < self.duration
+
+        pivot = int(numpy.round(duration * self.samplerate))
+
+        return (Sound(self.data[:pivot], self.samplerate),
+                Sound(self.data[pivot:], self.samplerate))
+
     def concat(self, other: 'Sound') -> 'Sound':
         """ Create a new instance that concatenated another sound
 
