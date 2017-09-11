@@ -143,7 +143,7 @@ class Sound:
         >>> s = Sound.from_array([-0.1, 0.0, 0.1], 3)
         >>> s.samplerate
         3
-        >>> s == Sound(numpy.array([-0.1, 0.0, 0.1], 3)
+        >>> s == Sound.from_array([-0.1, 0.0, 0.1], 3)
         True
         """
 
@@ -195,7 +195,7 @@ class Sound:
         This volume means the maximum value of the wave.
         Please be careful that is not gain.
 
-        vol -- New volume. must be between -1.0 and 1.0.
+        vol -- New volume.
 
         return -- A new Sound instance that changed volume.
 
@@ -210,7 +210,6 @@ class Sound:
         >>> s.volume(2) == Sound.from_array([0.4, 1.0], 1)
         True
         """
-        assert 0.0 <= vol <= 1.0
 
         return Sound(
             self.data * (vol / numpy.max([-self.data.min(), self.data.max()])),
@@ -378,8 +377,128 @@ def overlay(*sounds: Sound) -> Sound:
     return Sound(padded.sum(axis=0), sounds[0].samplerate)
 
 
+class Effect:
+    """ Base class of rsound effect """
+
+    def apply(self, sound: Sound) -> Sound:
+        """ Apply effect to sound
+
+        sound -- Sound instance to appling effect.
+
+        return -- A new Sound instance that applied effect.
+        """
+
+        raise NotImplementedError()
+
+    def then(self, effect: 'Effect') -> 'Effect':
+        """ Join effect
+
+        effect -- Effect that will apply after this effect.
+
+        return -- Joined effect.
+        """
+
+        return JoinedEffect(self, effect)
+
+
+class JoinedEffect(Effect):
+    """ Joined multiple effect """
+
+    def __init__(self, *effects: Effect) -> Effect:
+        self.effects = effects
+
+    def apply(self, sound: Sound) -> Sound:
+        """ Apply all effects
+
+        sound -- Sound instance to appling effect.
+
+        return -- A new Sound instance that applied all effects.
+        """
+
+        for e in self.effects:
+            sound = e.apply(sound)
+
+        return sound
+
+
+class LinearFadeIn(Effect):
+    """ Linear fade-in effect
+
+    >>> s = Sound.from_array([1, 1, 1, 1, 1], 1)
+    >>> (LinearFadeIn().apply(s)
+    ...  == Sound.from_array([0.0, 0.25, 0.5, 0.75, 1.0], 1))
+    True
+    >>> (LinearFadeIn(duration=3).apply(s)
+    ...  == Sound.from_array([0.0, 0.5, 1.0, 1.0, 1.0], 1))
+    True
+    """
+
+    def __init__(self, duration: typing.Optional[Number] = None) -> None:
+        """ Initialize
+
+        duration -- Duration in seconds of fade-in.
+        """
+
+        self.duration = duration
+
+    def apply(self, sound: Sound) -> Sound:
+        length = len(sound.data)
+        if self.duration != None:
+            length = int(numpy.round(self.duration * sound.samplerate))
+
+        mask = numpy.arange(length) / (length - 1)
+
+        return Sound(numpy.hstack([
+                        sound.data[:length] * mask[:len(sound.data)],
+                        sound.data[length:],
+                     ]),
+                     sound.samplerate)
+
+
+class LinearFadeOut(Effect):
+    """ Linear fade-out effect
+
+    >>> s = Sound.from_array([1, 1, 1, 1, 1], 1)
+    >>> (LinearFadeOut().apply(s)
+    ...  == Sound.from_array([1.0, 0.75, 0.5, 0.25, 0.0], 1))
+    True
+    >>> (LinearFadeOut(duration=3).apply(s)
+    ...  == Sound.from_array([1.0, 1.0, 1.0, 0.5, 0.0], 1))
+    True
+    """
+
+    def __init__(self, duration: typing.Optional[Number] = None) -> None:
+        """ Initialize
+
+        duration -- Duration in seconds of fade-out.
+        """
+
+        self.duration = duration
+
+    def apply(self, sound: Sound) -> Sound:
+        length = len(sound.data)
+        if self.duration != None:
+            length = int(numpy.round(self.duration * sound.samplerate))
+
+        offset = max(0, length - len(sound.data))
+        mask = 1.0 - numpy.arange(offset, length) / (length - 1)
+
+        return Sound(numpy.hstack([
+                        sound.data[:-length],
+                        sound.data[-length:] * mask,
+                     ]),
+                     sound.samplerate)
+
+
 if __name__ == '__main__':
+    fade_out = LinearFadeOut()
+
     a = Sound.from_sinwave(440, duration=0.1, volume=1.0)
-    b = Sound.from_sinwave(880, duration=1.0, volume=1.0)
+    a = fade_out.apply(a)
+
+    b = Sound.from_sinwave(880, duration=2.0, volume=1.0)
+    b = fade_out.apply(b)
+
     wait = Sound.silence().repeat(0.9)
+
     concat(a, wait, a, wait, a, wait, b).write('test.wav')
