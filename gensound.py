@@ -72,8 +72,8 @@ class Sound:
     @classmethod
     def from_sinwave(cls,
                      frequency: Number,
-                     duration: float = 1.0,
-                     volume: float = 1.0,
+                     duration: Number = 1.0,
+                     volume: Number = 1.0,
                      samplerate: Number = 44100) -> 'Sound':
         """ Generate sin wave sound
 
@@ -112,6 +112,23 @@ class Sound:
         """
 
         return cls(numpy.array([0]), samplerate)
+
+    @classmethod
+    def from_whitenoise(cls,
+                        duration: Number = 1.0,
+                        volume: Number = 1.0,
+                        samplerate: Number = 44100) -> 'Sound':
+        """ Generate white noise
+
+        duration   -- Duration in seconds of new sound.
+        volume     -- The volume of new sound.
+        samplerate -- Sampling rate of new sound.
+
+        return -- A new Sound instance.
+        """
+
+        length = int(numpy.round(duration * samplerate))
+        return cls(numpy.random.rand(length) * volume, samplerate)
 
     @classmethod
     def from_file(cls, file_: typing.Union[str, typing.BinaryIO]) -> 'Sound':
