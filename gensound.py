@@ -404,7 +404,7 @@ class Effect:
 class JoinedEffect(Effect):
     """ Joined multiple effect """
 
-    def __init__(self, *effects: Effect) -> Effect:
+    def __init__(self, *effects: Effect) -> None:
         self.effects = effects
 
     def apply(self, sound: Sound) -> Sound:
@@ -421,7 +421,64 @@ class JoinedEffect(Effect):
         return sound
 
 
-class LinearFadeIn(Effect):
+class MaskEffect(Effect):
+    """ Masking effect """
+
+    def __init__(self, duration: typing.Optional[Number] = None) -> None:
+        """ Initialize
+
+        duration -- Duration in seconds of mask.
+        """
+
+        self.duration = duration
+
+    def gen_mask(self, length: int) -> numpy.array:
+        """ Generate mask
+
+        length -- Length of mask array.
+
+        return -- Mask value.
+        """
+
+        raise NotImplementedError()
+
+
+class MaskStartEffect(MaskEffect):
+    """ Effect that masking start of sound """
+
+    def apply(self, sound: Sound) -> Sound:
+        length = len(sound.data)
+        if self.duration is not None:
+            length = int(numpy.round(self.duration * sound.samplerate))
+
+        mask = self.gen_mask(length)
+
+        return Sound(numpy.hstack([
+                        sound.data[:length] * mask[:len(sound.data)],
+                        sound.data[length:],
+                     ]),
+                     sound.samplerate)
+
+
+class MaskEndEffect(MaskEffect):
+    """ Effect that masking end of sound """
+
+    def apply(self, sound: Sound) -> Sound:
+        length = len(sound.data)
+        if self.duration is not None:
+            length = int(numpy.round(self.duration * sound.samplerate))
+
+        offset = max(0, length - len(sound.data))
+        mask = self.gen_mask(length)[offset:]
+
+        return Sound(numpy.hstack([
+                        sound.data[:-length],
+                        sound.data[-length:] * mask,
+                     ]),
+                     sound.samplerate)
+
+
+class LinearFadeIn(MaskStartEffect):
     """ Linear fade-in effect
 
     >>> s = Sound.from_array([1, 1, 1, 1, 1], 1)
@@ -433,29 +490,11 @@ class LinearFadeIn(Effect):
     True
     """
 
-    def __init__(self, duration: typing.Optional[Number] = None) -> None:
-        """ Initialize
-
-        duration -- Duration in seconds of fade-in.
-        """
-
-        self.duration = duration
-
-    def apply(self, sound: Sound) -> Sound:
-        length = len(sound.data)
-        if self.duration != None:
-            length = int(numpy.round(self.duration * sound.samplerate))
-
-        mask = numpy.arange(length) / (length - 1)
-
-        return Sound(numpy.hstack([
-                        sound.data[:length] * mask[:len(sound.data)],
-                        sound.data[length:],
-                     ]),
-                     sound.samplerate)
+    def gen_mask(self, length: int) -> numpy.array:
+        return numpy.arange(length) / (length - 1)
 
 
-class LinearFadeOut(Effect):
+class LinearFadeOut(MaskEndEffect):
     """ Linear fade-out effect
 
     >>> s = Sound.from_array([1, 1, 1, 1, 1], 1)
@@ -467,27 +506,8 @@ class LinearFadeOut(Effect):
     True
     """
 
-    def __init__(self, duration: typing.Optional[Number] = None) -> None:
-        """ Initialize
-
-        duration -- Duration in seconds of fade-out.
-        """
-
-        self.duration = duration
-
-    def apply(self, sound: Sound) -> Sound:
-        length = len(sound.data)
-        if self.duration != None:
-            length = int(numpy.round(self.duration * sound.samplerate))
-
-        offset = max(0, length - len(sound.data))
-        mask = 1.0 - numpy.arange(offset, length) / (length - 1)
-
-        return Sound(numpy.hstack([
-                        sound.data[:-length],
-                        sound.data[-length:] * mask,
-                     ]),
-                     sound.samplerate)
+    def gen_mask(self, length: int) -> numpy.array:
+        return 1.0 - numpy.arange(length) / (length - 1)
 
 
 if __name__ == '__main__':
