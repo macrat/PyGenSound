@@ -3,7 +3,6 @@
 Read an audio file or generate sound, compute it, and write to file.
 """
 
-import functools
 import typing
 
 import numpy
@@ -23,9 +22,11 @@ def _repeat_array(sound: numpy.array, want_length: int) -> numpy.array:
 
 
     >>> array = numpy.array([1, 2, 3])
-    >>> numpy.allclose(_repeat_array(array, 6), numpy.array([1, 2, 3, 1, 2, 3]))
+    >>> numpy.allclose(_repeat_array(array, 6),
+    ...                numpy.array([1, 2, 3, 1, 2, 3]))
     True
-    >>> numpy.allclose(_repeat_array(array, 8), numpy.array([1, 2, 3, 1, 2, 3, 1, 2]))
+    >>> numpy.allclose(_repeat_array(array, 8),
+    ...                numpy.array([1, 2, 3, 1, 2, 3, 1, 2]))
     True
     >>> numpy.allclose(_repeat_array(array, 2), numpy.array([1, 2]))
     True
@@ -61,17 +62,19 @@ class Sound:
                       Will clipping if value were out of -1.0 to 1.0.
         samplerate -- Sampling rate of sound data.
         """
-        assert samplerate > 0
+        assert 0 <= samplerate
         assert len(data.shape) == 1
+        assert 0 < len(data)
 
         self.data = data.clip(-1.0, 1.0)
         self.samplerate = samplerate
 
     @classmethod
-    def from_sinwave(cls, frequency: Number,
-                          duration: float = 1.0,
-                          volume: float = 1.0,
-                          samplerate: Number = 44100) -> 'Sound':
+    def from_sinwave(cls,
+                     frequency: Number,
+                     duration: float = 1.0,
+                     volume: float = 1.0,
+                     samplerate: Number = 44100) -> 'Sound':
         """ Generate sin wave sound
 
         frequency  -- Frequency of new sound.
@@ -81,13 +84,18 @@ class Sound:
 
         return -- A new Sound instance.
         """
+        assert 0 < frequency
+        assert 0 < duration
+        assert 0.0 <= volume <= 1.0
 
         wavelength = samplerate / frequency
 
-        one_wave = numpy.sin(numpy.arange(wavelength) * 2*numpy.pi / wavelength)
+        one_wave = numpy.sin(numpy.arange(wavelength)/wavelength * 2*numpy.pi)
 
         repeat_count = int(numpy.round(duration * samplerate / wavelength))
-        repeated = numpy.repeat(one_wave.reshape([1, -1]), repeat_count, axis=0)
+        repeated = numpy.repeat(one_wave.reshape([1, -1]),
+                                repeat_count,
+                                axis=0)
 
         return cls(repeated.flatten() * volume, samplerate)
 
@@ -95,7 +103,8 @@ class Sound:
     def silence(cls, samplerate: Number = 44100) -> 'Sound':
         """ Generate silent sound
 
-        This function returns VERY VERY short sound. Please use repeat function.
+        This function returns VERY VERY short sound.
+        Please use repeat function.
 
         samplerate -- Sampling rate of new sound.
 
@@ -119,12 +128,33 @@ class Sound:
         data /= numpy.max([-data.min(), data.max()])
         return cls(data, samplerate)
 
+    @classmethod
+    def from_array(cls,
+                   array: typing.Sequence[float],
+                   samplerate: Number) -> 'Sound':
+        """ Make new sound from float array
+
+        array      -- Sound data. Elements must in between -1.0 to 1.0.
+        samplerate -- Sampling rate of new sound.
+
+        return -- A new Sound instance.
+
+
+        >>> s = Sound.from_array([-0.1, 0.0, 0.1], 3)
+        >>> s.samplerate
+        3
+        >>> s == Sound(numpy.array([-0.1, 0.0, 0.1], 3)
+        True
+        """
+
+        return Sound(numpy.array(array), samplerate)
+
     @property
     def duration(self) -> float:
         """ Duration in seconds of this sound
 
 
-        >>> s = Sound(numpy.array([0.1, 0.2, 0.3]), 1)
+        >>> s = Sound.from_array([0.1, 0.2, 0.3], 1)
         >>> s.duration
         3.0
         >>> s.samplerate = 2
@@ -137,10 +167,10 @@ class Sound:
     def __eq__(self, another: typing.Any) -> bool:
         """ Compare with another Sound instance.
 
-        >>> a = Sound(numpy.array([0.1, 0.5]), 1)
-        >>> b = Sound(numpy.array([0.1, 0.5]), 1)
-        >>> c = Sound(numpy.array([-0.1, -0.5]), 1)
-        >>> d = Sound(numpy.array([-0.1, -0.5]), 2)
+        >>> a = Sound.from_array([0.1, 0.5], 1)
+        >>> b = Sound.from_array([0.1, 0.5], 1)
+        >>> c = Sound.from_array([-0.1, -0.5], 1)
+        >>> d = Sound.from_array([-0.1, -0.5], 2)
         >>> a == b
         True
         >>> a == c
@@ -170,16 +200,17 @@ class Sound:
         return -- A new Sound instance that changed volume.
 
 
-        >>> s = Sound(numpy.array([0.1, 0.5]), 1)
-        >>> s == Sound(numpy.array([0.1, 0.5]), 1)
+        >>> s = Sound.from_array([0.1, 0.5], 1)
+        >>> s == Sound.from_array([0.1, 0.5], 1)
         True
-        >>> s.volume(1) == Sound(numpy.array([0.2, 1.0]), 1)
+        >>> s.volume(1) == Sound.from_array([0.2, 1.0], 1)
         True
-        >>> s.volume(0.25) == Sound(numpy.array([0.05, 0.25]), 1)
+        >>> s.volume(0.25) == Sound.from_array([0.05, 0.25], 1)
         True
-        >>> s.volume(2) == Sound(numpy.array([0.4, 1.0]), 1)
+        >>> s.volume(2) == Sound.from_array([0.4, 1.0], 1)
         True
         """
+        assert 0.0 <= vol <= 1.0
 
         return Sound(
             self.data * (vol / numpy.max([-self.data.min(), self.data.max()])),
@@ -198,12 +229,12 @@ class Sound:
         return -- A new Sound instance that repeated same sound.
 
 
-        >>> s = Sound(numpy.array([0.1, 0.2, 0.3]), 1)
-        >>> s.repeat(6) == Sound(numpy.array([0.1, 0.2, 0.3, 0.1, 0.2, 0.3]), 1)
+        >>> s = Sound.from_array([0.1, 0.2, 0.3], 1)
+        >>> s.repeat(6) == Sound.from_array([0.1, 0.2, 0.3, 0.1, 0.2, 0.3], 1)
         True
-        >>> s.repeat(4) == Sound(numpy.array([0.1, 0.2, 0.3, 0.1]), 1)
+        >>> s.repeat(4) == Sound.from_array([0.1, 0.2, 0.3, 0.1], 1)
         True
-        >>> s.repeat(2) == Sound(numpy.array([0.1, 0.2]), 1)
+        >>> s.repeat(2) == Sound.from_array([0.1, 0.2], 1)
         True
         """
         assert 0 <= duration
@@ -223,10 +254,10 @@ class Sound:
         return -- A new Sound instance that trimmed.
 
 
-        >>> s = Sound(numpy.array([0.1, 0.2, 0.3]), 1)
-        >>> s.trim(2) == Sound(numpy.array([0.1, 0.2]), 1)
+        >>> s = Sound.from_array([0.1, 0.2, 0.3], 1)
+        >>> s.trim(2) == Sound.from_array([0.1, 0.2], 1)
         True
-        >>> s.trim(3) == Sound(numpy.array([0.1, 0.2, 0.3]), 1)
+        >>> s.trim(3) == Sound.from_array([0.1, 0.2, 0.3], 1)
         True
         """
         assert 0 <= duration <= self.duration
@@ -248,9 +279,9 @@ class Sound:
         return -- A new Sound that concatenated self and other.
 
 
-        >>> a = Sound(numpy.array([0.1, 0.2]), 1)
-        >>> b = Sound(numpy.array([0.3, 0.4]), 1)
-        >>> a.concat(b) == Sound(numpy.array([0.1, 0.2, 0.3, 0.4]), 1)
+        >>> a = Sound.from_array([0.1, 0.2], 1)
+        >>> b = Sound.from_array([0.3, 0.4], 1)
+        >>> a.concat(b) == Sound.from_array([0.1, 0.2, 0.3, 0.4], 1)
         True
         """
         assert self.samplerate == other.samplerate
@@ -268,13 +299,13 @@ class Sound:
         return -- A new Sound that overlay another sound.
 
 
-        >>> a = Sound(numpy.array([0.1, 0.2]), 1)
-        >>> b = Sound(numpy.array([0.1, 0.2, 0.3]), 1)
-        >>> a.overlay(a) == Sound(numpy.array([0.2, 0.4]), 1)
+        >>> a = Sound.from_array([0.1, 0.2], 1)
+        >>> b = Sound.from_array([0.1, 0.2, 0.3], 1)
+        >>> a.overlay(a) == Sound.from_array([0.2, 0.4], 1)
         True
-        >>> a.overlay(b) == Sound(numpy.array([0.2, 0.4, 0.3]), 1)
+        >>> a.overlay(b) == Sound.from_array([0.2, 0.4, 0.3], 1)
         True
-        >>> b.overlay(a) == Sound(numpy.array([0.2, 0.4, 0.3]), 1)
+        >>> b.overlay(a) == Sound.from_array([0.2, 0.4, 0.3], 1)
         True
         """
         assert self.samplerate == other.samplerate
@@ -306,10 +337,10 @@ def concat(*sounds: Sound) -> Sound:
     return -- A concatenated Sound instance.
 
 
-    >>> a = Sound(numpy.array([0.1, 0.2]), 1)
-    >>> b = Sound(numpy.array([0.3, 0.4]), 1)
-    >>> c = Sound(numpy.array([0.5, 0.6]), 1)
-    >>> concat(a, b, c) == Sound(numpy.array([0.1, 0.2, 0.3, 0.4, 0.5, 0.6]), 1)
+    >>> a = Sound.from_array([0.1, 0.2], 1)
+    >>> b = Sound.from_array([0.3, 0.4], 1)
+    >>> c = Sound.from_array([0.5, 0.6], 1)
+    >>> concat(a, b, c) == Sound.from_array([0.1, 0.2, 0.3, 0.4, 0.5, 0.6], 1)
     True
     """
     assert all(sounds[0].samplerate == s.samplerate for s in sounds[1:])
@@ -329,10 +360,10 @@ def overlay(*sounds: Sound) -> Sound:
     return -- A Sound instance that overlay all sounds.
 
 
-    >>> a = Sound(numpy.array([0.1, 0.2]), 1)
-    >>> b = Sound(numpy.array([0.3, 0.4]), 1)
-    >>> c = Sound(numpy.array([0.5, 0.6]), 1)
-    >>> overlay(a, b, c) == Sound(numpy.array([0.9, 1.0]), 1)
+    >>> a = Sound.from_array([0.1, 0.2], 1)
+    >>> b = Sound.from_array([0.3, 0.4], 1)
+    >>> c = Sound.from_array([0.5, 0.6], 1)
+    >>> overlay(a, b, c) == Sound.from_array([0.9, 1.0], 1)
     True
 
     The second element of this sample isn't 1.2 but 1.0 because of clipping was
