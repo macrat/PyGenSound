@@ -1,6 +1,7 @@
 """ The Sound class for generating sound
 
 
+>>> from gensound.effect import LinearFadeOut
 >>> fade_out = LinearFadeOut()
 >>> a = Sound.from_sinwave(440, duration=0.1, volume=1.0)
 >>> a = fade_out.apply(a)

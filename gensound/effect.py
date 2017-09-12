@@ -5,7 +5,7 @@ import typing
 import numpy
 import scipy.interpolate
 
-from .sound import Sound
+from gensound.sound import Sound
 
 
 class Effect:
@@ -144,6 +144,7 @@ class LinearFadeOut(MaskEndEffect):
 class LowPassFilter(Effect):
     """ Low pass filter
 
+    >>> from gensound.sound import overlay
     >>> a = Sound.from_sinwave(100, duration=0.1, volume=1/3)
     >>> b = Sound.from_sinwave(200, duration=0.1, volume=1/3)
     >>> c = Sound.from_sinwave(300, duration=0.1, volume=1/3)
@@ -171,6 +172,7 @@ class LowPassFilter(Effect):
 class HighPassFilter(Effect):
     """ High pass filter
 
+    >>> from gensound.sound import overlay
     >>> a = Sound.from_sinwave(100, duration=0.1, volume=1/3)
     >>> b = Sound.from_sinwave(200, duration=0.1, volume=1/3)
     >>> c = Sound.from_sinwave(300, duration=0.1, volume=1/3)
