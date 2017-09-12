@@ -242,44 +242,6 @@ class Sound:
             self.get_samplerate()
         )
 
-    def samplerate(self, samplerate: Number) -> 'Sound':
-        """ Create a new instance that changed sampling rate
-
-        samplerate -- New sampling rate.
-
-        return -- A new Sound instance that changed sampling rate.
-
-
-        >>> s = Sound.from_array([0.1, 0.3, 0.5, 0.7], 4)
-        >>> (s.samplerate(7)
-        ...  == Sound.from_array([0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7], 7))
-        True
-        """
-        assert 0 < samplerate
-
-        f = scipy.interpolate.interp1d(numpy.linspace(0, 1, len(self.data)),
-                                       self.data,
-                                       kind='cubic')
-        new_x = numpy.round(len(self.data) * samplerate/self.get_samplerate())
-        return Sound(f(numpy.linspace(0, 1, new_x)), samplerate)
-
-    def speed(self, speed_rate: Number) -> 'Sound':
-        """ Create a new instance that changed speed
-
-        speed_rate -- Speed rate of new sound.
-
-        return -- A new Sound instance that changed speed.
-
-
-        >>> s = Sound.from_array([0.1, 0.3, 0.5, 0.7], 4)
-        >>> (s.speed(4 / 7)
-        ...  == Sound.from_array([0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7], 4))
-        True
-        """
-
-        return Sound(self.samplerate(self.get_samplerate() / speed_rate).data,
-                     self._samplerate)
-
     def repeat(self, duration: Number) -> 'Sound':
         """ Create a new instance that repeated same sound
 
@@ -652,6 +614,59 @@ class HighPassFilter(Effect):
         f[freq < self.freq / sound.get_samplerate()] = 0
 
         return Sound(numpy.fft.irfft(f), sound.get_samplerate())
+
+
+class Resampling(Effect):
+    """ Resampling effect
+
+    >>> s = Sound.from_array([0.1, 0.3, 0.5, 0.7], 4)
+    >>> (Resampling(7).apply(s)
+    ...  == Sound.from_array([0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7], 7))
+    True
+    """
+
+    def __init__(self, samplerate: Number, kind: str = 'cubic') -> None:
+        """
+        samplerate -- New sampling rate.
+        kind       -- The way to interpolating data.
+                      Please see document of scipy.interpolate.interp1d.
+        """
+        assert 0 < samplerate
+
+        self.samplerate = samplerate
+        self.kind = kind
+
+    def apply(self, sound: Sound) -> Sound:
+        length = len(sound.data)
+        f = scipy.interpolate.interp1d(numpy.linspace(0, 1, length),
+                                       sound.data,
+                                       kind=self.kind)
+        new_x = numpy.round(length * self.samplerate / sound.get_samplerate())
+        return Sound(f(numpy.linspace(0, 1, new_x)), self.samplerate)
+
+
+class ChangeSpeed(Effect):
+    """ Change sound speed effect
+
+    >>> s = Sound.from_array([0.1, 0.3, 0.5, 0.7], 4)
+    >>> (ChangeSpeed(4 / 7).apply(s)
+    ...  == Sound.from_array([0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7], 4))
+    True
+    """
+
+    def __init__(self, speed_rate: Number, kind: str = 'cubic') -> None:
+        """
+        speed_rate -- Speed rate of new sound. 1.0 means don't change speed.
+        kind       -- The way to interpolating data.
+                      Please see document of scipy.interpolate.interp1d.
+        """
+
+        self.speed_rate = speed_rate
+        self.kind = kind
+
+    def apply(self, sound: Sound) -> Sound:
+        resampler = Resampling(sound.get_samplerate() / self.speed_rate)
+        return Sound(resampler.apply(sound).data, sound.get_samplerate())
 
 
 if __name__ == '__main__':
