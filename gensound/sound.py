@@ -11,9 +11,11 @@
 >>> #concat(a, wait, a, wait, a, wait, b).write('test.wav')
 """
 
+import time
 import typing
 
 import numpy
+import pyaudio
 import soundfile
 
 
@@ -380,6 +382,44 @@ class Sound:
 
         soundfile.write(file_, self.data, self.get_samplerate())
 
+    def play(self) -> None:
+        """ Play sound """
+
+        class Callback:
+            def __init__(self, data: numpy.array) -> None:
+                self.idx = 0
+                self.data = data
+
+            def next(self,
+                     in_: None,
+                     frame_count: int,
+                     time_info: dict,
+                     status: int) -> typing.Tuple[numpy.array, int]:
+
+                d = self.data[self.idx:self.idx+frame_count]
+                self.idx += frame_count
+
+                flag = pyaudio.paContinue
+                if len(d) <= 0:
+                    flag = pyaudio.paComplete
+
+                return d.astype(numpy.float32), flag
+
+        pa = pyaudio.PyAudio()
+        stream = pa.open(format=pyaudio.paFloat32,
+                         channels=1,
+                         rate=self.get_samplerate(),
+                         output=True,
+                         stream_callback=Callback(self.data).next)
+
+        stream.start_stream()
+        while stream.is_active():
+            time.sleep(0.1)
+        stream.stop_stream()
+
+        stream.close()
+        pa.terminate()
+
 
 def concat(*sounds: Sound) -> Sound:
     """ Concatenate multiple sounds
@@ -434,6 +474,8 @@ def overlay(*sounds: Sound) -> Sound:
 
 
 if __name__ == '__main__':
+    from gensound.effect import LinearFadeOut
+
     fade_out = LinearFadeOut()
 
     a = Sound.from_sinwave(440, duration=0.1, volume=1.0)
@@ -444,4 +486,6 @@ if __name__ == '__main__':
 
     wait = Sound.silence().repeat(0.9)
 
-    concat(a, wait, a, wait, a, wait, b).write('test.wav')
+    output = concat(a, wait, a, wait, a, wait, b)
+    output.write('test.wav')
+    output.play()

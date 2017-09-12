@@ -5,6 +5,7 @@ requires = [
     'numpy',
     'scipy',
     'PySoundFile',
+    'PyAudio',
 ]
 
 setup(name='PyGenSound',

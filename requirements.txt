@@ -1,3 +1,4 @@
+PyAudio
 PySoundFile
 numpy
 scipy
