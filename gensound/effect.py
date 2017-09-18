@@ -9,7 +9,17 @@ from gensound.sound import Sound
 
 
 class Effect:
-    """ Base class of sound effect """
+    """ Base class of sound effect
+
+
+    Can't use this directly. Must be overridden apply method.
+
+    >>> sound = Sound.from_sinwave(440)
+    >>> Effect().apply(sound)
+    Traceback (most recent call last):
+      ...
+    NotImplementedError
+    """
 
     def apply(self, sound: Sound) -> Sound:
         """ Apply effect to sound
@@ -27,13 +37,33 @@ class Effect:
         effect -- Effect that will apply after this effect.
 
         return -- Joined effect.
+
+
+        >>> in_ = LinearFadeIn()
+        >>> out = LinearFadeOut()
+        >>> sound = Sound.from_sinwave(440)
+
+        >>> out.apply(in_.apply(sound)) == in_.then(out).apply(sound)
+        True
         """
 
         return JoinedEffect(self, effect)
 
 
 class JoinedEffect(Effect):
-    """ Joined multiple effect """
+    """ Joined multiple effects
+
+
+    >>> in_ = LinearFadeIn()
+    >>> out = LinearFadeOut()
+    >>> sound = Sound.from_sinwave(440)
+
+    >>> out.apply(in_.apply(sound)) == JoinedEffect(in_, out).apply(sound)
+    True
+
+    >>> out.apply(in_.apply(sound)) == in_.then(out).apply(sound)
+    True
+    """
 
     def __init__(self, *effects: Effect) -> None:
         self.effects = effects
@@ -53,7 +83,16 @@ class JoinedEffect(Effect):
 
 
 class MaskEffect(Effect):
-    """ Masking effect """
+    """ Masking effect
+
+
+    Must be overridden gen_mask and apply.
+
+    >>> MaskEffect().gen_mask(1)
+    Traceback (most recent call last):
+      ...
+    NotImplementedError
+    """
 
     def __init__(self, duration: typing.Optional[float] = None) -> None:
         """ Initialize

@@ -90,6 +90,18 @@ class Sound:
         samplerate -- Sampling rate of new sound.
 
         return -- A new Sound instance.
+
+
+        >>> -0.1 <= Sound.from_sinwave(440, duration=1.0).duration - 1.0 <= 0.1
+        True
+        >>> -0.1 <= Sound.from_sinwave(440, duration=2.0).duration - 2.0 <= 0.1
+        True
+        >>> (Sound.from_sinwave(440, volume=0.5).data <= 0.5).all()
+        True
+        >>> (-0.5 <= Sound.from_sinwave(440, volume=0.5).data).all()
+        True
+        >>> Sound.from_sinwave(440, samplerate=100).get_samplerate() == 100
+        True
         """
         assert 0 < frequency
         assert 0 < duration
@@ -116,6 +128,10 @@ class Sound:
         samplerate -- Sampling rate of new sound.
 
         return -- A new Sound instance.
+
+
+        >>> Sound.silence(samplerate=100).get_samplerate() == 100
+        True
         """
 
         return cls(numpy.array([0]), samplerate)
@@ -132,6 +148,18 @@ class Sound:
         samplerate -- Sampling rate of new sound.
 
         return -- A new Sound instance.
+
+
+        >>> numpy.isclose(Sound.from_whitenoise(duration=1.0).duration, 1.0)
+        True
+        >>> numpy.isclose(Sound.from_whitenoise(duration=2.0).duration, 2.0)
+        True
+        >>> (Sound.from_whitenoise(volume=0.5).data <= 0.5).all()
+        True
+        >>> (-0.5 <= Sound.from_whitenoise(volume=0.5).data).all()
+        True
+        >>> Sound.from_whitenoise(samplerate=100).get_samplerate() == 100
+        True
         """
 
         length = int(numpy.round(duration * samplerate))
@@ -212,6 +240,8 @@ class Sound:
         >>> b == d
         False
         >>> c == d
+        False
+        >>> a == 'not sound data'
         False
         """
 
@@ -378,6 +408,25 @@ class Sound:
         """ Write sound into file or file-like
 
         file_ -- A file name or file-like object to write sound
+
+
+        >>> write = Sound.from_sinwave(440)
+        >>> write.write('__doctest_output_sound__.wav')
+
+        >>> read = Sound.from_file('__doctest_output_sound__.wav')
+
+        >>> write.get_samplerate() == read.get_samplerate()
+        True
+        >>> write.duration == read.duration
+        True
+
+        Data will some distortion when converting into wav file.
+        >>> numpy.allclose(write.data, read.data, atol=1e-4)
+        True
+
+
+        >>> import os
+        >>> os.remove('__doctest_output_sound__.wav')
         """
 
         soundfile.write(file_, self.data, self.get_samplerate())
