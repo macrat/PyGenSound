@@ -13,7 +13,7 @@ install:
 
 script:
   - python setup.py test
-  - coverage run -m doctest gensound/*.py
+  - coverage run -m doctest gensound/sound.py gensound/effect.py
 
 after_success:
   - coveralls
