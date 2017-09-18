@@ -5,6 +5,18 @@ Read an audio file or generate sound, compute it, and write to file.
 
 ファイルから音を読み込んだり周波数から生成して、重ねたり繋げたりして、ファイルに保存するやつ。
 
+## install
+``` shell
+$ git clone http://github.com/macrat/PyGenSound
+$ cd PyGenSound
+$ pip3 install .
+```
+
+## uninstall
+``` shelll
+$ pip3 uninstall PyGenSound
+```
+
 ## example
 This is code for generating time signal sound of NHK.
 
@@ -25,7 +37,7 @@ time_signal.play()  # Play sound
 ```
 
 ``` shell
-$ python3 gensound.py
+$ python3 gensound/sound.py
 $ mplayer test.wav
 ```
 
