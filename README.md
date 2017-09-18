@@ -5,6 +5,9 @@ Read an audio file or generate sound, compute it, and write to file.
 
 ファイルから音を読み込んだり周波数から生成して、重ねたり繋げたりして、ファイルに保存するやつ。
 
+[![Build Status](https://travis-ci.org/macrat/PyGenSound.svg?branch=master)](https://travis-ci.org/macrat/PyGenSound)
+[![Coverage Status](https://coveralls.io/repos/github/macrat/PyGenSound/badge.svg?branch=master)](https://coveralls.io/github/macrat/PyGenSound?branch=master)
+
 ## install
 ``` shell
 $ git clone http://github.com/macrat/PyGenSound
