@@ -5,7 +5,12 @@ python:
 
 install:
   - sudo apt-get install -y python3-pyaudio libportaudio2
-  - pip3 install .
+  - pip install coveralls
+  - pip install .
 
 script:
-  - python3 setup.py test
+  - python setup.py test
+  - coverage run -m doctest gensound/**/*.py
+
+after_success:
+  - coveralls
