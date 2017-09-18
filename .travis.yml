@@ -3,14 +3,17 @@ language: python
 python:
   - 3.6
 
+before_install:
+  - sudo apt-get update
+  - sudo apt-get install -y portaudio19-dev libsndfile1
+
 install:
-  - sudo apt-get install -y python3-pyaudio libportaudio2
-  - pip install coveralls
   - pip install .
+  - pip install coveralls
 
 script:
   - python setup.py test
-  - coverage run -m doctest gensound/**/*.py
+  - coverage run -m doctest gensound/*.py
 
 after_success:
   - coveralls
