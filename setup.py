@@ -1,4 +1,5 @@
 from setuptools import setup, find_packages
+import doctest
 
 
 requires = [
@@ -7,6 +8,8 @@ requires = [
     'PySoundFile',
     'PyAudio',
 ]
+
+tests = lambda : doctest.DocTestSuite('gensound')
 
 setup(name='PyGenSound',
       version='0.0.1',
@@ -18,4 +21,5 @@ setup(name='PyGenSound',
       packages=find_packages(),
       license='MIT License',
       requires=requires,
-      install_requires=requires)
+      install_requires=requires,
+      test_suite='setup.tests')
