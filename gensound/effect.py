@@ -9,17 +9,7 @@ from gensound.sound import Sound
 
 
 class Effect:
-    """ Base class of sound effect
-
-
-    Can't use this directly. Must be overridden apply method.
-
-    >>> sound = Sound.from_sinwave(440)
-    >>> Effect().apply(sound)
-    Traceback (most recent call last):
-      ...
-    NotImplementedError
-    """
+    """ Base class of sound effect """
 
     def apply(self, sound: Sound) -> Sound:
         """ Apply effect to sound
@@ -34,17 +24,17 @@ class Effect:
     def then(self, effect: 'Effect') -> 'Effect':
         """ Join effect
 
-        effect -- Effect that will apply after this effect.
-
-        return -- Joined effect.
-
-
         >>> in_ = LinearFadeIn()
         >>> out = LinearFadeOut()
         >>> sound = Sound.from_sinwave(440)
 
         >>> out.apply(in_.apply(sound)) == in_.then(out).apply(sound)
         True
+
+
+        effect -- Effect that will apply after this effect.
+
+        return -- Joined effect.
         """
 
         return JoinedEffect(self, effect)
@@ -52,7 +42,6 @@ class Effect:
 
 class JoinedEffect(Effect):
     """ Joined multiple effects
-
 
     >>> in_ = LinearFadeIn()
     >>> out = LinearFadeOut()
@@ -83,16 +72,7 @@ class JoinedEffect(Effect):
 
 
 class MaskEffect(Effect):
-    """ Masking effect
-
-
-    Must be overridden gen_mask and apply.
-
-    >>> MaskEffect().gen_mask(1)
-    Traceback (most recent call last):
-      ...
-    NotImplementedError
-    """
+    """ Masking effect """
 
     def __init__(self, duration: typing.Optional[float] = None) -> None:
         """ Initialize
@@ -177,16 +157,7 @@ class LinearFadeOut(MaskEndEffect):
 
 
 class LowPassFilter(Effect):
-    """ Low pass filter
-
-    >>> from gensound.sound import overlay
-    >>> a = Sound.from_sinwave(100, duration=0.1, volume=1/3)
-    >>> b = Sound.from_sinwave(200, duration=0.1, volume=1/3)
-    >>> c = Sound.from_sinwave(300, duration=0.1, volume=1/3)
-    >>> filtered = LowPassFilter(210).apply(overlay(a, b, c))
-    >>> sum((filtered.data - overlay(a, b).data) ** 2) < 0.1
-    True
-    """
+    """ Low pass filter """
 
     def __init__(self, freq: float) -> None:
         """
@@ -205,16 +176,7 @@ class LowPassFilter(Effect):
 
 
 class HighPassFilter(Effect):
-    """ High pass filter
-
-    >>> from gensound.sound import overlay
-    >>> a = Sound.from_sinwave(100, duration=0.1, volume=1/3)
-    >>> b = Sound.from_sinwave(200, duration=0.1, volume=1/3)
-    >>> c = Sound.from_sinwave(300, duration=0.1, volume=1/3)
-    >>> filtered = HighPassFilter(190).apply(overlay(a, b, c))
-    >>> sum((filtered.data - overlay(b, c).data) ** 2) < 0.1
-    True
-    """
+    """ High pass filter """
 
     def __init__(self, freq: float) -> None:
         """
@@ -235,9 +197,21 @@ class HighPassFilter(Effect):
 class Resampling(Effect):
     """ Resampling effect
 
-    >>> s = Sound.from_array([0.1, 0.3, 0.5, 0.7], 4)
-    >>> (Resampling(7).apply(s)
-    ...  == Sound.from_array([0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7], 7))
+    Change sampling rate without changes sound duration.
+
+
+    This example does resampling from 44100 Hz to 88200 Hz.
+
+    >>> original = Sound.from_sinwave(440, duration=1, samplerate=44100)
+    >>> original.get_samplerate()
+    44100
+    >>> abs(original.duration - 1) < 0.01
+    True
+
+    >>> resampled = Resampling(88200).apply(original)
+    >>> resampled.get_samplerate()
+    88200
+    >>> abs(resampled.duration - 1) < 0.01
     True
     """
 
@@ -264,9 +238,30 @@ class Resampling(Effect):
 class ChangeSpeed(Effect):
     """ Change sound speed effect
 
-    >>> s = Sound.from_array([0.1, 0.3, 0.5, 0.7], 4)
-    >>> (ChangeSpeed(4 / 7).apply(s)
-    ...  == Sound.from_array([0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7], 4))
+    Change sound duration without changes sampling rate.
+
+
+    >>> original = Sound.from_sinwave(440, duration=1)
+    >>> abs(original.duration - 1) < 0.01
+    True
+
+    This example changes duration from 1sec to 2sec.
+
+    >>> slow = ChangeSpeed(2).apply(original)
+    >>> abs(slow.duration - 2) < 0.01
+    True
+
+    And, changes duration to 0.5sec.
+
+    >>> fast = ChangeSpeed(0.5).apply(original)
+    >>> abs(fast.duration - 0.5) < 0.01
+    True
+
+    Sampling rate will not be changed.
+
+    >>> original.get_samplerate() == slow.get_samplerate()
+    True
+    >>> original.get_samplerate() == fast.get_samplerate()
     True
     """
 

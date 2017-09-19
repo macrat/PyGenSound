@@ -22,12 +22,6 @@ import soundfile
 def _repeat_array(sound: numpy.array, want_length: int) -> numpy.array:
     """ Repeat numpy.array for enlarging a sound duration
 
-    sound       -- Sound data for repeat.
-    want_length -- The length of an output array.
-
-    return -- Tepeated sound data.
-
-
     >>> array = numpy.array([1, 2, 3])
     >>> numpy.allclose(_repeat_array(array, 6),
     ...                numpy.array([1, 2, 3, 1, 2, 3]))
@@ -37,6 +31,12 @@ def _repeat_array(sound: numpy.array, want_length: int) -> numpy.array:
     True
     >>> numpy.allclose(_repeat_array(array, 2), numpy.array([1, 2]))
     True
+
+
+    sound       -- Sound data for repeat.
+    want_length -- The length of an output array.
+
+    return -- Tepeated sound data.
     """
     assert 0 <= want_length
 
@@ -82,7 +82,21 @@ class Sound:
                      duration: float = 1.0,
                      volume: float = 1.0,
                      samplerate: float = 44100) -> 'Sound':
-        """ Generate sin wave sound
+        """ Generate sine wave sound
+
+        This example makes 440Hz sine wave sound.
+
+        >>> sound = Sound.from_sinwave(440)
+
+        Can set duration and volume with arguments.
+        This example makes 2 seconds, 50% volume.
+
+        >>> sound = Sound.from_sinwave(440, duration=2.0, volume=0.5)
+
+        Can make 2 seconds sine wave with repeat too. But, this way may make
+        noise at the joint point of sounds.
+        Recommend using from_sinwave() as possible.
+
 
         frequency  -- Frequency of new sound.
         duration   -- Duration in seconds of new sound.
@@ -90,18 +104,6 @@ class Sound:
         samplerate -- Sampling rate of new sound.
 
         return -- A new Sound instance.
-
-
-        >>> -0.1 <= Sound.from_sinwave(440, duration=1.0).duration - 1.0 <= 0.1
-        True
-        >>> -0.1 <= Sound.from_sinwave(440, duration=2.0).duration - 2.0 <= 0.1
-        True
-        >>> (Sound.from_sinwave(440, volume=0.5).data <= 0.5).all()
-        True
-        >>> (-0.5 <= Sound.from_sinwave(440, volume=0.5).data).all()
-        True
-        >>> Sound.from_sinwave(440, samplerate=100).get_samplerate() == 100
-        True
         """
         assert 0 < frequency
         assert 0 < duration
@@ -124,15 +126,20 @@ class Sound:
         """ Generate silent sound
 
         This function returns VERY VERY short sound.
+
+        >>> Sound.silence().duration < 0.0001
+        True
+
         Please use repeat function.
+
+        >>> silence = Sound.silence().repeat(1)
+        >>> abs(silence.duration - 1) < 0.0001
+        True
+
 
         samplerate -- Sampling rate of new sound.
 
         return -- A new Sound instance.
-
-
-        >>> Sound.silence(samplerate=100).get_samplerate() == 100
-        True
         """
 
         return cls(numpy.array([0]), samplerate)
@@ -144,23 +151,15 @@ class Sound:
                         samplerate: float = 44100) -> 'Sound':
         """ Generate white noise
 
+        Making white noise.
+        >>> noise = Sound.from_whitenoise()
+
+
         duration   -- Duration in seconds of new sound.
         volume     -- The volume of new sound.
         samplerate -- Sampling rate of new sound.
 
         return -- A new Sound instance.
-
-
-        >>> numpy.isclose(Sound.from_whitenoise(duration=1.0).duration, 1.0)
-        True
-        >>> numpy.isclose(Sound.from_whitenoise(duration=2.0).duration, 2.0)
-        True
-        >>> (Sound.from_whitenoise(volume=0.5).data <= 0.5).all()
-        True
-        >>> (-0.5 <= Sound.from_whitenoise(volume=0.5).data).all()
-        True
-        >>> Sound.from_whitenoise(samplerate=100).get_samplerate() == 100
-        True
         """
 
         length = int(numpy.round(duration * samplerate))
@@ -168,9 +167,9 @@ class Sound:
 
     @classmethod
     def from_file(cls, file_: typing.Union[str, typing.BinaryIO]) -> 'Sound':
-        """ Read sound from file or file-like
+        """ Read sound from file or file
 
-        file_ -- File name or file-like object.
+        file_ -- File name or file object.
 
         return -- A new Sound instance.
         """
@@ -187,36 +186,24 @@ class Sound:
                    samplerate: float) -> 'Sound':
         """ Make new sound from float array
 
+        This method is same as passing numpy.array to the Sound constructor.
+
+        >>> (Sound.from_array([-0.1, 0.0, 1.0], 3)
+        ...  == Sound(numpy.array([-0.1, 0.0, 1.0]), 3))
+        True
+
+
         array      -- Sound data. Elements must in between -1.0 to 1.0.
         samplerate -- Sampling rate of new sound.
 
         return -- A new Sound instance.
-
-
-        >>> s = Sound.from_array([-0.1, 0.0, 0.1], 3)
-        >>> s.get_samplerate()
-        3
-        >>> s == Sound.from_array([-0.1, 0.0, 0.1], 3)
-        True
         """
 
         return Sound(numpy.array(array), samplerate)
 
     @property
     def duration(self) -> float:
-        """ Duration in seconds of this sound
-
-
-        >>> s = Sound.from_array([0.1, 0.2, 0.3], 1)
-        >>> s.duration
-        3.0
-        >>> s = Sound.from_array([0.1, 0.2, 0.3], 2)
-        >>> s.duration
-        1.5
-        >>> s = Sound.from_array([0.1, 0.2, 0.3, 0.4, 0.5, 0.6], 2)
-        >>> s.duration
-        3.0
-        """
+        """ Duration in seconds of this sound """
 
         return len(self.data) / self.get_samplerate()
 
@@ -226,25 +213,7 @@ class Sound:
         return self._samplerate
 
     def __eq__(self, another: typing.Any) -> bool:
-        """ Compare with another Sound instance.
-
-        >>> a = Sound.from_array([0.1, 0.5], 1)
-        >>> b = Sound.from_array([0.1, 0.5], 1)
-        >>> c = Sound.from_array([-0.1, -0.5], 1)
-        >>> d = Sound.from_array([-0.1, -0.5], 2)
-        >>> a == b
-        True
-        >>> a == c
-        False
-        >>> b == c
-        False
-        >>> b == d
-        False
-        >>> c == d
-        False
-        >>> a == 'not sound data'
-        False
-        """
+        """ Compare with another Sound instance """
 
         if not isinstance(another, Sound):
             return False
@@ -258,20 +227,24 @@ class Sound:
         This volume means the maximum value of the wave.
         Please be careful that is not gain.
 
+
+        >>> sound = Sound.from_sinwave(440, volume=1.0)
+
+        >>> 0.999 <= sound.data.max() <= 1.0
+        True
+        >>> -0.999 >= sound.data.min() >= -1.0
+        True
+
+        >>> half = sound.volume(0.5)
+        >>> 0.499 <= half.data.max() <= 0.501
+        True
+        >>> -0.499 >= half.data.min() >= -0.501
+        True
+
+
         vol -- New volume.
 
         return -- A new Sound instance that changed volume.
-
-
-        >>> s = Sound.from_array([0.1, 0.5], 1)
-        >>> s == Sound.from_array([0.1, 0.5], 1)
-        True
-        >>> s.volume(1) == Sound.from_array([0.2, 1.0], 1)
-        True
-        >>> s.volume(0.25) == Sound.from_array([0.05, 0.25], 1)
-        True
-        >>> s.volume(2) == Sound.from_array([0.4, 1.0], 1)
-        True
         """
 
         return Sound(
@@ -282,22 +255,23 @@ class Sound:
     def repeat(self, duration: float) -> 'Sound':
         """ Create a new instance that repeated same sound
 
+        >>> sound = Sound.from_sinwave(440)
+        >>> sound.repeat(5).duration
+        5.0
+
         This function can not only repeat but trimming.
         But recommend use trim function because become hard to understand
         if using it for trimming.
 
+        >>> sound.repeat(0.5).duration
+        0.5
+        >>> sound.repeat(0.5) == sound.trim(0.5)
+        True
+
+
         duration -- Duration in seconds to repeat.
 
         return -- A new Sound instance that repeated same sound.
-
-
-        >>> s = Sound.from_array([0.1, 0.2, 0.3], 1)
-        >>> s.repeat(6) == Sound.from_array([0.1, 0.2, 0.3, 0.1, 0.2, 0.3], 1)
-        True
-        >>> s.repeat(4) == Sound.from_array([0.1, 0.2, 0.3, 0.1], 1)
-        True
-        >>> s.repeat(2) == Sound.from_array([0.1, 0.2], 1)
-        True
         """
         assert 0 <= duration
 
@@ -310,17 +284,15 @@ class Sound:
     def trim(self, duration: float) -> 'Sound':
         """ Create a new instance that trimmed
 
+        >>> sound = Sound.from_sinwave(440)
+        >>> sound.trim(0.5).duration
+        0.5
+
+
         duration -- Duration in seconds of new sound.
                     Must be equals or shorter than original duration.
 
         return -- A new Sound instance that trimmed.
-
-
-        >>> s = Sound.from_array([0.1, 0.2, 0.3], 1)
-        >>> s.trim(2) == Sound.from_array([0.1, 0.2], 1)
-        True
-        >>> s.trim(3) == Sound.from_array([0.1, 0.2, 0.3], 1)
-        True
         """
         assert 0 <= duration <= self.duration
 
@@ -332,17 +304,19 @@ class Sound:
     def split(self, duration: float) -> typing.Tuple['Sound', 'Sound']:
         """ Spit sound
 
+        >>> sound = Sound.from_sinwave(440, duration=3)
+        >>> a, b = sound.split(1)
+        >>> abs(a.duration - 1.0) < 0.1
+        True
+        >>> abs(b.duration - 2.0) < 0.1
+        True
+        >>> a.concat(b) == sound
+        True
+
+
         duration -- The pivot of sound splitting.
 
         return -- Splitted sounds.
-
-
-        >>> s = Sound.from_array([0.1, 0.2, 0.3], 1)
-        >>> a, b = s.split(1)
-        >>> a == Sound.from_array([0.1], 1)
-        True
-        >>> b == Sound.from_array([0.2, 0.3], 1)
-        True
         """
         assert 0 < duration < self.duration
 
@@ -354,19 +328,22 @@ class Sound:
     def concat(self, other: 'Sound') -> 'Sound':
         """ Create a new instance that concatenated another sound
 
+        >>> sound = Sound.from_sinwave(440, duration=3)
+        >>> a, b = sound.split(1)
+        >>> a.concat(b) == sound
+        True
+
         Recommend using gensound.concat if concatenate many sounds. Because
         gensound.concat is optimized for many sounds.
+
+        >>> concat(a, b) == a.concat(b)
+        True
+
 
         other -- The sound that concatenates after of self.
                  Must it has same sampling rate.
 
         return -- A new Sound that concatenated self and other.
-
-
-        >>> a = Sound.from_array([0.1, 0.2], 1)
-        >>> b = Sound.from_array([0.3, 0.4], 1)
-        >>> a.concat(b) == Sound.from_array([0.1, 0.2, 0.3, 0.4], 1)
-        True
         """
         assert self.get_samplerate() == other.get_samplerate()
 
@@ -376,22 +353,21 @@ class Sound:
     def overlay(self, other: 'Sound') -> 'Sound':
         """ Create a new instance that was overlay another sound
 
+        >>> a = Sound.from_array([0.1, 0.2], 1)
+        >>> b = Sound.from_array([0.1, 0.2, 0.3], 1)
+        >>> a.overlay(b) == Sound.from_array([0.2, 0.4, 0.3], 1)
+        True
+
         Recommend using gensound.overlay if overlay many sounds. Because
         gensound.overlay is optimized for many sounds.
+
+        >>> overlay(a, b) == a.overlay(b)
+        True
+
 
         other -- The sound that overlay.
 
         return -- A new Sound that overlay another sound.
-
-
-        >>> a = Sound.from_array([0.1, 0.2], 1)
-        >>> b = Sound.from_array([0.1, 0.2, 0.3], 1)
-        >>> a.overlay(a) == Sound.from_array([0.2, 0.4], 1)
-        True
-        >>> a.overlay(b) == Sound.from_array([0.2, 0.4, 0.3], 1)
-        True
-        >>> b.overlay(a) == Sound.from_array([0.2, 0.4, 0.3], 1)
-        True
         """
         assert self.get_samplerate() == other.get_samplerate()
 
@@ -406,28 +382,9 @@ class Sound:
         return Sound(x + y, self.get_samplerate())
 
     def write(self, file_: typing.Union[str, typing.BinaryIO]) -> None:
-        """ Write sound into file or file-like
+        """ Write sound into file
 
-        file_ -- A file name or file-like object to write sound
-
-
-        >>> write = Sound.from_sinwave(440)
-        >>> write.write('__doctest_output_sound__.wav')
-
-        >>> read = Sound.from_file('__doctest_output_sound__.wav')
-
-        >>> write.get_samplerate() == read.get_samplerate()
-        True
-        >>> write.duration == read.duration
-        True
-
-        Data will some distortion when converting into wav file.
-        >>> numpy.allclose(write.data, read.data, atol=1e-4)
-        True
-
-
-        >>> import os
-        >>> os.remove('__doctest_output_sound__.wav')
+        file_ -- A file name or file object to write sound.
         """
 
         soundfile.write(file_, self.data, self.get_samplerate())
@@ -474,16 +431,16 @@ class Sound:
 def concat(*sounds: Sound) -> Sound:
     """ Concatenate multiple sounds
 
-    sounds -- Sound instances to concatenate. Must they has some sampling rate.
-
-    return -- A concatenated Sound instance.
-
-
     >>> a = Sound.from_array([0.1, 0.2], 1)
     >>> b = Sound.from_array([0.3, 0.4], 1)
     >>> c = Sound.from_array([0.5, 0.6], 1)
     >>> concat(a, b, c) == Sound.from_array([0.1, 0.2, 0.3, 0.4, 0.5, 0.6], 1)
     True
+
+
+    sounds -- Sound instances to concatenate. Must they has some sampling rate.
+
+    return -- A concatenated Sound instance.
     """
     assert all(sounds[0].get_samplerate() == s.get_samplerate()
                for s in sounds[1:])
@@ -498,12 +455,6 @@ def overlay(*sounds: Sound) -> Sound:
     BE CAREFUL: This function doesn't care about clipping. Perhaps, need to
                 change volume before use this if overlay many sounds.
 
-    sounds -- Sound instances to overlay. Must they has some sampling rate and
-              same duration.
-
-    return -- A Sound instance that overlay all sounds.
-
-
     >>> a = Sound.from_array([0.1, 0.2], 1)
     >>> b = Sound.from_array([0.3, 0.4], 1)
     >>> c = Sound.from_array([0.5, 0.6], 1)
@@ -512,6 +463,13 @@ def overlay(*sounds: Sound) -> Sound:
 
     The second element of this sample isn't 1.2 but 1.0 because of clipping was
     an occurrence.
+
+
+
+    sounds -- Sound instances to overlay. Must they has some sampling rate and
+              same duration.
+
+    return -- A Sound instance that overlay all sounds.
     """
     assert all(sounds[0].get_samplerate() == s.get_samplerate()
                for s in sounds[1:])
@@ -521,21 +479,3 @@ def overlay(*sounds: Sound) -> Sound:
                           for x in sounds])
 
     return Sound(padded.sum(axis=0), sounds[0].get_samplerate())
-
-
-if __name__ == '__main__':
-    from gensound.effect import LinearFadeOut
-
-    fade_out = LinearFadeOut()
-
-    a = Sound.from_sinwave(440, duration=0.1, volume=1.0)
-    a = fade_out.apply(a)
-
-    b = Sound.from_sinwave(880, duration=2.0, volume=1.0)
-    b = fade_out.apply(b)
-
-    wait = Sound.silence().repeat(0.9)
-
-    output = concat(a, wait, a, wait, a, wait, b)
-    output.write('test.wav')
-    output.play()

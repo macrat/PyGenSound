@@ -39,11 +39,6 @@ time_signal.write('test.wav')  # Save to test.wav
 time_signal.play()  # Play sound
 ```
 
-``` shell
-$ python3 gensound/sound.py
-$ mplayer test.wav
-```
-
 ## requirements
 - python3
 - numpy
