@@ -109,7 +109,8 @@ class Sound:
 
         wavelength = samplerate / frequency
 
-        one_wave = numpy.sin(numpy.arange(wavelength)/wavelength * 2*numpy.pi)
+        one_wave = numpy.sin(numpy.arange(wavelength) / wavelength
+                             * 2 * numpy.pi)
 
         repeat_count = int(numpy.round(duration * samplerate / wavelength))
         repeated = numpy.repeat(one_wave.reshape([1, -1]),
@@ -445,7 +446,7 @@ class Sound:
                      time_info: dict,
                      status: int) -> typing.Tuple[numpy.array, int]:
 
-                d = self.data[self.idx:self.idx+frame_count]
+                d = self.data[self.idx:self.idx + frame_count]
                 self.idx += frame_count
 
                 flag = pyaudio.paContinue

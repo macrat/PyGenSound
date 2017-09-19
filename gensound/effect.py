@@ -123,10 +123,8 @@ class MaskStartEffect(MaskEffect):
 
         mask = self.gen_mask(length)
 
-        return Sound(numpy.hstack([
-                        sound.data[:length] * mask[:len(sound.data)],
-                        sound.data[length:],
-                     ]),
+        return Sound(numpy.hstack([sound.data[:length] * mask[:length],
+                                   sound.data[length:]]),
                      sound.get_samplerate())
 
 
@@ -141,10 +139,8 @@ class MaskEndEffect(MaskEffect):
         offset = max(0, length - len(sound.data))
         mask = self.gen_mask(length)[offset:]
 
-        return Sound(numpy.hstack([
-                        sound.data[:-length],
-                        sound.data[-length:] * mask,
-                     ]),
+        return Sound(numpy.hstack([sound.data[:-length],
+                                   sound.data[-length:] * mask]),
                      sound.get_samplerate())
 
 
@@ -262,7 +258,7 @@ class Resampling(Effect):
                                        sound.data,
                                        kind=self.kind)
         new_x = numpy.round(length * self.samplerate / sound.get_samplerate())
-        return Sound(f(numpy.linspace(0, 1, new_x)), self.samplerate)
+        return Sound(f(numpy.linspace(0, 1, int(new_x))), self.samplerate)
 
 
 class ChangeSpeed(Effect):
