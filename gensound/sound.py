@@ -122,6 +122,29 @@ class Sound:
         return cls(repeated.flatten() * volume, samplerate)
 
     @classmethod
+    def from_sawtoothwave(cls,
+                          frequency: float,
+                          duration: float = 1.0,
+                          volume: float = 1.0,
+                          samplerate: float = 44100) -> 'Sound':
+        """ Generate sawtooth wave sound
+
+
+        frequency  -- Frequency of new sound.
+        duration   -- Duration in seconds of new sound.
+        volume     -- The volume of new sound.
+        samplerate -- Sampling rate of new sound.
+
+        return -- A new Sound instance.
+        """
+
+        count = numpy.arange(0, duration, 1 / samplerate) * frequency
+        data = count % 1
+        data /= data.max()
+
+        return cls((data * 2 - 1) * volume, samplerate)
+
+    @classmethod
     def silence(cls, samplerate: float = 44100) -> 'Sound':
         """ Generate silent sound
 
