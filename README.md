@@ -40,6 +40,18 @@ time_signal.write('test.wav')  # Save to test.wav
 time_signal.play()  # Play sound
 ```
 
+## commandline interface
+This example is generating time signal sound of NHK by command-line and play it.
+
+コマンドラインからNHKの時報を作って鳴らすやつ。
+
+``` shell
+$ gensound silence -d 0.9 -o silence.wav
+$ gensound sine 440 -d 0.1 | gensound fadeout -o 440.wav
+$ gensound sine 880 -d 2.0 | gensound fadeout -o 880.wav
+$ gensound concat 440.wav silence.wav | gensound concat - - - 880.wav | mplayer -cache 1024 -
+```
+
 ## requirements
 - python3
 - numpy
