@@ -1,3 +1,4 @@
+import io
 import tempfile
 import unittest
 
@@ -286,13 +287,27 @@ class SoundTest(unittest.TestCase):
         self.assertEqual(b.overlay(a),
                          Sound.from_array([0.2, 0.4, 0.4], 2))
 
-    def test_save_and_load(self):
+    def test_save_and_load_file(self):
         original = Sound.from_sinwave(440).concat(Sound.from_sinwave(880))
 
         with tempfile.NamedTemporaryFile(suffix='.wav') as f:
             original.write(f.name)
 
             loaded = Sound.from_file(f.name)
+
+        self.assertEqual(original.samplerate, loaded.samplerate)
+        self.assertEqual(original.duration, loaded.duration)
+        self.assertTrue(numpy.allclose(original.data, loaded.data, rtol=0.01))
+
+    def test_save_and_load_buffer(self):
+        original = Sound.from_sinwave(440).concat(Sound.from_sinwave(880))
+
+        with io.BytesIO() as f:
+            original.write(f, format_='wav')
+
+            f.seek(0)
+
+            loaded = Sound.from_file(f)
 
         self.assertEqual(original.samplerate, loaded.samplerate)
         self.assertEqual(original.duration, loaded.duration)

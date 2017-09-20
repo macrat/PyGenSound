@@ -211,9 +211,9 @@ class Sound:
 
     @classmethod
     def from_file(cls, file_: typing.Union[str, typing.BinaryIO]) -> 'Sound':
-        """ Read sound from file or file
+        """ Read sound from file or file-like
 
-        file_ -- File name or file object.
+        file_   -- File name or file-like object.
 
         return -- A new Sound instance.
         """
@@ -425,13 +425,17 @@ class Sound:
 
         return Sound(x + y, self.samplerate)
 
-    def write(self, file_: typing.Union[str, typing.BinaryIO]) -> None:
-        """ Write sound into file
+    def write(self,
+              file_: typing.Union[str, typing.BinaryIO],
+              format_: typing.Optional[str] = None) -> None:
+        """ Write sound into file or file-like
 
-        file_ -- A file name or file object to write sound.
+        file_   -- A file name or file-like object to write sound.
+        format_ -- Format type of output like a 'wav'. Automatically detect
+                   from file name if None.
         """
 
-        soundfile.write(file_, self.data, self.samplerate)
+        soundfile.write(file_, self.data, self.samplerate, format=format_)
 
     def play(self) -> None:
         """ Play sound """
