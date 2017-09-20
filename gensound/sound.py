@@ -205,10 +205,11 @@ class Sound:
     def duration(self) -> float:
         """ Duration in seconds of this sound """
 
-        return len(self.data) / self.get_samplerate()
+        return len(self.data) / self.samplerate
 
-    def get_samplerate(self) -> float:
-        """ Get sampling rate of this sound """
+    @property
+    def samplerate(self) -> float:
+        """ Sampling rate of this sound """
 
         return self._samplerate
 
@@ -218,7 +219,7 @@ class Sound:
         if not isinstance(another, Sound):
             return False
 
-        return (self.get_samplerate() == another.get_samplerate()
+        return (self.samplerate == another.samplerate
                 and numpy.allclose(self.data, another.data))
 
     def volume(self, vol: float) -> 'Sound':
@@ -249,7 +250,7 @@ class Sound:
 
         return Sound(
             self.data * (vol / numpy.max([-self.data.min(), self.data.max()])),
-            self.get_samplerate()
+            self.samplerate
         )
 
     def repeat(self, duration: float) -> 'Sound':
@@ -277,8 +278,8 @@ class Sound:
 
         return Sound(
             _repeat_array(self.data,
-                          int(numpy.round(duration * self.get_samplerate()))),
-            self.get_samplerate(),
+                          int(numpy.round(duration * self.samplerate))),
+            self.samplerate,
         )
 
     def trim(self, duration: float) -> 'Sound':
@@ -297,8 +298,8 @@ class Sound:
         assert 0 <= duration <= self.duration
 
         return Sound(
-            self.data[:int(numpy.round(duration * self.get_samplerate()))],
-            self._samplerate,
+            self.data[:int(numpy.round(duration * self.samplerate))],
+            self.samplerate,
         )
 
     def split(self, duration: float) -> typing.Tuple['Sound', 'Sound']:
@@ -320,10 +321,10 @@ class Sound:
         """
         assert 0 < duration < self.duration
 
-        pivot = int(numpy.round(duration * self.get_samplerate()))
+        pivot = int(numpy.round(duration * self.samplerate))
 
-        return (Sound(self.data[:pivot], self.get_samplerate()),
-                Sound(self.data[pivot:], self.get_samplerate()))
+        return (Sound(self.data[:pivot], self.samplerate),
+                Sound(self.data[pivot:], self.samplerate))
 
     def concat(self, other: 'Sound') -> 'Sound':
         """ Create a new instance that concatenated another sound
@@ -345,10 +346,9 @@ class Sound:
 
         return -- A new Sound that concatenated self and other.
         """
-        assert self.get_samplerate() == other.get_samplerate()
+        assert self.samplerate == other.samplerate
 
-        return Sound(numpy.hstack([self.data, other.data]),
-                     self.get_samplerate())
+        return Sound(numpy.hstack([self.data, other.data]), self.samplerate)
 
     def overlay(self, other: 'Sound') -> 'Sound':
         """ Create a new instance that was overlay another sound
@@ -369,7 +369,7 @@ class Sound:
 
         return -- A new Sound that overlay another sound.
         """
-        assert self.get_samplerate() == other.get_samplerate()
+        assert self.samplerate == other.samplerate
 
         x = self.data
         y = other.data
@@ -379,7 +379,7 @@ class Sound:
         if len(y) > len(x):
             x = numpy.hstack([x, [0] * (len(y) - len(x))])
 
-        return Sound(x + y, self.get_samplerate())
+        return Sound(x + y, self.samplerate)
 
     def write(self, file_: typing.Union[str, typing.BinaryIO]) -> None:
         """ Write sound into file
@@ -387,7 +387,7 @@ class Sound:
         file_ -- A file name or file object to write sound.
         """
 
-        soundfile.write(file_, self.data, self.get_samplerate())
+        soundfile.write(file_, self.data, self.samplerate)
 
     def play(self) -> None:
         """ Play sound """
@@ -415,7 +415,7 @@ class Sound:
         pa = pyaudio.PyAudio()
         stream = pa.open(format=pyaudio.paFloat32,
                          channels=1,
-                         rate=self.get_samplerate(),
+                         rate=self.samplerate,
                          output=True,
                          stream_callback=Callback(self.data).next)
 
@@ -442,11 +442,9 @@ def concat(*sounds: Sound) -> Sound:
 
     return -- A concatenated Sound instance.
     """
-    assert all(sounds[0].get_samplerate() == s.get_samplerate()
-               for s in sounds[1:])
+    assert all(sounds[0].samplerate == s.samplerate for s in sounds[1:])
 
-    return Sound(numpy.hstack([x.data for x in sounds]),
-                 sounds[0].get_samplerate())
+    return Sound(numpy.hstack([x.data for x in sounds]), sounds[0].samplerate)
 
 
 def overlay(*sounds: Sound) -> Sound:
@@ -471,11 +469,10 @@ def overlay(*sounds: Sound) -> Sound:
 
     return -- A Sound instance that overlay all sounds.
     """
-    assert all(sounds[0].get_samplerate() == s.get_samplerate()
-               for s in sounds[1:])
+    assert all(sounds[0].samplerate == s.samplerate for s in sounds[1:])
 
     longest = max(len(x.data) for x in sounds)
     padded = numpy.array([numpy.hstack([x.data, [0] * (longest - len(x.data))])
                           for x in sounds])
 
-    return Sound(padded.sum(axis=0), sounds[0].get_samplerate())
+    return Sound(padded.sum(axis=0), sounds[0].samplerate)

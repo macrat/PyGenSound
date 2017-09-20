@@ -99,13 +99,13 @@ class MaskStartEffect(MaskEffect):
     def apply(self, sound: Sound) -> Sound:
         length = len(sound.data)
         if self.duration is not None:
-            length = int(numpy.round(self.duration * sound.get_samplerate()))
+            length = int(numpy.round(self.duration * sound.samplerate))
 
         mask = self.gen_mask(length)
 
         return Sound(numpy.hstack([sound.data[:length] * mask[:length],
                                    sound.data[length:]]),
-                     sound.get_samplerate())
+                     sound.samplerate)
 
 
 class MaskEndEffect(MaskEffect):
@@ -114,14 +114,14 @@ class MaskEndEffect(MaskEffect):
     def apply(self, sound: Sound) -> Sound:
         length = len(sound.data)
         if self.duration is not None:
-            length = int(numpy.round(self.duration * sound.get_samplerate()))
+            length = int(numpy.round(self.duration * sound.samplerate))
 
         offset = max(0, length - len(sound.data))
         mask = self.gen_mask(length)[offset:]
 
         return Sound(numpy.hstack([sound.data[:-length],
                                    sound.data[-length:] * mask]),
-                     sound.get_samplerate())
+                     sound.samplerate)
 
 
 class LinearFadeIn(MaskStartEffect):
@@ -170,9 +170,9 @@ class LowPassFilter(Effect):
         f = numpy.fft.rfft(sound.data)
         freq = numpy.fft.rfftfreq(len(sound.data))
 
-        f[freq > self.freq / sound.get_samplerate()] = 0
+        f[freq > self.freq / sound.samplerate] = 0
 
-        return Sound(numpy.fft.irfft(f), sound.get_samplerate())
+        return Sound(numpy.fft.irfft(f), sound.samplerate)
 
 
 class HighPassFilter(Effect):
@@ -189,9 +189,9 @@ class HighPassFilter(Effect):
         f = numpy.fft.rfft(sound.data)
         freq = numpy.fft.rfftfreq(len(sound.data))
 
-        f[freq < self.freq / sound.get_samplerate()] = 0
+        f[freq < self.freq / sound.samplerate] = 0
 
-        return Sound(numpy.fft.irfft(f), sound.get_samplerate())
+        return Sound(numpy.fft.irfft(f), sound.samplerate)
 
 
 class Resampling(Effect):
@@ -203,13 +203,13 @@ class Resampling(Effect):
     This example does resampling from 44100 Hz to 88200 Hz.
 
     >>> original = Sound.from_sinwave(440, duration=1, samplerate=44100)
-    >>> original.get_samplerate()
+    >>> original.samplerate
     44100
     >>> abs(original.duration - 1) < 0.01
     True
 
     >>> resampled = Resampling(88200).apply(original)
-    >>> resampled.get_samplerate()
+    >>> resampled.samplerate
     88200
     >>> abs(resampled.duration - 1) < 0.01
     True
@@ -231,7 +231,7 @@ class Resampling(Effect):
         f = scipy.interpolate.interp1d(numpy.linspace(0, 1, length),
                                        sound.data,
                                        kind=self.kind)
-        new_x = numpy.round(length * self.samplerate / sound.get_samplerate())
+        new_x = numpy.round(length * self.samplerate / sound.samplerate)
         return Sound(f(numpy.linspace(0, 1, int(new_x))), self.samplerate)
 
 
@@ -259,9 +259,9 @@ class ChangeSpeed(Effect):
 
     Sampling rate will not be changed.
 
-    >>> original.get_samplerate() == slow.get_samplerate()
+    >>> original.samplerate == slow.samplerate
     True
-    >>> original.get_samplerate() == fast.get_samplerate()
+    >>> original.samplerate == fast.samplerate
     True
     """
 
@@ -276,5 +276,6 @@ class ChangeSpeed(Effect):
         self.kind = kind
 
     def apply(self, sound: Sound) -> Sound:
-        resampler = Resampling(sound.get_samplerate() / self.speed_rate)
-        return Sound(resampler.apply(sound).data, sound.get_samplerate())
+        resampler = Resampling(sound.samplerate / self.speed_rate)
+
+        return Sound(resampler.apply(sound).data, sound.samplerate)

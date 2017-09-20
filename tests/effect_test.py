@@ -72,23 +72,23 @@ class PassFilterTest(unittest.TestCase):
 
     def test_low_pass_filter(self):
         filtered = LowPassFilter(210).apply(self.abc)
-        self.assertEqual(filtered.get_samplerate(), self.abc.get_samplerate())
+        self.assertEqual(filtered.samplerate, self.abc.samplerate)
         self.assertEqual(filtered.duration, self.abc.duration)
         self.assertTrue(sum((filtered.data - self.ab.data) ** 2) < 0.1)
 
         filtered = LowPassFilter(110).apply(self.abc)
-        self.assertEqual(filtered.get_samplerate(), self.abc.get_samplerate())
+        self.assertEqual(filtered.samplerate, self.abc.samplerate)
         self.assertEqual(filtered.duration, self.abc.duration)
         self.assertTrue(sum((filtered.data - self.a.data) ** 2) < 0.1)
 
     def test_high_pass_filter(self):
         filtered = HighPassFilter(190).apply(self.abc)
-        self.assertEqual(filtered.get_samplerate(), self.abc.get_samplerate())
+        self.assertEqual(filtered.samplerate, self.abc.samplerate)
         self.assertEqual(filtered.duration, self.abc.duration)
         self.assertTrue(sum((filtered.data - self.bc.data) ** 2) < 0.1)
 
         filtered = HighPassFilter(290).apply(self.abc)
-        self.assertEqual(filtered.get_samplerate(), self.abc.get_samplerate())
+        self.assertEqual(filtered.samplerate, self.abc.samplerate)
         self.assertEqual(filtered.duration, self.abc.duration)
         self.assertTrue(sum((filtered.data - self.c.data) ** 2) < 0.1)
 

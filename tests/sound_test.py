@@ -20,7 +20,7 @@ class SoundUtilsTest(unittest.TestCase):
         b = Sound.from_array([0.2, 0.3], 2)
         c = Sound.from_array([0.4, 0.5], 2)
 
-        self.assertEqual(overlay(a, b, c).get_samplerate(), 2)
+        self.assertEqual(overlay(a, b, c).samplerate, 2)
         self.assertEqual(overlay(a, b, c).duration, 1)
 
         self.assertEqual(overlay(a, b, c),
@@ -40,7 +40,7 @@ class SoundUtilsTest(unittest.TestCase):
         b = Sound.from_array([0.2, 0.3], 2)
         c = Sound.from_array([0.4, 0.5, 0.6, 0.7], 2)
 
-        self.assertEqual(overlay(a, b, c).get_samplerate(), 2)
+        self.assertEqual(overlay(a, b, c).samplerate, 2)
         self.assertEqual(overlay(a, b, c).duration, 2)
 
         self.assertEqual(overlay(a, b, c),
@@ -51,7 +51,7 @@ class SoundUtilsTest(unittest.TestCase):
         b = Sound.from_array([0.2, 0.3], 2)
         c = Sound.from_array([0.4, 0.5], 2)
 
-        self.assertEqual(concat(a, b, c).get_samplerate(), 2)
+        self.assertEqual(concat(a, b, c).samplerate, 2)
         self.assertEqual(concat(a, b, c).duration, 3)
 
         self.assertEqual(concat(a, b, c),
@@ -71,7 +71,7 @@ class SoundUtilsTest(unittest.TestCase):
         b = Sound.from_array([0.2, 0.3], 2)
         c = Sound.from_array([0.4, 0.5, 0.6, 0.7], 2)
 
-        self.assertEqual(concat(a, b, c).get_samplerate(), 2)
+        self.assertEqual(concat(a, b, c).samplerate, 2)
         self.assertEqual(concat(a, b, c).duration, 4)
 
         self.assertEqual(concat(a, b, c), Sound.from_array([
@@ -83,14 +83,14 @@ class SoundTest(unittest.TestCase):
     def test_constructor(self):
         sound = Sound(numpy.array([-1.0, 0.5, 1.0]), 1)
 
-        self.assertEqual(sound.get_samplerate(), 1)
+        self.assertEqual(sound.samplerate, 1)
         self.assertEqual(sound.duration, 3)
         self.assertEqual(tuple(sound.data), (-1.0, 0.5, 1.0))
 
     def test_constructor_clip(self):
         sound = Sound(numpy.array([-1.1, -1.0, 1.0, 1.1]), 2)
 
-        self.assertEqual(sound.get_samplerate(), 2)
+        self.assertEqual(sound.samplerate, 2)
         self.assertEqual(sound.duration, 2)
         self.assertEqual(tuple(sound.data), (-1.0, -1.0, 1.0, 1.0))
 
@@ -107,7 +107,7 @@ class SoundTest(unittest.TestCase):
                                    volume=0.5,
                                    samplerate=44100)
 
-        self.assertEqual(sound.get_samplerate(), 44100)
+        self.assertEqual(sound.samplerate, 44100)
         self.assertTrue(abs(sound.duration - 1) < 0.01)
         self.assertTrue((-0.5 <= sound.data).all())
         self.assertTrue((sound.data <= 0.5).all())
@@ -119,7 +119,7 @@ class SoundTest(unittest.TestCase):
                                    volume=0.8,
                                    samplerate=88200)
 
-        self.assertEqual(sound.get_samplerate(), 88200)
+        self.assertEqual(sound.samplerate, 88200)
         self.assertTrue(abs(sound.duration - 2) < 0.02)
         self.assertTrue((-0.8 <= sound.data).all())
         self.assertTrue((sound.data <= 0.8).all())
@@ -129,20 +129,20 @@ class SoundTest(unittest.TestCase):
     def test_silence(self):
         sound = Sound.silence(100)
 
-        self.assertEqual(sound.get_samplerate(), 100)
+        self.assertEqual(sound.samplerate, 100)
         self.assertEqual(sound.duration, 1/100)
         self.assertEqual(tuple(sound.data), (0, ))
 
         sound = Sound.silence(20)
 
-        self.assertEqual(sound.get_samplerate(), 20)
+        self.assertEqual(sound.samplerate, 20)
         self.assertEqual(sound.duration, 1/20)
         self.assertEqual(tuple(sound.data), (0, ))
 
     def test_whitenoise(self):
         sound = Sound.from_whitenoise(duration=2, volume=0.1, samplerate=100)
 
-        self.assertEqual(sound.get_samplerate(), 100)
+        self.assertEqual(sound.samplerate, 100)
         self.assertEqual(sound.duration, 2)
         self.assertTrue((-0.1 <= sound.data).all())
         self.assertTrue((sound.data <= 0.1).all())
@@ -245,6 +245,6 @@ class SoundTest(unittest.TestCase):
 
             loaded = Sound.from_file(f.name)
 
-        self.assertEqual(original.get_samplerate(), loaded.get_samplerate())
+        self.assertEqual(original.samplerate, loaded.samplerate)
         self.assertEqual(original.duration, loaded.duration)
         self.assertTrue(numpy.allclose(original.data, loaded.data, rtol=0.01))
