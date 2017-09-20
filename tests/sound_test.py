@@ -101,28 +101,49 @@ class SoundTest(unittest.TestCase):
         self.assertEqual(Sound(numpy.array([0.1, -0.1]), 100),
                          Sound.from_array([0.1, -0.1], 100))
 
-    def test_from_sinwave(self):
+    def test_from_sinwave_with_smooth_end(self):
         sound = Sound.from_sinwave(440,
                                    duration=1,
                                    volume=0.5,
-                                   samplerate=44100)
+                                   samplerate=44100,
+                                   smooth_end=True)
 
         self.assertEqual(sound.samplerate, 44100)
         self.assertTrue(abs(sound.duration - 1) < 0.01)
-        self.assertTrue((-0.5 <= sound.data).all())
-        self.assertTrue((sound.data <= 0.5).all())
         self.assertTrue(abs(sound.data.max() - 0.5) < 1e-04)
         self.assertTrue(abs(sound.data.min() + 0.5) < 1e-04)
 
         sound = Sound.from_sinwave(880,
                                    duration=2,
                                    volume=0.8,
-                                   samplerate=88200)
+                                   samplerate=88200,
+                                   smooth_end=True)
 
         self.assertEqual(sound.samplerate, 88200)
         self.assertTrue(abs(sound.duration - 2) < 0.02)
-        self.assertTrue((-0.8 <= sound.data).all())
-        self.assertTrue((sound.data <= 0.8).all())
+        self.assertTrue(abs(sound.data.max() - 0.8) < 1e-04)
+        self.assertTrue(abs(sound.data.min() + 0.8) < 1e-04)
+
+    def test_from_sinwave_without_smooth_end(self):
+        sound = Sound.from_sinwave(440,
+                                   duration=1,
+                                   volume=0.5,
+                                   samplerate=44100,
+                                   smooth_end=False)
+
+        self.assertEqual(sound.samplerate, 44100)
+        self.assertTrue(sound.duration, 1.0)
+        self.assertTrue(abs(sound.data.max() - 0.5) < 1e-04)
+        self.assertTrue(abs(sound.data.min() + 0.5) < 1e-04)
+
+        sound = Sound.from_sinwave(880,
+                                   duration=2,
+                                   volume=0.8,
+                                   samplerate=88200,
+                                   smooth_end=False)
+
+        self.assertEqual(sound.samplerate, 88200)
+        self.assertTrue(sound.duration, 2.0)
         self.assertTrue(abs(sound.data.max() - 0.8) < 1e-04)
         self.assertTrue(abs(sound.data.min() + 0.8) < 1e-04)
 

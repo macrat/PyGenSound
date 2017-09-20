@@ -81,7 +81,8 @@ class Sound:
                      frequency: float,
                      duration: float = 1.0,
                      volume: float = 1.0,
-                     samplerate: float = 44100) -> 'Sound':
+                     samplerate: float = 44100,
+                     smooth_end: bool = True) -> 'Sound':
         """ Generate sine wave sound
 
         This example makes 440Hz sine wave sound.
@@ -98,10 +99,26 @@ class Sound:
         Recommend using from_sinwave() as possible.
 
 
+        Make a smooth end if smooth_end is true. but duration will inaccuracy.
+        This error is not critical most cases so smooth_end is true by default.
+
+        >>> sound = Sound.from_sinwave(880, duration=1.0, smooth_end=True)
+        >>> sound.duration
+        1.017687074829932
+
+        Please pass false to smooth_end if want accurate duration. But please
+        be careful, may make noise in end of sound if disable smooth_end.
+
+        >>> sound = Sound.from_sinwave(880, duration=1.0, smooth_end=False)
+        >>> sound.duration
+        1.0
+
+
         frequency  -- Frequency of new sound.
         duration   -- Duration in seconds of new sound.
         volume     -- The volume of new sound.
         samplerate -- Sampling rate of new sound.
+        smooth_end -- Do make smooth end or not. Please see above.
 
         return -- A new Sound instance.
         """
@@ -111,15 +128,19 @@ class Sound:
 
         wavelength = samplerate / frequency
 
-        one_wave = numpy.sin(numpy.arange(wavelength) / wavelength
-                             * 2 * numpy.pi)
+        one_wave = numpy.sin(
+            numpy.arange(wavelength) / wavelength * 2 * numpy.pi
+        ) * volume
 
         repeat_count = int(numpy.round(duration * samplerate / wavelength))
         repeated = numpy.repeat(one_wave.reshape([1, -1]),
                                 repeat_count,
-                                axis=0)
+                                axis=0).flatten()
 
-        return cls(repeated.flatten() * volume, samplerate)
+        if smooth_end is False:
+            repeated = repeated[:int(numpy.round(duration * samplerate))]
+
+        return cls(repeated, samplerate)
 
     @classmethod
     def from_sawtoothwave(cls,
