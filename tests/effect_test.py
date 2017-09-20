@@ -53,17 +53,17 @@ class PassFilterTest(unittest.TestCase):
     def setUp(self):
         self.a = Sound.from_sinwave(100,
                                     duration=0.1,
-                                    volume=1/3,
+                                    volume=1 / 3,
                                     samplerate=60000)
 
         self.b = Sound.from_sinwave(200,
                                     duration=0.1,
-                                    volume=1/3,
+                                    volume=1 / 3,
                                     samplerate=60000)
 
         self.c = Sound.from_sinwave(300,
                                     duration=0.1,
-                                    volume=1/3,
+                                    volume=1 / 3,
                                     samplerate=60000)
 
         self.ab = overlay(self.a, self.b)
@@ -109,9 +109,9 @@ class ChangeSpeedTest(unittest.TestCase):
     def test_change_speed(self):
         sound = Sound.from_array([-0.4, -0.2, 0.0, 0.2, 0.4], 5)
 
-        self.assertEqual(ChangeSpeed(5/9).apply(sound),
+        self.assertEqual(ChangeSpeed(5 / 9).apply(sound),
                          Sound.from_array([-0.4, -0.3, -0.2, -0.1, 0.0, 0.1,
                                            0.2, 0.3, 0.4], 5))
 
-        self.assertEqual(ChangeSpeed(5/3).apply(sound),
+        self.assertEqual(ChangeSpeed(5 / 3).apply(sound),
                          Sound.from_array([-0.4, 0.0, 0.4], 5))

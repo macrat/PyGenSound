@@ -130,13 +130,13 @@ class SoundTest(unittest.TestCase):
         sound = Sound.silence(100)
 
         self.assertEqual(sound.samplerate, 100)
-        self.assertEqual(sound.duration, 1/100)
+        self.assertEqual(sound.duration, 1 / 100)
         self.assertEqual(tuple(sound.data), (0, ))
 
         sound = Sound.silence(20)
 
         self.assertEqual(sound.samplerate, 20)
-        self.assertEqual(sound.duration, 1/20)
+        self.assertEqual(sound.duration, 1 / 20)
         self.assertEqual(tuple(sound.data), (0, ))
 
     def test_whitenoise(self):
@@ -179,9 +179,9 @@ class SoundTest(unittest.TestCase):
         self.assertEqual(sound.duration, 2)
         self.assertEqual(tuple(sound.data), (0.0, 0.1, 0.2, 0.0, 0.1, 0.2))
 
-        sound = sound.repeat(2/3)
+        sound = sound.repeat(2 / 3)
 
-        self.assertEqual(sound.duration, 2/3)
+        self.assertEqual(sound.duration, 2 / 3)
         self.assertEqual(tuple(sound.data), (0.0, 0.1))
 
     def test_trim(self):
@@ -190,14 +190,14 @@ class SoundTest(unittest.TestCase):
         self.assertEqual(sound.duration, 1)
         self.assertEqual(tuple(sound.data), (0.0, 0.1, 0.2))
 
-        sound = sound.trim(2/3)
+        sound = sound.trim(2 / 3)
 
-        self.assertEqual(sound.duration, 2/3)
+        self.assertEqual(sound.duration, 2 / 3)
         self.assertEqual(tuple(sound.data), (0.0, 0.1))
 
-        sound = sound.trim(1/3)
+        sound = sound.trim(1 / 3)
 
-        self.assertEqual(sound.duration, 1/3)
+        self.assertEqual(sound.duration, 1 / 3)
         self.assertEqual(tuple(sound.data), (0.0, ))
 
     def test_split(self):
@@ -206,12 +206,12 @@ class SoundTest(unittest.TestCase):
         self.assertEqual(sound.duration, 1)
         self.assertEqual(tuple(sound.data), (0.0, 0.1, 0.2, 0.3))
 
-        a, b = sound.split(1/2)
+        a, b = sound.split(1 / 2)
 
         self.assertEqual(a, Sound.from_array([0.0, 0.1], 4))
         self.assertEqual(b, Sound.from_array([0.2, 0.3], 4))
 
-        c, d = sound.split(1/4)
+        c, d = sound.split(1 / 4)
 
         self.assertEqual(c, Sound.from_array([0.0], 4))
         self.assertEqual(d, Sound.from_array([0.1, 0.2, 0.3], 4))
@@ -235,7 +235,6 @@ class SoundTest(unittest.TestCase):
 
         self.assertEqual(b.overlay(a),
                          Sound.from_array([0.2, 0.4, 0.4], 2))
-
 
     def test_save_and_load(self):
         original = Sound.from_sinwave(440).concat(Sound.from_sinwave(880))
