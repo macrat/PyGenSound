@@ -167,12 +167,9 @@ class LowPassFilter(Effect):
         self.freq = freq
 
     def apply(self, sound: Sound) -> Sound:
-        f = numpy.fft.rfft(sound.data)
-        freq = numpy.fft.rfftfreq(len(sound.data))
-
-        f[freq > self.freq / sound.samplerate] = 0
-
-        return Sound(numpy.fft.irfft(f), sound.samplerate)
+        f = sound.fft()
+        f[f[:, 0] > self.freq, 1] = 0
+        return Sound.from_fft(f, sound.samplerate)
 
 
 class HighPassFilter(Effect):
@@ -186,12 +183,9 @@ class HighPassFilter(Effect):
         self.freq = freq
 
     def apply(self, sound: Sound) -> Sound:
-        f = numpy.fft.rfft(sound.data)
-        freq = numpy.fft.rfftfreq(len(sound.data))
-
-        f[freq < self.freq / sound.samplerate] = 0
-
-        return Sound(numpy.fft.irfft(f), sound.samplerate)
+        f = sound.fft()
+        f[f[:, 0] < self.freq, 1] = 0
+        return Sound.from_fft(f, sound.samplerate)
 
 
 class Resampling(Effect):

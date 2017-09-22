@@ -245,6 +245,24 @@ class Sound:
 
         return Sound(numpy.array(array), samplerate)
 
+    @classmethod
+    def from_fft(cls,
+                 spectrum: numpy.array,
+                 samplerate: float = None) -> 'Sound':
+        """ Make new sound from spectrum data like a result from fft() method.
+
+
+        spectrum   -- A spectrum data. Please see fft() method about a format.
+        samplerate -- Sampling rate of new sound. Use spectrum data if None.
+
+        return -- A new Sound instance.
+        """
+
+        if samplerate is None:
+            samplerate = spectrum[-1, 0].real * 2
+
+        return Sound(numpy.fft.irfft(spectrum[:, 1]), samplerate)
+
     @property
     def duration(self) -> float:
         """ Duration in seconds of this sound """
@@ -275,6 +293,19 @@ class Sound:
 
         return (self.samplerate == another.samplerate
                 and numpy.allclose(self.data, another.data))
+
+    def fft(self) -> numpy.array:
+        """ Calculate fft
+
+        return -- An array that pair of frequency and value.
+        """
+
+        return numpy.hstack([
+            (
+                numpy.fft.rfftfreq(len(self.data)) * self.samplerate
+            ).reshape([-1, 1]),
+            numpy.fft.rfft(self.data).reshape([-1, 1]),
+        ])
 
     def change_volume(self, vol: float) -> 'Sound':
         """ Create a new instance that changed volume

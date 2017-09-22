@@ -192,6 +192,27 @@ class SoundTest(unittest.TestCase):
         self.assertTrue((-0.1 <= sound.data).all())
         self.assertTrue((sound.data <= 0.1).all())
 
+    def test_from_fft(self):
+        f = numpy.zeros([1024 // 2 + 1, 2], numpy.complex)
+        f[-1, 0] = 1024 // 2
+        f[128, 1] = numpy.complex(0, -numpy.pi)
+
+        s = Sound.from_fft(f).change_volume(1.0)
+
+        self.assertEqual(s.samplerate, 1024)
+        self.assertEqual(s.duration, 1.0)
+
+        from_sin = Sound.from_sinwave(128, samplerate=1024)
+        self.assertTrue(numpy.allclose(s.data, from_sin.data))
+
+    def test_fft(self):
+        sound = Sound.from_sinwave(440, duration=0.1)
+        f = sound.fft()
+
+        self.assertTrue((0 <= f[:, 0]).all())
+        self.assertTrue((f[:, 0] <= sound.samplerate).all())
+        self.assertEqual(f[:, 1].argmax(), abs(f[:, 0] - 440).argmin())
+
     def test_volume(self):
         sound = Sound.from_sinwave(440)
 
