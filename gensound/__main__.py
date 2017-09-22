@@ -195,12 +195,14 @@ def make_parser(prog: str = 'gensound'):
     subparsers = parser.add_subparsers(title='commands', metavar='COMMAND')
 
     sine = subparsers.add_parser('sine',
+                                 help='Generate sine wave sound.',
                                  description='Generate sine wave sound.')
     _setup_gencommand(sine)
     sine.set_defaults(handler=command_sine)
 
     sawtooth = subparsers.add_parser(
         'sawtooth',
+        help='Generate sawtooth wave sound.',
         description='Generate sawtooth wave sound.',
     )
     _setup_gencommand(sawtooth)
