@@ -104,6 +104,27 @@ class ResamplingTest(unittest.TestCase):
         self.assertEqual(Resampling(3).apply(sound),
                          Sound.from_array([-0.4, 0.0, 0.4], 3))
 
+    def test_same_samplerate(self):
+        sound = Sound.from_sinwave(440, samplerate=44100)
+
+        resample_to_same_rate = Resampling(sound.samplerate).apply(sound)
+
+        self.assertIs(resample_to_same_rate, sound)
+        self.assertTrue((resample_to_same_rate.data == sound.data).all())
+
+    def test_twice_resampling(self):
+        sound = Sound.from_sinwave(440, samplerate=44100)
+
+        twice_resampler = Resampling(48000).then(Resampling(sound.samplerate))
+        twice_resampled = twice_resampler.apply(sound)
+
+        self.assertEqual(twice_resampled.samplerate, sound.samplerate)
+        self.assertIsNot(twice_resampled, sound)
+        self.assertFalse((twice_resampled.data == sound.data).all())
+        self.assertTrue(numpy.allclose(twice_resampled.data,
+                                       sound.data,
+                                       atol=0.01))
+
 
 class ChangeSpeedTest(unittest.TestCase):
     def test_change_speed(self):

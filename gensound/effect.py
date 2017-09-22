@@ -193,6 +193,9 @@ class Resampling(Effect):
 
     Change sampling rate without changes sound duration.
 
+    If the sampling rate of passed sound is same as target sampling rate, will
+    return the same instance without re-sampling process.
+
 
     This example does resampling from 44100 Hz to 88200 Hz.
 
@@ -221,6 +224,9 @@ class Resampling(Effect):
         self.kind = kind
 
     def apply(self, sound: Sound) -> Sound:
+        if sound.samplerate == self.samplerate:
+            return sound
+
         length = len(sound.data)
         f = scipy.interpolate.interp1d(numpy.linspace(0, 1, length),
                                        sound.data,
