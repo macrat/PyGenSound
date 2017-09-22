@@ -257,6 +257,16 @@ class Sound:
 
         return self._samplerate
 
+    @property
+    def volume(self) -> float:
+        """ Volume of this dound
+
+        This volume means the maximum value of the wave.
+        Please be careful that is not gain.
+        """
+
+        return max(self.data.max(), -self.data.min())
+
     def __eq__(self, another: typing.Any) -> bool:
         """ Compare with another Sound instance """
 
@@ -266,7 +276,7 @@ class Sound:
         return (self.samplerate == another.samplerate
                 and numpy.allclose(self.data, another.data))
 
-    def volume(self, vol: float) -> 'Sound':
+    def change_volume(self, vol: float) -> 'Sound':
         """ Create a new instance that changed volume
 
         This volume means the maximum value of the wave.
@@ -280,10 +290,8 @@ class Sound:
         >>> -0.999 >= sound.data.min() >= -1.0
         True
 
-        >>> half = sound.volume(0.5)
-        >>> 0.499 <= half.data.max() <= 0.501
-        True
-        >>> -0.499 >= half.data.min() >= -0.501
+        >>> half = sound.change_volume(0.5)
+        >>> 0.499 <= half.volume <= 0.501
         True
 
 
@@ -293,7 +301,7 @@ class Sound:
         """
 
         return Sound(
-            self.data * (vol / numpy.max([-self.data.min(), self.data.max()])),
+            self.data * (vol / self.volume),
             self.samplerate
         )
 

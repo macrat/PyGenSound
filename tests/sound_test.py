@@ -111,8 +111,7 @@ class SoundTest(unittest.TestCase):
 
         self.assertEqual(sound.samplerate, 44100)
         self.assertTrue(abs(sound.duration - 1) < 0.01)
-        self.assertTrue(abs(sound.data.max() - 0.5) < 1e-04)
-        self.assertTrue(abs(sound.data.min() + 0.5) < 1e-04)
+        self.assertTrue(abs(sound.volume - 0.5) < 1e-04)
 
         sound = Sound.from_sinwave(880,
                                    duration=2,
@@ -122,8 +121,7 @@ class SoundTest(unittest.TestCase):
 
         self.assertEqual(sound.samplerate, 88200)
         self.assertTrue(abs(sound.duration - 2) < 0.02)
-        self.assertTrue(abs(sound.data.max() - 0.8) < 1e-04)
-        self.assertTrue(abs(sound.data.min() + 0.8) < 1e-04)
+        self.assertTrue(abs(sound.volume - 0.8) < 1e-04)
 
     def test_from_sinwave_without_smooth_end(self):
         sound = Sound.from_sinwave(440,
@@ -134,8 +132,7 @@ class SoundTest(unittest.TestCase):
 
         self.assertEqual(sound.samplerate, 44100)
         self.assertTrue(sound.duration, 1.0)
-        self.assertTrue(abs(sound.data.max() - 0.5) < 1e-04)
-        self.assertTrue(abs(sound.data.min() + 0.5) < 1e-04)
+        self.assertTrue(abs(sound.volume - 0.5) < 1e-04)
 
         sound = Sound.from_sinwave(880,
                                    duration=2,
@@ -145,8 +142,7 @@ class SoundTest(unittest.TestCase):
 
         self.assertEqual(sound.samplerate, 88200)
         self.assertTrue(sound.duration, 2.0)
-        self.assertTrue(abs(sound.data.max() - 0.8) < 1e-04)
-        self.assertTrue(abs(sound.data.min() + 0.8) < 1e-04)
+        self.assertTrue(abs(sound.volume - 0.8) < 1e-04)
 
     def test_from_sawtoothwave(self):
         sound = Sound.from_sawtoothwave(440,
@@ -158,8 +154,7 @@ class SoundTest(unittest.TestCase):
         self.assertEqual(sound.duration, 1.0)
         self.assertTrue((-0.5 <= sound.data).all())
         self.assertTrue((sound.data <= 0.5).all())
-        self.assertEqual(sound.data.max(), 0.5)
-        self.assertEqual(sound.data.min(), -0.5)
+        self.assertEqual(sound.volume, 0.5)
 
         sound = Sound.from_sawtoothwave(880,
                                         duration=2,
@@ -170,8 +165,7 @@ class SoundTest(unittest.TestCase):
         self.assertTrue(sound.duration, 2.0)
         self.assertTrue((-0.8 <= sound.data).all())
         self.assertTrue((sound.data <= 0.8).all())
-        self.assertTrue(sound.data.max(), 0.8)
-        self.assertTrue(sound.data.min(), -0.8)
+        self.assertTrue(sound.volume, 0.8)
 
         sound = Sound.from_sawtoothwave(1, duration=2, samplerate=3)
         self.assertTrue(numpy.allclose(sound.data,
@@ -201,23 +195,19 @@ class SoundTest(unittest.TestCase):
     def test_volume(self):
         sound = Sound.from_sinwave(440)
 
-        self.assertTrue(abs(sound.data.max() - 1) < 1e-04)
-        self.assertTrue(abs(sound.data.min() + 1) < 1e-04)
+        self.assertTrue(abs(sound.volume - 1) < 1e-04)
 
-        sound = sound.volume(0.8)
+        sound = sound.change_volume(0.8)
 
-        self.assertTrue(abs(sound.data.max() - 0.8) < 1e-04)
-        self.assertTrue(abs(sound.data.min() + 0.8) < 1e-04)
+        self.assertTrue(abs(sound.volume - 0.8) < 1e-04)
 
-        sound = sound.volume(0.3)
+        sound = sound.change_volume(0.3)
 
-        self.assertTrue(abs(sound.data.max() - 0.3) < 1e-04)
-        self.assertTrue(abs(sound.data.min() + 0.3) < 1e-04)
+        self.assertTrue(abs(sound.volume - 0.3) < 1e-04)
 
-        sound = sound.volume(1.0)
+        sound = sound.change_volume(1.0)
 
-        self.assertTrue(abs(sound.data.max() - 1) < 1e-04)
-        self.assertTrue(abs(sound.data.min() + 1) < 1e-04)
+        self.assertTrue(abs(sound.volume - 1) < 1e-04)
 
     def test_repeat(self):
         sound = Sound.from_array([0.0, 0.1, 0.2], 3)
