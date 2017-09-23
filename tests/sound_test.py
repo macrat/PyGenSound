@@ -172,17 +172,17 @@ class SoundTest(unittest.TestCase):
                                        (-1.0, 0.0, 1.0, -1.0, 0.0, 1.0)))
 
     def test_silence(self):
-        sound = Sound.silence(100)
+        sound = Sound.silence(duration=1.0, samplerate=100)
 
         self.assertEqual(sound.samplerate, 100)
-        self.assertEqual(sound.duration, 1 / 100)
-        self.assertEqual(tuple(sound.data), (0, ))
+        self.assertEqual(sound.duration, 1.0)
+        self.assertTrue((sound.data == 0).all())
 
-        sound = Sound.silence(20)
+        sound = Sound.silence(duration=2.0, samplerate=20)
 
         self.assertEqual(sound.samplerate, 20)
-        self.assertEqual(sound.duration, 1 / 20)
-        self.assertEqual(tuple(sound.data), (0, ))
+        self.assertEqual(sound.duration, 2.0)
+        self.assertTrue((sound.data == 0).all())
 
     def test_whitenoise(self):
         sound = Sound.from_whitenoise(duration=2, volume=0.1, samplerate=100)

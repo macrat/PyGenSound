@@ -7,7 +7,7 @@
 >>> a = fade_out.apply(a)
 >>> b = Sound.from_sinwave(880, duration=2.0, volume=1.0)
 >>> b = fade_out.apply(b)
->>> wait = Sound.silence().repeat(0.9)
+>>> wait = Sound.silence(duration=0.9)
 >>> #concat(a, wait, a, wait, a, wait, b).write('test.wav')
 """
 
@@ -166,27 +166,21 @@ class Sound:
         return cls((data * 2 - 1) * volume, samplerate)
 
     @classmethod
-    def silence(cls, samplerate: float = 44100) -> 'Sound':
+    def silence(cls,
+                duration: float = 1.0,
+                samplerate: float = 44100) -> 'Sound':
         """ Generate silent sound
 
-        This function returns VERY VERY short sound.
-
-        >>> Sound.silence().duration < 0.0001
-        True
-
-        Please use repeat function.
-
-        >>> silence = Sound.silence().repeat(1)
-        >>> abs(silence.duration - 1) < 0.0001
-        True
-
-
+        duration   -- Duration of new sound.
         samplerate -- Sampling rate of new sound.
 
         return -- A new Sound instance.
         """
+        assert duration > 0
+        assert samplerate > 0
 
-        return cls(numpy.array([0]), samplerate)
+        length = int(numpy.round(duration * samplerate))
+        return cls(numpy.array([0] * length), samplerate)
 
     @classmethod
     def from_whitenoise(cls,

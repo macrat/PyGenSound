@@ -30,7 +30,7 @@ NHKの時報を作るやつ。
 import gensound
 
 
-wait = gensound.Sound.silence().repeat(0.9)  # Generate 0.9 seconds silence
+wait = gensound.Sound.silence(duration=0.9)  # Generate 0.9 seconds silence
 a = gensound.Sound.from_sinwave(440, duration=0.1, volume=1.0).concat(wait)  # Generate 440Hz sin wave 0.1 seconds, and 0.9 seconds silence
 b = gensound.Sound.from_sinwave(880, duration=1.0, volume=1.0)  # Generate 880Hz sin wave 1 seconds
 
