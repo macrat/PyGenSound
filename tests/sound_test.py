@@ -449,15 +449,19 @@ class SoundTest(unittest.TestCase):
     def test_trim_just_invalid(self):
         sound = Sound.from_array([0.0, 0.1, 0.2], 3)
 
-        with self.assertRaises(InvalidDurationError) as cm:
+        with self.assertRaises(OutOfDurationError) as cm:
             sound[-0.001]
 
         self.assertEqual(cm.exception.duration, -0.001)
+        self.assertEqual(cm.exception.min, 0)
+        self.assertEqual(cm.exception.max, 1)
 
-        with self.assertRaises(InvalidDurationError) as cm:
+        with self.assertRaises(OutOfDurationError) as cm:
             sound[3.001]
 
         self.assertEqual(cm.exception.duration, 3.001)
+        self.assertEqual(cm.exception.min, 0)
+        self.assertEqual(cm.exception.max, 1)
 
     def test_trim_head(self):
         sound = Sound.from_array([0.0, 0.1, 0.2], 3)

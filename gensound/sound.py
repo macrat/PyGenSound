@@ -101,12 +101,21 @@ class DifferentSamplerateError(InvalidSamplerateError):
 class InvalidDurationError(ValueError):
     """ The exception that raises when passed sound was invalid duration """
 
-    def __init__(self,
-                 duration: float,
-                 msg: str = 'duration of sound must not 0 or short') -> None:
-
-        super().__init__('{} but got {}'.format(msg, duration))
+    def __init__(self, duration: float) -> None:
+        super().__init__('duration of sound must not 0 or short but got {}'
+                         .format(duration))
         self.duration = duration
+
+
+class OutOfDurationError(IndexError):
+    """ The exception that raises when passed index that out of duration """
+
+    def __init__(self, duration: float, min_: float, max_: float) -> None:
+        super().__init__('index must between {} to {} but got {}'
+                         .format(min_, max_, duration))
+        self.duration = duration
+        self.min = min_
+        self.max = max_
 
 
 class InvalidVolumeError(ValueError):
@@ -424,10 +433,7 @@ class Sound:
 
         if isinstance(position, (int, float)):
             if position < 0 or self.duration < position:
-                msg = ('duration must between 0 to this sound duration({:.2})'
-                       .format(self.duration))
-
-                raise InvalidDurationError(position, msg)
+                raise OutOfDurationError(position, 0.0, self.duration)
 
             index = int(numpy.round(position * self.samplerate))
             if index >= len(self.data):
