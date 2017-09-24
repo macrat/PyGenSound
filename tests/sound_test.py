@@ -187,8 +187,8 @@ class SoundTest(unittest.TestCase):
                                    smooth_end=True)
 
         self.assertEqual(sound.samplerate, 44100)
-        self.assertTrue(abs(sound.duration - 1) < 0.01)
-        self.assertTrue(abs(sound.volume - 0.5) < 1e-04)
+        self.assertAlmostEqual(sound.duration, 1, places=1)
+        self.assertAlmostEqual(sound.volume, 0.5, places=4)
 
         sound = Sound.from_sinwave(880,
                                    duration=2,
@@ -197,8 +197,8 @@ class SoundTest(unittest.TestCase):
                                    smooth_end=True)
 
         self.assertEqual(sound.samplerate, 88200)
-        self.assertTrue(abs(sound.duration - 2) < 0.02)
-        self.assertTrue(abs(sound.volume - 0.8) < 1e-04)
+        self.assertAlmostEqual(sound.duration, 2, places=1)
+        self.assertAlmostEqual(sound.volume, 0.8, places=4)
 
     def test_from_sinwave_without_smooth_end(self):
         sound = Sound.from_sinwave(440,
@@ -208,8 +208,8 @@ class SoundTest(unittest.TestCase):
                                    smooth_end=False)
 
         self.assertEqual(sound.samplerate, 44100)
-        self.assertTrue(sound.duration, 1.0)
-        self.assertTrue(abs(sound.volume - 0.5) < 1e-04)
+        self.assertEqual(sound.duration, 1.0)
+        self.assertAlmostEqual(sound.volume, 0.5, places=4)
 
         sound = Sound.from_sinwave(880,
                                    duration=2,
@@ -218,8 +218,8 @@ class SoundTest(unittest.TestCase):
                                    smooth_end=False)
 
         self.assertEqual(sound.samplerate, 88200)
-        self.assertTrue(sound.duration, 2.0)
-        self.assertTrue(abs(sound.volume - 0.8) < 1e-04)
+        self.assertEqual(sound.duration, 2.0)
+        self.assertAlmostEqual(sound.volume, 0.8, places=4)
 
     def test_from_sinwave_invalid(self):
         with self.assertRaises(InvalidFrequencyError) as cm:
@@ -385,19 +385,19 @@ class SoundTest(unittest.TestCase):
     def test_volume(self):
         sound = Sound.from_sinwave(440)
 
-        self.assertTrue(abs(sound.volume - 1) < 1e-04)
+        self.assertAlmostEqual(sound.volume, 1, places=4)
 
         sound = sound.change_volume(0.8)
 
-        self.assertTrue(abs(sound.volume - 0.8) < 1e-04)
+        self.assertAlmostEqual(sound.volume, 0.8, places=4)
 
         sound = sound.change_volume(0.3)
 
-        self.assertTrue(abs(sound.volume - 0.3) < 1e-04)
+        self.assertAlmostEqual(sound.volume, 0.3, places=4)
 
         sound = sound.change_volume(1.0)
 
-        self.assertTrue(abs(sound.volume - 1) < 1e-04)
+        self.assertAlmostEqual(sound.volume, 1, places=4)
 
     def test_volume_invalid(self):
         sound = Sound.from_sinwave(440)
