@@ -241,20 +241,20 @@ class ChangeSpeed(Effect):
     Change sound duration without changes sampling rate.
 
 
-    >>> original = Sound.from_sinwave(440, duration=1)
-    >>> abs(original.duration - 1) < 0.01
+    >>> original = Sound.from_sinwave(440, duration=1, smooth_end=False)
+    >>> original.duration == 1.0
     True
 
     This example changes duration from 1sec to 2sec.
 
     >>> slow = ChangeSpeed(2).apply(original)
-    >>> abs(slow.duration - 2) < 0.01
+    >>> slow.duration == 0.5
     True
 
     And, changes duration to 0.5sec.
 
     >>> fast = ChangeSpeed(0.5).apply(original)
-    >>> abs(fast.duration - 0.5) < 0.01
+    >>> fast.duration == 2.0
     True
 
     Sampling rate will not be changed.
