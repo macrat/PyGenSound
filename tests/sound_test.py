@@ -160,6 +160,9 @@ class SoundTest(unittest.TestCase):
         self.assertEqual(a, a)
         self.assertEqual(b, b)
         self.assertNotEqual(a, b)
+        self.assertNotEqual(a, None)
+        self.assertNotEqual(a, 1)
+        self.assertNotEqual(a, 'a')
 
     def test_from_array(self):
         self.assertEqual(Sound(numpy.array([-0.5, 0.5]), 44100),
