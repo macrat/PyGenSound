@@ -397,6 +397,58 @@ class Sound:
         return (self.samplerate == another.samplerate
                 and numpy.allclose(self.data, another.data))
 
+    def __ne__(self, another: typing.Any) -> bool:
+        return not (self == another)
+
+    def __getitem__(self, position: typing.Union[float, slice]) -> 'Sound':
+        """ Slice a sound
+
+        If passed float a position, returns very short sound that only has
+        1/samplerate seconds.
+
+        >>> sound = Sound.from_sinwave(440)
+
+        >>> short_sound = sound[0.5]
+        >>> short_sound.duration == 1 / sound.samplerate
+        True
+
+
+        The step of the slice is not supported. Will raise ValueError if passed
+        slice that has a step.
+
+
+        position -- A position in seconds in float or slice.
+
+        return -- A new Sound instance that sliced.
+        """
+
+        if isinstance(position, (int, float)):
+            if position < 0 or self.duration < position:
+                msg = ('duration must between 0 to this sound duration({:.2})'
+                       .format(self.duration))
+
+                raise InvalidDurationError(position, msg)
+
+            index = int(numpy.round(position * self.samplerate))
+            if index >= len(self.data):
+                index = len(self.data) - 1
+            data = numpy.array([self.data[index]])
+        else:
+            if position.step is not None:
+                raise ValueError('step is not supported')
+
+            start = position.start
+            if start is not None:
+                start = int(numpy.round(start * self.samplerate))
+
+            stop = position.stop
+            if stop is not None:
+                stop = int(numpy.round(stop * self.samplerate))
+
+            data = self.data[start:stop]
+
+        return Sound(data, self.samplerate)
+
     def fft(self) -> numpy.array:
         """ Calculate fft
 
@@ -450,12 +502,12 @@ class Sound:
         5.0
 
         This function can not only repeat but trimming.
-        But recommend use trim function because become hard to understand
-        if using it for trimming.
+        But recommend use slice because become hard to understand if using it
+        for trimming.
 
         >>> sound.repeat(0.5).duration
         0.5
-        >>> sound.repeat(0.5) == sound.trim(0.5)
+        >>> sound.repeat(0.5) == sound[:0.5]
         True
 
 
@@ -473,65 +525,11 @@ class Sound:
             self.samplerate,
         )
 
-    def trim(self, duration: float) -> 'Sound':
-        """ Create a new instance that trimmed
-
-        >>> sound = Sound.from_sinwave(440)
-        >>> sound.trim(0.5).duration
-        0.5
-
-
-        duration -- Duration in seconds of new sound.
-                    Must be equals or shorter than original duration.
-
-        return -- A new Sound instance that trimmed.
-        """
-
-        if duration <= 0 or self.duration <= duration:
-            msg = ('duration must between 0 to this sound duration({:.2})'
-                   .format(self.duration))
-
-            raise InvalidDurationError(duration, msg)
-
-        return Sound(
-            self.data[:int(numpy.round(duration * self.samplerate))],
-            self.samplerate,
-        )
-
-    def split(self, duration: float) -> typing.Tuple['Sound', 'Sound']:
-        """ Spit sound
-
-        >>> sound = Sound.from_sinwave(440, duration=3)
-        >>> a, b = sound.split(1)
-        >>> abs(a.duration - 1.0) < 0.1
-        True
-        >>> abs(b.duration - 2.0) < 0.1
-        True
-        >>> a.concat(b) == sound
-        True
-
-
-        duration -- The pivot of sound splitting.
-
-        return -- Splitted sounds.
-        """
-
-        if duration <= 0 or self.duration <= duration:
-            msg = ('duration must between 0 to this sound duration({:.2})'
-                   .format(self.duration))
-
-            raise InvalidDurationError(duration, msg)
-
-        pivot = int(numpy.round(duration * self.samplerate))
-
-        return (Sound(self.data[:pivot], self.samplerate),
-                Sound(self.data[pivot:], self.samplerate))
-
     def concat(self, other: 'Sound') -> 'Sound':
         """ Create a new instance that concatenated another sound
 
         >>> sound = Sound.from_sinwave(440, duration=3)
-        >>> a, b = sound.split(1)
+        >>> a, b = sound[:1], sound[1:]
         >>> a.concat(b) == sound
         True
 

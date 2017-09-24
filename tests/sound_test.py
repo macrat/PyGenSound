@@ -153,6 +153,14 @@ class SoundTest(unittest.TestCase):
                                msg='multiple channel sound is not supported'):
             Sound(numpy.array([[1, 2], [3, 4]]), 1)
 
+    def test_equals(self):
+        a = Sound.from_array([0.1, 0.2, 0.3], 1)
+        b = Sound.from_array([0.4, 0.5, 0.6], 1)
+
+        self.assertEqual(a, a)
+        self.assertEqual(b, b)
+        self.assertNotEqual(a, b)
+
     def test_from_array(self):
         self.assertEqual(Sound(numpy.array([-0.5, 0.5]), 44100),
                          Sound.from_array([-0.5, 0.5], 44100))
@@ -428,63 +436,129 @@ class SoundTest(unittest.TestCase):
 
         self.assertEqual(cm.exception.duration, 0)
 
-    def test_trim(self):
+    def test_trim_just(self):
+        sound = Sound.from_array([0.0, 0.1, 0.2], 1)
+
+        self.assertEqual(tuple(sound[0.0].data), (0.0, ))
+        self.assertEqual(tuple(sound[0.4999999999].data), (0.0, ))
+        self.assertEqual(tuple(sound[0.5000000001].data), (0.1, ))
+        self.assertEqual(tuple(sound[1.0].data), (0.1, ))
+        self.assertEqual(tuple(sound[2.0].data), (0.2, ))
+        self.assertEqual(tuple(sound[3.0].data), (0.2, ))
+
+    def test_trim_just_invalid(self):
+        sound = Sound.from_array([0.0, 0.1, 0.2], 3)
+
+        with self.assertRaises(InvalidDurationError) as cm:
+            sound[-0.001]
+
+        self.assertEqual(cm.exception.duration, -0.001)
+
+        with self.assertRaises(InvalidDurationError) as cm:
+            sound[3.001]
+
+        self.assertEqual(cm.exception.duration, 3.001)
+
+    def test_trim_head(self):
         sound = Sound.from_array([0.0, 0.1, 0.2], 3)
 
         self.assertEqual(sound.duration, 1)
         self.assertEqual(tuple(sound.data), (0.0, 0.1, 0.2))
 
-        sound = sound.trim(2 / 3)
+        sound = sound[:2 / 3]
 
         self.assertEqual(sound.duration, 2 / 3)
         self.assertEqual(tuple(sound.data), (0.0, 0.1))
 
-        sound = sound.trim(1 / 3)
+        sound = sound[:1 / 3]
 
         self.assertEqual(sound.duration, 1 / 3)
         self.assertEqual(tuple(sound.data), (0.0, ))
 
-    def test_trim_invalid(self):
-        sound = Sound.from_sinwave(440, duration=1)
-
-        with self.assertRaises(InvalidDurationError) as cm:
-            sound.trim(0)
-
-        self.assertEqual(cm.exception.duration, 0)
-
-        with self.assertRaises(InvalidDurationError) as cm:
-            sound.trim(1.1)
-
-        self.assertEqual(cm.exception.duration, 1.1)
-
-    def test_split(self):
-        sound = Sound.from_array([0.0, 0.1, 0.2, 0.3], 4)
+    def test_trim_head_by_end(self):
+        sound = Sound.from_array([0.0, 0.1, 0.2], 3)
 
         self.assertEqual(sound.duration, 1)
-        self.assertEqual(tuple(sound.data), (0.0, 0.1, 0.2, 0.3))
+        self.assertEqual(tuple(sound.data), (0.0, 0.1, 0.2))
 
-        a, b = sound.split(1 / 2)
+        sound = sound[:-1 / 3]
 
-        self.assertEqual(a, Sound.from_array([0.0, 0.1], 4))
-        self.assertEqual(b, Sound.from_array([0.2, 0.3], 4))
+        self.assertEqual(sound.duration, 2 / 3)
+        self.assertEqual(tuple(sound.data), (0.0, 0.1))
 
-        c, d = sound.split(1 / 4)
+        sound = sound[:-1 / 3]
 
-        self.assertEqual(c, Sound.from_array([0.0], 4))
-        self.assertEqual(d, Sound.from_array([0.1, 0.2, 0.3], 4))
+        self.assertEqual(sound.duration, 1 / 3)
+        self.assertEqual(tuple(sound.data), (0.0, ))
 
-    def test_split_invalid(self):
-        sound = Sound.from_sinwave(440, duration=1)
+    def test_trim_tail(self):
+        sound = Sound.from_array([0.0, 0.1, 0.2], 3)
 
-        with self.assertRaises(InvalidDurationError) as cm:
-            sound.split(0)
+        self.assertEqual(sound.duration, 1)
+        self.assertEqual(tuple(sound.data), (0.0, 0.1, 0.2))
 
-        self.assertEqual(cm.exception.duration, 0)
+        sound = sound[1 / 3:]
 
-        with self.assertRaises(InvalidDurationError) as cm:
-            sound.split(1.1)
+        self.assertEqual(sound.duration, 2 / 3)
+        self.assertEqual(tuple(sound.data), (0.1, 0.2))
 
-        self.assertEqual(cm.exception.duration, 1.1)
+        sound = sound[1 / 3:]
+
+        self.assertEqual(sound.duration, 1 / 3)
+        self.assertEqual(tuple(sound.data), (0.2, ))
+
+    def test_trim_tail_by_end(self):
+        sound = Sound.from_array([0.0, 0.1, 0.2], 3)
+
+        self.assertEqual(sound.duration, 1)
+        self.assertEqual(tuple(sound.data), (0.0, 0.1, 0.2))
+
+        sound = sound[-2 / 3:]
+
+        self.assertEqual(sound.duration, 2 / 3)
+        self.assertEqual(tuple(sound.data), (0.1, 0.2))
+
+        sound = sound[-1 / 3:]
+
+        self.assertEqual(sound.duration, 1 / 3)
+        self.assertEqual(tuple(sound.data), (0.2, ))
+
+    def test_trim_between(self):
+        sound = Sound.from_array([0.0, 0.1, 0.2], 3)
+
+        self.assertEqual(sound.duration, 1)
+        self.assertEqual(tuple(sound.data), (0.0, 0.1, 0.2))
+
+        sound = sound[1 / 3: 2 / 3]
+
+        self.assertEqual(sound.duration, 1 / 3)
+        self.assertEqual(tuple(sound.data), (0.1, ))
+
+    def test_trim_between_by_end(self):
+        sound = Sound.from_array([0.0, 0.1, 0.2], 3)
+
+        self.assertEqual(sound.duration, 1)
+        self.assertEqual(tuple(sound.data), (0.0, 0.1, 0.2))
+
+        sound = sound[-2 / 3: -1 / 3]
+
+        self.assertEqual(sound.duration, 1 / 3)
+        self.assertEqual(tuple(sound.data), (0.1, ))
+
+    def test_trim_between_invalid(self):
+        sound = Sound.from_sinwave(440)
+
+        with self.assertRaises(InvalidDurationError):
+            sound[0.6:0.5]
+
+        with self.assertRaises(InvalidDurationError):
+            sound[0.5:0.5]
+
+    def test_trim_step(self):
+        sound = Sound.from_sinwave(440)
+
+        with self.assertRaises(ValueError, msg='step is not supported'):
+            sound[::1]
 
     def test_concat(self):
         a = Sound.from_array([0.0, 0.1], 2)
