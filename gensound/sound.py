@@ -88,7 +88,7 @@ class DifferentSamplerateError(InvalidSamplerateError):
     """ The exception that raises when different samplerates of sounds to joint
     """
 
-    def __init__(self, *frequencies: float) -> None:
+    def __init__(self, frequencies: typing.Tuple[float]) -> None:
         ValueError.__init__(
             self,
             'all samplerates must be the same value but got {}'.format(
@@ -128,6 +128,41 @@ class InvalidVolumeError(ValueError):
         self.volume = volume
 
 
+def _assertFrequency(frequency: float) -> None:
+    """ Check if the frequency is greater than 0 """
+
+    if frequency <= 0:
+        raise InvalidFrequencyError(frequency)
+
+
+def _assertSamplerate(samplerate: float) -> None:
+    """ Check if the samplerate is greater than 0 """
+
+    if samplerate <= 0:
+        raise InvalidSamplerateError(samplerate)
+
+
+def _assertSameSamplerate(samplerates: typing.Sequence[float]) -> None:
+    """ Check if all samplerates is same value """
+
+    if any(samplerates[0] != s for s in samplerates[1:]):
+        raise DifferentSamplerateError(tuple(samplerates))
+
+
+def _assertDuration(duration: float) -> None:
+    """ Check if the duration is longer than 0 """
+
+    if duration <= 0:
+        raise InvalidDurationError(duration)
+
+
+def _assertVolume(volume: float) -> None:
+    """ Check if the volume in between 0.0 to 1.0 """
+
+    if volume < 0.0 or 1.0 < volume:
+        raise InvalidVolumeError(volume)
+
+
 class Sound:
     """ The class for handling sound
 
@@ -145,14 +180,11 @@ class Sound:
         samplerate -- Sampling rate of sound data.
         """
 
-        if samplerate <= 0:
-            raise InvalidSamplerateError(samplerate)
+        _assertDuration(len(data))
+        _assertSamplerate(samplerate)
 
         if len(data.shape) != 1:
             raise ValueError('multiple channel sound is not supported')
-
-        if len(data) <= 0:
-            raise InvalidDurationError(0)
 
         self.data = data.clip(-1.0, 1.0)
         self._samplerate = samplerate
@@ -204,17 +236,10 @@ class Sound:
         return -- A new Sound instance.
         """
 
-        if frequency <= 0:
-            raise InvalidFrequencyError(frequency)
-
-        if duration <= 0:
-            raise InvalidDurationError(duration)
-
-        if volume < 0 or 1.0 < volume:
-            raise InvalidVolumeError(volume)
-
-        if samplerate <= 0:
-            raise InvalidSamplerateError(samplerate)
+        _assertDuration(duration)
+        _assertFrequency(frequency)
+        _assertSamplerate(samplerate)
+        _assertVolume(volume)
 
         wavelength = samplerate / frequency
 
@@ -249,17 +274,10 @@ class Sound:
         return -- A new Sound instance.
         """
 
-        if frequency <= 0:
-            raise InvalidFrequencyError(frequency)
-
-        if duration <= 0:
-            raise InvalidDurationError(duration)
-
-        if volume < 0 or 1.0 < volume:
-            raise InvalidVolumeError(volume)
-
-        if samplerate <= 0:
-            raise InvalidSamplerateError(samplerate)
+        _assertDuration(duration)
+        _assertFrequency(frequency)
+        _assertSamplerate(samplerate)
+        _assertVolume(volume)
 
         count = numpy.arange(0, duration, 1 / samplerate) * frequency
         data = count % 1
@@ -279,11 +297,8 @@ class Sound:
         return -- A new Sound instance.
         """
 
-        if duration <= 0:
-            raise InvalidDurationError(duration)
-
-        if samplerate <= 0:
-            raise InvalidSamplerateError(samplerate)
+        _assertDuration(duration)
+        _assertSamplerate(samplerate)
 
         length = int(numpy.round(duration * samplerate))
         return cls(numpy.array([0] * length), samplerate)
@@ -306,14 +321,9 @@ class Sound:
         return -- A new Sound instance.
         """
 
-        if duration <= 0:
-            raise InvalidDurationError(duration)
-
-        if volume < 0 or 1.0 < volume:
-            raise InvalidVolumeError(volume)
-
-        if samplerate <= 0:
-            raise InvalidSamplerateError(samplerate)
+        _assertDuration(duration)
+        _assertSamplerate(samplerate)
+        _assertVolume(volume)
 
         length = int(numpy.round(duration * samplerate))
         return cls(numpy.random.rand(length) * volume, samplerate)
@@ -370,8 +380,7 @@ class Sound:
         if samplerate is None:
             samplerate = spectrum[-1, 0].real * 2
 
-        if samplerate <= 0:
-            raise InvalidSamplerateError(samplerate)
+        _assertSamplerate(samplerate)
 
         return Sound(numpy.fft.irfft(spectrum[:, 1]), samplerate)
 
@@ -468,7 +477,7 @@ class Sound:
             numpy.fft.rfft(self.data).reshape([-1, 1]),
         ])
 
-    def change_volume(self, vol: float) -> 'Sound':
+    def change_volume(self, volume: float) -> 'Sound':
         """ Create a new instance that changed volume
 
         This volume means the maximum value of the wave.
@@ -487,16 +496,15 @@ class Sound:
         True
 
 
-        vol -- New volume.
+        volume -- New volume.
 
         return -- A new Sound instance that changed volume.
         """
 
-        if vol < 0 or 1 < vol:
-            raise InvalidVolumeError(vol)
+        _assertVolume(volume)
 
         return Sound(
-            self.data * (vol / self.volume),
+            self.data * (volume / self.volume),
             self.samplerate
         )
 
@@ -522,8 +530,7 @@ class Sound:
         return -- A new Sound instance that repeated same sound.
         """
 
-        if duration <= 0:
-            raise InvalidDurationError(duration)
+        _assertDuration(duration)
 
         return Sound(
             _repeat_array(self.data,
@@ -552,8 +559,7 @@ class Sound:
         return -- A new Sound that concatenated self and other.
         """
 
-        if self.samplerate != other.samplerate:
-            raise DifferentSamplerateError(self.samplerate, other.samplerate)
+        _assertSameSamplerate([self.samplerate, other.samplerate])
 
         return Sound(numpy.hstack([self.data, other.data]), self.samplerate)
 
@@ -577,8 +583,7 @@ class Sound:
         return -- A new Sound that overlay another sound.
         """
 
-        if self.samplerate != other.samplerate:
-            raise DifferentSamplerateError(self.samplerate, other.samplerate)
+        _assertSameSamplerate([self.samplerate, other.samplerate])
 
         x = self.data
         y = other.data
@@ -656,8 +661,7 @@ def concat(*sounds: Sound) -> Sound:
     return -- A concatenated Sound instance.
     """
 
-    if any(sounds[0].samplerate != s.samplerate for s in sounds[1:]):
-        raise DifferentSamplerateError(*(s.samplerate for s in sounds))
+    _assertSameSamplerate([s.samplerate for s in sounds])
 
     return Sound(numpy.hstack([x.data for x in sounds]), sounds[0].samplerate)
 
@@ -685,8 +689,7 @@ def overlay(*sounds: Sound) -> Sound:
     return -- A Sound instance that overlay all sounds.
     """
 
-    if any(sounds[0].samplerate != s.samplerate for s in sounds[1:]):
-        raise DifferentSamplerateError(*(s.samplerate for s in sounds))
+    _assertSameSamplerate([s.samplerate for s in sounds])
 
     longest = max(len(x.data) for x in sounds)
     padded = numpy.array([numpy.hstack([x.data, [0] * (longest - len(x.data))])
