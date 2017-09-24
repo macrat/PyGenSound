@@ -103,7 +103,10 @@ class MaskStartEffect(MaskEffect):
 
         mask = self.gen_mask(length)
 
-        return Sound(numpy.hstack([sound.data[:length] * mask[:length],
+        if len(mask.shape) == 1:
+            mask = mask.reshape([-1, 1]).repeat(sound.n_channels, axis=1)
+
+        return Sound(numpy.vstack([sound.data[:length] * mask[:length],
                                    sound.data[length:]]),
                      sound.samplerate)
 
@@ -112,14 +115,17 @@ class MaskEndEffect(MaskEffect):
     """ Effect that masking end of sound """
 
     def apply(self, sound: Sound) -> Sound:
-        length = len(sound.data)
+        length = sound.data.shape[0]
         if self.duration is not None:
             length = int(numpy.round(self.duration * sound.samplerate))
 
-        offset = max(0, length - len(sound.data))
+        offset = max(0, length - sound.data.shape[0])
         mask = self.gen_mask(length)[offset:]
 
-        return Sound(numpy.hstack([sound.data[:-length],
+        if len(mask.shape) == 1:
+            mask = mask.reshape([-1, 1]).repeat(sound.n_channels, axis=1)
+
+        return Sound(numpy.vstack([sound.data[:-length],
                                    sound.data[-length:] * mask]),
                      sound.samplerate)
 
@@ -168,7 +174,7 @@ class LowPassFilter(Effect):
 
     def apply(self, sound: Sound) -> Sound:
         f = sound.fft()
-        f[f[:, 0] > self.freq, 1] = 0
+        f[f[:, :, 0] > self.freq, 1] = 0
         return Sound.from_fft(f, sound.samplerate)
 
 
@@ -184,7 +190,7 @@ class HighPassFilter(Effect):
 
     def apply(self, sound: Sound) -> Sound:
         f = sound.fft()
-        f[f[:, 0] < self.freq, 1] = 0
+        f[f[:, :, 0] < self.freq, 1] = 0
         return Sound.from_fft(f, sound.samplerate)
 
 
@@ -227,12 +233,22 @@ class Resampling(Effect):
         if sound.samplerate == self.samplerate:
             return sound
 
-        length = len(sound.data)
-        f = scipy.interpolate.interp1d(numpy.linspace(0, 1, length),
-                                       sound.data,
-                                       kind=self.kind)
-        new_x = numpy.round(length * self.samplerate / sound.samplerate)
-        return Sound(f(numpy.linspace(0, 1, int(new_x))), self.samplerate)
+        length = sound.data.shape[0]
+        in_space = numpy.linspace(0, 1, length)
+        out_space = numpy.linspace(
+            0,
+            1,
+            int(numpy.round(length * self.samplerate / sound.samplerate)),
+        )
+
+        result = numpy.array([
+            scipy.interpolate.interp1d(numpy.linspace(0, 1, length),
+                                       sound.data[:, channel],
+                                       kind=self.kind)(out_space)
+            for channel in range(sound.n_channels)
+        ]).T
+
+        return Sound(result, self.samplerate)
 
 
 class ChangeSpeed(Effect):

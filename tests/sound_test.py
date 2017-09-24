@@ -9,30 +9,60 @@ from gensound.sound import _repeat_array
 
 
 class SoundUtilsTest(unittest.TestCase):
-    def test_repeat_array(self):
-        array = numpy.array([1, 2, 3])
-        repeated = numpy.array([1, 2, 3] * 3)
+    def test_repeat_array_single_channel(self):
+        array = numpy.array([[1, 2, 3]]).T
+        repeated = [1, 2, 3] * 3
 
-        self.assertEqual(tuple(_repeat_array(array, 6)), tuple(repeated[:6]))
-        self.assertEqual(tuple(_repeat_array(array, 8)), tuple(repeated[:8]))
-        self.assertEqual(tuple(_repeat_array(array, 2)), tuple(repeated[:2]))
+        self.assertEqual(tuple(_repeat_array(array, 6).flatten()),
+                         tuple(repeated[:6]))
+
+        self.assertEqual(tuple(_repeat_array(array, 8).flatten()),
+                         tuple(repeated[:8]))
+
+        self.assertEqual(tuple(_repeat_array(array, 2).flatten()),
+                         tuple(repeated[:2]))
+
+    def test_repeat_array_two_channel(self):
+        array = numpy.array([[1, 2, 3], [4, 5, 6]]).T
+        repeated = numpy.array([[1, 2, 3] * 3, [4, 5, 6] * 3]).T
+
+        six = _repeat_array(array, 6)
+        self.assertEqual(six.shape, (6, 2))
+        self.assertEqual(six.tolist(), repeated[:6].tolist())
+
+        eight = _repeat_array(array, 8)
+        self.assertEqual(eight.shape, (8, 2))
+        self.assertEqual(eight.tolist(), repeated[:8].tolist())
+
+        two = _repeat_array(array, 2)
+        self.assertEqual(two.shape, (2, 2))
+        self.assertEqual(two.tolist(), repeated[:2].tolist())
 
     def test_repeat_array_invalid_input(self):
-        array = numpy.array([1, 2, 3])
-        null = numpy.array([])
-        multi = numpy.array([[1, 2], [3, 4]])
+        array = numpy.array([[1, 2, 3]])
+        null = numpy.array([[]])
+        lessdimen = numpy.array([1, 2, 3])
+        overdimen = numpy.array([[[1, 2]], [[3, 4]]])
 
-        with self.assertRaises(ValueError):
+        with self.assertRaises(
+                ValueError,
+                msg='want_length must be greater than 0 but got -1'):
             _repeat_array(array, 0)
 
-        with self.assertRaises(ValueError):
+        with self.assertRaises(
+                ValueError,
+                msg='want_length must be greater than 0 but got -1'):
             _repeat_array(array, -1)
 
-        with self.assertRaises(ValueError):
+        with self.assertRaises(ValueError,
+                               msg='sound should have least one element'):
             _repeat_array(null, 1)
 
-        with self.assertRaises(ValueError):
-            _repeat_array(multi, 1)
+        with self.assertRaises(ValueError, msg='sound should two dimensions'):
+            _repeat_array(lessdimen, 1)
+
+        with self.assertRaises(ValueError, msg='sound should two dimensions'):
+            _repeat_array(overdimen, 1)
 
     def test_overlay(self):
         a = Sound.from_array([0.0, 0.1], 2)
@@ -117,6 +147,18 @@ class SoundUtilsTest(unittest.TestCase):
 
         self.assertEqual(cm.exception.frequency, (2, 2, 3))
 
+    def test_merge_channels(self):
+        a = Sound.from_array([0.0, 0.1], 2)
+        b = Sound.from_array([0.2, 0.3], 2)
+        c = Sound.from_array([0.4, 0.5], 2)
+        abc = Sound.from_array([[0.0, 0.2, 0.4], [0.1, 0.3, 0.5]], 2)
+
+        self.assertEqual(merge_channels(a, b, c), abc)
+
+        c_stereo = merge_channels(Sound.from_array([0.3, 0.6], 2),
+                                  Sound.from_array([0.5, 0.4], 2))
+        self.assertEqual(merge_channels(a, b, c_stereo), abc)
+
 
 class SoundTest(unittest.TestCase):
     def test_constructor(self):
@@ -149,9 +191,8 @@ class SoundTest(unittest.TestCase):
 
         self.assertEqual(cm.exception.duration, 0)
 
-        with self.assertRaises(ValueError,
-                               msg='multiple channel sound is not supported'):
-            Sound(numpy.array([[1, 2], [3, 4]]), 1)
+        with self.assertRaises(ValueError):
+            Sound(numpy.array([[[1], [2]], [[3], [4]]]), 1)
 
     def test_equals(self):
         a = Sound.from_array([0.1, 0.2, 0.3], 1)
@@ -274,7 +315,7 @@ class SoundTest(unittest.TestCase):
         self.assertTrue(sound.volume, 0.8)
 
         sound = Sound.from_sawtoothwave(1, duration=2, samplerate=3)
-        self.assertTrue(numpy.allclose(sound.data,
+        self.assertTrue(numpy.allclose(sound.data[:, 0],
                                        (-1.0, 0.0, 1.0, -1.0, 0.0, 1.0)))
 
     def test_from_sawtoothwave_invalid(self):
@@ -357,16 +398,19 @@ class SoundTest(unittest.TestCase):
         self.assertEqual(cm.exception.frequency, 0)
 
     def test_from_fft(self):
-        f = numpy.zeros([1024 // 2 + 1, 2], numpy.complex)
-        f[-1, 0] = 1024 // 2
-        f[128, 1] = numpy.complex(0, -numpy.pi)
+        f = numpy.zeros([2, 1024 // 2 + 1, 2], numpy.complex)
+        f[:, -1, 0] = 1024 // 2
+        f[0, 128, 1] = numpy.complex(0, -numpy.pi)
+        f[1, 256, 1] = numpy.complex(0, -numpy.pi)
 
         s = Sound.from_fft(f).change_volume(1.0)
 
         self.assertEqual(s.samplerate, 1024)
+        self.assertEqual(s.n_channels, 2)
         self.assertEqual(s.duration, 1.0)
 
-        from_sin = Sound.from_sinwave(128, samplerate=1024)
+        from_sin = merge_channels(Sound.from_sinwave(128, samplerate=1024),
+                                  Sound.from_sinwave(256, samplerate=1024))
         self.assertTrue(numpy.allclose(s.data, from_sin.data))
 
     def test_from_fft_invalid(self):
@@ -377,13 +421,29 @@ class SoundTest(unittest.TestCase):
 
         self.assertEqual(cm.exception.frequency, 0)
 
-    def test_fft(self):
+    def test_fft_single_channel(self):
         sound = Sound.from_sinwave(440, duration=0.1)
         f = sound.fft()
 
-        self.assertTrue((0 <= f[:, 0]).all())
-        self.assertTrue((f[:, 0] <= sound.samplerate).all())
-        self.assertEqual(f[:, 1].argmax(), abs(f[:, 0] - 440).argmin())
+        self.assertTrue((0 <= f[:, :, 0]).all())
+        self.assertEqual(f.shape[0], 1)
+        self.assertEqual(f.shape[2], 2)
+        self.assertGreaterEqual(f[:, :, 0].min(), 0)
+        self.assertLessEqual(f[:, :, 0].max(), sound.samplerate)
+        self.assertEqual(f[0, :, 1].argmax(), abs(f[0, :, 0] - 440).argmin())
+
+    def test_fft_two_channel(self):
+        sound = merge_channels(Sound.from_sinwave(440, duration=0.1),
+                               Sound.from_sinwave(220, duration=0.1))
+        f = sound.fft()
+
+        self.assertTrue((0 <= f[:, :, 0]).all())
+        self.assertEqual(f.shape[0], 2)
+        self.assertEqual(f.shape[2], 2)
+        self.assertGreaterEqual(f[:, :, 0].min(), 0)
+        self.assertLessEqual(f[:, :, 0].max(), sound.samplerate)
+        self.assertEqual(f[0, :, 1].argmax(), abs(f[0, :, 0] - 440).argmin())
+        self.assertEqual(f[1, :, 1].argmax(), abs(f[1, :, 0] - 220).argmin())
 
     def test_volume(self):
         sound = Sound.from_sinwave(440)
@@ -440,14 +500,25 @@ class SoundTest(unittest.TestCase):
         self.assertEqual(cm.exception.duration, 0)
 
     def test_trim_just(self):
-        sound = Sound.from_array([0.0, 0.1, 0.2], 1)
+        sound = Sound.from_array([[0.0, 0.3], [0.1, 0.4], [0.2, 0.5]], 1)
 
-        self.assertEqual(tuple(sound[0.0].data), (0.0, ))
-        self.assertEqual(tuple(sound[0.4999999999].data), (0.0, ))
-        self.assertEqual(tuple(sound[0.5000000001].data), (0.1, ))
-        self.assertEqual(tuple(sound[1.0].data), (0.1, ))
-        self.assertEqual(tuple(sound[2.0].data), (0.2, ))
-        self.assertEqual(tuple(sound[3.0].data), (0.2, ))
+        self.assertEqual(sound[0.0].n_channels, 2)
+        self.assertEqual(tuple(sound[0.0].data[0, :]), (0.0, 0.3))
+
+        self.assertEqual(sound[0.4999999999].n_channels, 2)
+        self.assertEqual(tuple(sound[0.4999999999].data[0, :]), (0.0, 0.3))
+
+        self.assertEqual(sound[0.5000000001].n_channels, 2)
+        self.assertEqual(tuple(sound[0.5000000001].data[0, :]), (0.1, 0.4))
+
+        self.assertEqual(sound[1.0].n_channels, 2)
+        self.assertEqual(tuple(sound[1.0].data[0, :]), (0.1, 0.4))
+
+        self.assertEqual(sound[2.0].n_channels, 2)
+        self.assertEqual(tuple(sound[2.0].data[0, :]), (0.2, 0.5))
+
+        self.assertEqual(sound[3.0].n_channels, 2)
+        self.assertEqual(tuple(sound[3.0].data[0, :]), (0.2, 0.5))
 
     def test_trim_just_invalid(self):
         sound = Sound.from_array([0.0, 0.1, 0.2], 3)
@@ -467,90 +538,122 @@ class SoundTest(unittest.TestCase):
         self.assertEqual(cm.exception.max, 1)
 
     def test_trim_head(self):
-        sound = Sound.from_array([0.0, 0.1, 0.2], 3)
+        sound = Sound.from_array([[0.0, 0.3], [0.1, 0.4], [0.2, 0.5]], 3)
 
         self.assertEqual(sound.duration, 1)
-        self.assertEqual(tuple(sound.data), (0.0, 0.1, 0.2))
+        self.assertEqual(sound.n_channels, 2)
+        self.assertEqual(tuple(sound.data[:, 0]), (0.0, 0.1, 0.2))
+        self.assertEqual(tuple(sound.data[:, 1]), (0.3, 0.4, 0.5))
 
         sound = sound[:2 / 3]
 
         self.assertEqual(sound.duration, 2 / 3)
-        self.assertEqual(tuple(sound.data), (0.0, 0.1))
+        self.assertEqual(sound.n_channels, 2)
+        self.assertEqual(tuple(sound.data[:, 0]), (0.0, 0.1))
+        self.assertEqual(tuple(sound.data[:, 1]), (0.3, 0.4))
 
         sound = sound[:1 / 3]
 
         self.assertEqual(sound.duration, 1 / 3)
-        self.assertEqual(tuple(sound.data), (0.0, ))
+        self.assertEqual(sound.n_channels, 2)
+        self.assertEqual(tuple(sound.data[:, 0]), (0.0, ))
+        self.assertEqual(tuple(sound.data[:, 1]), (0.3, ))
 
     def test_trim_head_by_end(self):
-        sound = Sound.from_array([0.0, 0.1, 0.2], 3)
+        sound = Sound.from_array([[0.0, 0.3], [0.1, 0.4], [0.2, 0.5]], 3)
 
         self.assertEqual(sound.duration, 1)
-        self.assertEqual(tuple(sound.data), (0.0, 0.1, 0.2))
+        self.assertEqual(sound.n_channels, 2)
+        self.assertEqual(tuple(sound.data[:, 0]), (0.0, 0.1, 0.2))
+        self.assertEqual(tuple(sound.data[:, 1]), (0.3, 0.4, 0.5))
 
         sound = sound[:-1 / 3]
 
         self.assertEqual(sound.duration, 2 / 3)
-        self.assertEqual(tuple(sound.data), (0.0, 0.1))
+        self.assertEqual(sound.n_channels, 2)
+        self.assertEqual(tuple(sound.data[:, 0]), (0.0, 0.1))
+        self.assertEqual(tuple(sound.data[:, 1]), (0.3, 0.4))
 
         sound = sound[:-1 / 3]
 
         self.assertEqual(sound.duration, 1 / 3)
-        self.assertEqual(tuple(sound.data), (0.0, ))
+        self.assertEqual(sound.n_channels, 2)
+        self.assertEqual(tuple(sound.data[:, 0]), (0.0, ))
+        self.assertEqual(tuple(sound.data[:, 1]), (0.3, ))
 
     def test_trim_tail(self):
-        sound = Sound.from_array([0.0, 0.1, 0.2], 3)
+        sound = Sound.from_array([[0.0, 0.3], [0.1, 0.4], [0.2, 0.5]], 3)
 
         self.assertEqual(sound.duration, 1)
-        self.assertEqual(tuple(sound.data), (0.0, 0.1, 0.2))
+        self.assertEqual(sound.n_channels, 2)
+        self.assertEqual(tuple(sound.data[:, 0]), (0.0, 0.1, 0.2))
+        self.assertEqual(tuple(sound.data[:, 1]), (0.3, 0.4, 0.5))
 
         sound = sound[1 / 3:]
 
         self.assertEqual(sound.duration, 2 / 3)
-        self.assertEqual(tuple(sound.data), (0.1, 0.2))
+        self.assertEqual(sound.n_channels, 2)
+        self.assertEqual(tuple(sound.data[:, 0]), (0.1, 0.2))
+        self.assertEqual(tuple(sound.data[:, 1]), (0.4, 0.5))
 
         sound = sound[1 / 3:]
 
         self.assertEqual(sound.duration, 1 / 3)
-        self.assertEqual(tuple(sound.data), (0.2, ))
+        self.assertEqual(sound.n_channels, 2)
+        self.assertEqual(tuple(sound.data[:, 0]), (0.2, ))
+        self.assertEqual(tuple(sound.data[:, 1]), (0.5, ))
 
     def test_trim_tail_by_end(self):
-        sound = Sound.from_array([0.0, 0.1, 0.2], 3)
+        sound = Sound.from_array([[0.0, 0.3], [0.1, 0.4], [0.2, 0.5]], 3)
 
         self.assertEqual(sound.duration, 1)
-        self.assertEqual(tuple(sound.data), (0.0, 0.1, 0.2))
+        self.assertEqual(sound.n_channels, 2)
+        self.assertEqual(tuple(sound.data[:, 0]), (0.0, 0.1, 0.2))
+        self.assertEqual(tuple(sound.data[:, 1]), (0.3, 0.4, 0.5))
 
         sound = sound[-2 / 3:]
 
         self.assertEqual(sound.duration, 2 / 3)
-        self.assertEqual(tuple(sound.data), (0.1, 0.2))
+        self.assertEqual(sound.n_channels, 2)
+        self.assertEqual(tuple(sound.data[:, 0]), (0.1, 0.2))
+        self.assertEqual(tuple(sound.data[:, 1]), (0.4, 0.5))
 
         sound = sound[-1 / 3:]
 
         self.assertEqual(sound.duration, 1 / 3)
-        self.assertEqual(tuple(sound.data), (0.2, ))
+        self.assertEqual(sound.n_channels, 2)
+        self.assertEqual(tuple(sound.data[:, 0]), (0.2, ))
+        self.assertEqual(tuple(sound.data[:, 1]), (0.5, ))
 
     def test_trim_between(self):
-        sound = Sound.from_array([0.0, 0.1, 0.2], 3)
+        sound = Sound.from_array([[0.0, 0.3], [0.1, 0.4], [0.2, 0.5]], 3)
 
         self.assertEqual(sound.duration, 1)
-        self.assertEqual(tuple(sound.data), (0.0, 0.1, 0.2))
+        self.assertEqual(sound.n_channels, 2)
+        self.assertEqual(tuple(sound.data[:, 0]), (0.0, 0.1, 0.2))
+        self.assertEqual(tuple(sound.data[:, 1]), (0.3, 0.4, 0.5))
 
         sound = sound[1 / 3: 2 / 3]
 
         self.assertEqual(sound.duration, 1 / 3)
-        self.assertEqual(tuple(sound.data), (0.1, ))
+        self.assertEqual(sound.n_channels, 2)
+        self.assertEqual(tuple(sound.data[:, 0]), (0.1, ))
+        self.assertEqual(tuple(sound.data[:, 1]), (0.4, ))
 
     def test_trim_between_by_end(self):
-        sound = Sound.from_array([0.0, 0.1, 0.2], 3)
+        sound = Sound.from_array([[0.0, 0.3], [0.1, 0.4], [0.2, 0.5]], 3)
 
         self.assertEqual(sound.duration, 1)
-        self.assertEqual(tuple(sound.data), (0.0, 0.1, 0.2))
+        self.assertEqual(sound.n_channels, 2)
+        self.assertEqual(tuple(sound.data[:, 0]), (0.0, 0.1, 0.2))
+        self.assertEqual(tuple(sound.data[:, 1]), (0.3, 0.4, 0.5))
 
         sound = sound[-2 / 3: -1 / 3]
 
         self.assertEqual(sound.duration, 1 / 3)
-        self.assertEqual(tuple(sound.data), (0.1, ))
+        self.assertEqual(sound.n_channels, 2)
+        self.assertEqual(tuple(sound.data[:, 0]), (0.1, ))
+        self.assertEqual(tuple(sound.data[:, 1]), (0.4, ))
 
     def test_trim_between_invalid(self):
         sound = Sound.from_sinwave(440)
@@ -566,6 +669,33 @@ class SoundTest(unittest.TestCase):
 
         with self.assertRaises(ValueError, msg='step is not supported'):
             sound[::1]
+
+    def test_split_channels(self):
+        a = Sound.from_array([0.1, 0.2], 2)
+        b = Sound.from_array([0.3, 0.4], 2)
+        ab = Sound.from_array([[0.1, 0.3], [0.2, 0.4]], 2)
+
+        a_, b_ = ab.split_channels()
+        self.assertEqual(a_, a)
+        self.assertEqual(b_, b)
+
+    def test_as_monaural(self):
+        stereo = Sound.from_array([[0.1, 0.3], [0.2, 0.4]], 2)
+        monaural = Sound.from_array([0.2, 0.3], 2)
+
+        self.assertEqual(stereo.as_monaural(), monaural)
+
+    def test_as_stereo(self):
+        monaural = Sound.from_array([0.1, 0.2], 2)
+        stereo = Sound.from_array([[0.1, 0.1], [0.2, 0.2]], 2)
+
+        self.assertEqual(monaural.as_stereo(), stereo)
+
+    def test_as_stereo_invalid(self):
+        stereo = Sound.from_array([[0.1, 0.1], [0.2, 0.2]], 2)
+
+        with self.assertRaises(ValueError, msg='Sound must be monaural'):
+            stereo.as_stereo()
 
     def test_concat(self):
         a = Sound.from_array([0.0, 0.1], 2)

@@ -22,14 +22,14 @@ import soundfile
 def _repeat_array(sound: numpy.array, want_length: int) -> numpy.array:
     """ Repeat numpy.array for enlarging a sound duration
 
-    >>> array = numpy.array([1, 2, 3])
+    >>> array = numpy.array([[1, 2, 3]]).T
     >>> numpy.allclose(_repeat_array(array, 6),
-    ...                numpy.array([1, 2, 3, 1, 2, 3]))
+    ...                numpy.array([[1, 2, 3, 1, 2, 3]]).T)
     True
     >>> numpy.allclose(_repeat_array(array, 8),
-    ...                numpy.array([1, 2, 3, 1, 2, 3, 1, 2]))
+    ...                numpy.array([[1, 2, 3, 1, 2, 3, 1, 2]]).T)
     True
-    >>> numpy.allclose(_repeat_array(array, 2), numpy.array([1, 2]))
+    >>> numpy.allclose(_repeat_array(array, 2), numpy.array([[1, 2]]).T)
     True
 
 
@@ -44,18 +44,19 @@ def _repeat_array(sound: numpy.array, want_length: int) -> numpy.array:
             'want_length must be greater than 0 but got {}'.format(want_length)
         )
 
-    if len(sound) <= 0:
+    if len(sound.shape) != 2:
+        raise ValueError('sound should two dimensions')
+
+    if sound.shape[0] <= 0 or sound.shape[1] <= 0:
         raise ValueError('sound should have least one element')
 
-    if len(sound.shape) != 1:
-        raise ValueError('sound should single dimension')
+    need_length = int(numpy.ceil(want_length / sound.shape[0]))
+    drop_length = int(need_length * sound.shape[0] - want_length)
 
-    need_length = int(numpy.ceil(want_length / len(sound)))
-    drop_length = int(need_length * len(sound) - want_length)
-
-    repeated = numpy.repeat(sound.reshape([1, -1]),
-                            need_length,
-                            axis=0).flatten()
+    repeated = (sound.T
+                .reshape([sound.shape[1], sound.shape[0], 1])
+                .repeat(need_length, axis=0)
+                .reshape([sound.shape[1], -1]).T)
 
     if drop_length > 0:
         return repeated[:-drop_length]
@@ -88,7 +89,7 @@ class DifferentSamplerateError(InvalidSamplerateError):
     """ The exception that raises when different samplerates of sounds to joint
     """
 
-    def __init__(self, frequencies: typing.Tuple[float]) -> None:
+    def __init__(self, frequencies: typing.Tuple[float, ...]) -> None:
         ValueError.__init__(
             self,
             'all samplerates must be the same value but got {}'.format(
@@ -175,16 +176,21 @@ class Sound:
 
     def __init__(self, data: numpy.array, samplerate: float) -> None:
         """
-        data       -- Sound data array. must be single channel.
-                      Will clipping if value were out of -1.0 to 1.0.
+        data       -- Sound data array. First dimension is time, second
+                      dimension is channel. Will clipping if value were out of
+                      -1.0 to 1.0.
         samplerate -- Sampling rate of sound data.
         """
 
-        _assertDuration(len(data))
-        _assertSamplerate(samplerate)
+        if len(data.shape) > 2:
+            raise ValueError('data dimensions must be 1 or 2 but got {}'
+                             .format(len(data.shape)))
 
-        if len(data.shape) != 1:
-            raise ValueError('multiple channel sound is not supported')
+        if len(data.shape) == 1:
+            data = data.reshape([-1, 1])
+
+        _assertSamplerate(samplerate)
+        _assertDuration(data.shape[0])
 
         self.data = data.clip(-1.0, 1.0)
         self._samplerate = samplerate
@@ -338,8 +344,6 @@ class Sound:
         """
 
         data, samplerate = soundfile.read(file_)
-        if len(data.shape) != 1:
-            data = numpy.average(data, axis=1)
         data /= numpy.max([-data.min(), data.max()])
         return cls(data, samplerate)
 
@@ -378,23 +382,32 @@ class Sound:
         """
 
         if samplerate is None:
-            samplerate = spectrum[-1, 0].real * 2
+            samplerate = spectrum[0, -1, 0].real * 2
 
         _assertSamplerate(samplerate)
 
-        return Sound(numpy.fft.irfft(spectrum[:, 1]), samplerate)
+        return Sound(
+            numpy.array([numpy.fft.irfft(x[:, 1]) for x in spectrum]).T,
+            samplerate,
+        )
 
     @property
     def duration(self) -> float:
         """ Duration in seconds of this sound """
 
-        return len(self.data) / self.samplerate
+        return self.data.shape[0] / self.samplerate
 
     @property
     def samplerate(self) -> float:
         """ Sampling rate of this sound """
 
         return self._samplerate
+
+    @property
+    def n_channels(self) -> int:
+        """ Number of channels """
+
+        return self.data.shape[1]
 
     @property
     def volume(self) -> float:
@@ -445,9 +458,9 @@ class Sound:
                 raise OutOfDurationError(position, 0.0, self.duration)
 
             index = int(numpy.round(position * self.samplerate))
-            if index >= len(self.data):
-                index = len(self.data) - 1
-            data = numpy.array([self.data[index]])
+            if index >= self.data.shape[0]:
+                index = self.data.shape[0] - 1
+            data = self.data[index, :].reshape([1, -1])
         else:
             if position.step is not None:
                 raise ValueError('step is not supported')
@@ -460,9 +473,47 @@ class Sound:
             if stop is not None:
                 stop = int(numpy.round(stop * self.samplerate))
 
-            data = self.data[start:stop]
+            data = self.data[start:stop, :]
 
         return Sound(data, self.samplerate)
+
+    def split_channels(self) -> typing.Sequence[numpy.array]:
+        """ Split channels into Sound
+
+        return -- A list of Sound instances.
+        """
+
+        return [
+            Sound(self.data[:, i], self.samplerate)
+            for i in range(self.n_channels)
+        ]
+
+    def as_monaural(self) -> 'Sound':
+        """ Create a new instance that converted to monaural sound
+
+        If an instance already monaural sound, may returns the same instance.
+
+        return -- A new Sound instance that monaural.
+        """
+
+        if self.n_channels == 1:
+            return self
+
+        return Sound(numpy.average(self.data, axis=1), self.samplerate)
+
+    def as_stereo(self) -> 'Sound':
+        """ Create a new instance that converted to stereo sound
+
+        This method raises ValueError if this sound isn't monaural sound.
+
+        return -- A new Sound instance that stereo.
+        """
+
+        if self.n_channels != 1:
+            raise ValueError('Sound must be monaural')
+
+        return Sound(self.data.reshape([-1, 1]).repeat(2, axis=1),
+                     self.samplerate)
 
     def fft(self) -> numpy.array:
         """ Calculate fft
@@ -470,11 +521,15 @@ class Sound:
         return -- An array that pair of frequency and value.
         """
 
-        return numpy.hstack([
-            (
-                numpy.fft.rfftfreq(len(self.data)) * self.samplerate
-            ).reshape([-1, 1]),
-            numpy.fft.rfft(self.data).reshape([-1, 1]),
+        freqs = (numpy.fft.rfftfreq(self.data.shape[0]) * self.samplerate)
+        freqs = freqs.reshape([-1, 1])
+
+        return numpy.array([
+            numpy.hstack([
+                freqs,
+                numpy.fft.rfft(self.data[:, channel]).reshape([-1, 1])
+            ])
+            for channel in range(self.n_channels)
         ])
 
     def change_volume(self, volume: float) -> 'Sound':
@@ -559,9 +614,7 @@ class Sound:
         return -- A new Sound that concatenated self and other.
         """
 
-        _assertSameSamplerate([self.samplerate, other.samplerate])
-
-        return Sound(numpy.hstack([self.data, other.data]), self.samplerate)
+        return concat(self, other)
 
     def overlay(self, other: 'Sound') -> 'Sound':
         """ Create a new instance that was overlay another sound
@@ -583,17 +636,7 @@ class Sound:
         return -- A new Sound that overlay another sound.
         """
 
-        _assertSameSamplerate([self.samplerate, other.samplerate])
-
-        x = self.data
-        y = other.data
-
-        if len(x) > len(y):
-            y = numpy.hstack([y, [0] * (len(x) - len(y))])
-        if len(y) > len(x):
-            x = numpy.hstack([x, [0] * (len(y) - len(x))])
-
-        return Sound(x + y, self.samplerate)
+        return overlay(self, other)
 
     def write(self,
               file_: typing.Union[str, typing.BinaryIO],
@@ -663,7 +706,7 @@ def concat(*sounds: Sound) -> Sound:
 
     _assertSameSamplerate([s.samplerate for s in sounds])
 
-    return Sound(numpy.hstack([x.data for x in sounds]), sounds[0].samplerate)
+    return Sound(numpy.vstack([x.data for x in sounds]), sounds[0].samplerate)
 
 
 def overlay(*sounds: Sound) -> Sound:
@@ -683,16 +726,39 @@ def overlay(*sounds: Sound) -> Sound:
 
 
 
-    sounds -- Sound instances to overlay. Must they has some sampling rate and
-              same duration.
+    sounds -- Sound instances to overlay. Must they has some sampling rate.
 
     return -- A Sound instance that overlay all sounds.
     """
 
     _assertSameSamplerate([s.samplerate for s in sounds])
 
-    longest = max(len(x.data) for x in sounds)
-    padded = numpy.array([numpy.hstack([x.data, [0] * (longest - len(x.data))])
-                          for x in sounds])
+    longest = max(x.data.shape[0] for x in sounds)
+    padded = numpy.array([
+        numpy.vstack([x.data,
+                      numpy.zeros([longest - x.data.shape[0], x.n_channels])])
+        for x in sounds
+    ])
 
     return Sound(padded.sum(axis=0), sounds[0].samplerate)
+
+
+def merge_channels(*sounds: Sound) -> Sound:
+    """ Merge multiple sounds as a sound that has multiple channels
+
+    BE CAREFUL: all sounds calculate as monaural sound.
+
+
+    sounds -- Sound instances to merge. Must they has some sampling rate.
+    """
+
+    _assertSameSamplerate([s.samplerate for s in sounds])
+
+    longest = max(x.data.shape[0] for x in sounds)
+    padded = numpy.hstack([
+        numpy.vstack([x.as_monaural().data,
+                      numpy.zeros([longest - x.data.shape[0], 1])])
+        for x in sounds
+    ])
+
+    return Sound(padded, sounds[0].samplerate)

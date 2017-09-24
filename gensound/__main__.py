@@ -102,6 +102,20 @@ def command_speed(args: argparse.Namespace):
     save(gensound.ChangeSpeed(sound.duration * args.rate).apply(sound), args)
 
 
+def command_stereo(args: argparse.Namespace):
+    left = load(args.left)
+    if args.right is None:
+        right = left
+    else:
+        right = load(args.right)
+
+    save(gensound.merge_channels(left, right), args)
+
+
+def command_monaural(args: argparse.Namespace):
+    save(load(args.file).as_monaural(), args)
+
+
 def _setup_input(parser: argparse.ArgumentParser):
     parser.add_argument('-i',
                         '--input',
@@ -291,6 +305,36 @@ def make_parser(prog: str = 'gensound'):
     _setup_input(duration)
     _setup_output(duration)
     duration.set_defaults(handler=command_speed)
+
+    stereo = subparsers.add_parser('stereo',
+                                   help='Make streo from sound(s).',
+                                   description='Make streo from sound(s).')
+    stereo.add_argument('left',
+                        type=argparse.FileType('rb'),
+                        default=sys.stdin,
+                        nargs='?',
+                        help='File to left sound. If not given right, it will'
+                             + ' use as a right too. Default is stdin.')
+    stereo.add_argument('right',
+                        type=argparse.FileType('rb'),
+                        default=None,
+                        nargs='?',
+                        help='File to right sound.')
+    _setup_output(stereo)
+    stereo.set_defaults(handler=command_stereo)
+
+    monaural = subparsers.add_parser('monaural',
+                                     help='Make monaural from multiple channel'
+                                          + ' sound.',
+                                     description='Make monaural from multiple'
+                                                 + ' channel sound.')
+    monaural.add_argument('file',
+                          type=argparse.FileType('rb'),
+                          default=sys.stdin,
+                          nargs='?',
+                          help='File for conversion to monaural.')
+    _setup_output(monaural)
+    monaural.set_defaults(handler=command_monaural)
 
     return parser
 

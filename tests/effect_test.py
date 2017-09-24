@@ -74,23 +74,23 @@ class PassFilterTest(unittest.TestCase):
         filtered = LowPassFilter(210).apply(self.abc)
         self.assertEqual(filtered.samplerate, self.abc.samplerate)
         self.assertEqual(filtered.duration, self.abc.duration)
-        self.assertTrue(sum((filtered.data - self.ab.data) ** 2) < 0.1)
+        self.assertTrue(numpy.allclose(filtered.data, self.ab.data))
 
         filtered = LowPassFilter(110).apply(self.abc)
         self.assertEqual(filtered.samplerate, self.abc.samplerate)
         self.assertEqual(filtered.duration, self.abc.duration)
-        self.assertTrue(sum((filtered.data - self.a.data) ** 2) < 0.1)
+        self.assertTrue(numpy.allclose(filtered.data, self.a.data))
 
     def test_high_pass_filter(self):
         filtered = HighPassFilter(190).apply(self.abc)
         self.assertEqual(filtered.samplerate, self.abc.samplerate)
         self.assertEqual(filtered.duration, self.abc.duration)
-        self.assertTrue(sum((filtered.data - self.bc.data) ** 2) < 0.1)
+        self.assertTrue(numpy.allclose(filtered.data, self.bc.data))
 
         filtered = HighPassFilter(290).apply(self.abc)
         self.assertEqual(filtered.samplerate, self.abc.samplerate)
         self.assertEqual(filtered.duration, self.abc.duration)
-        self.assertTrue(sum((filtered.data - self.c.data) ** 2) < 0.1)
+        self.assertTrue(numpy.allclose(filtered.data, self.c.data))
 
 
 class ResamplingTest(unittest.TestCase):
