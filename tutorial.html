@@ -1,0 +1,204 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Tutorial &#8212; PyGenSound 0.0.1 dev documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.0.1 dev',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Commandline Tutorial" href="tutorial-commandline.html" />
+    <link rel="prev" title="PyGenSound" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="tutorial">
+<h1>Tutorial<a class="headerlink" href="#tutorial" title="Permalink to this headline">¶</a></h1>
+<div class="contents local topic" id="contents">
+<ul class="simple">
+<li><a class="reference internal" href="#make-simple-sound" id="id1">Make simple sound</a></li>
+<li><a class="reference internal" href="#play-and-save" id="id2">Play and save</a></li>
+<li><a class="reference internal" href="#overlay-or-concatenate" id="id3">Overlay or concatenate</a></li>
+<li><a class="reference internal" href="#use-sound-effects" id="id4">Use sound effects</a></li>
+<li><a class="reference internal" href="#examples" id="id5">Examples</a><ul>
+<li><a class="reference internal" href="#make-nhk-time-signal-sound" id="id6">Make NHK time signal sound</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="make-simple-sound">
+<h2>Make simple sound<a class="headerlink" href="#make-simple-sound" title="Permalink to this headline">¶</a></h2>
+<p>This example is make 440 Hz sine wave sound.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">gensound</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sound</span> <span class="o">=</span> <span class="n">gensound</span><span class="o">.</span><span class="n">Sound</span><span class="o">.</span><span class="n">from_sinwave</span><span class="p">(</span><span class="mi">440</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The <a class="reference internal" href="modules/sound.html#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a> class has some class methods for generating simple tones.
+Please see <a class="reference internal" href="modules/sound.html"><span class="doc">reference</span></a>.</p>
+</div>
+<div class="section" id="play-and-save">
+<h2>Play and save<a class="headerlink" href="#play-and-save" title="Permalink to this headline">¶</a></h2>
+<p>Play made sound with <a class="reference internal" href="modules/sound.html#gensound.sound.Sound.play" title="gensound.sound.Sound.play"><code class="xref py py-func docutils literal"><span class="pre">play</span></code></a> method, like this.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sound</span><span class="o">.</span><span class="n">play</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Or, can write into disk with <a class="reference internal" href="modules/sound.html#gensound.sound.Sound.write" title="gensound.sound.Sound.write"><code class="xref py py-func docutils literal"><span class="pre">write</span></code></a> method.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sound</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;out.wav&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="overlay-or-concatenate">
+<h2>Overlay or concatenate<a class="headerlink" href="#overlay-or-concatenate" title="Permalink to this headline">¶</a></h2>
+<p>Make two sounds,</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">gensound</span><span class="o">.</span><span class="n">Sound</span><span class="o">.</span><span class="n">from_sinwave</span><span class="p">(</span><span class="mi">440</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="n">gensound</span><span class="o">.</span><span class="n">Sound</span><span class="o">.</span><span class="n">from_sinwave</span><span class="p">(</span><span class="mi">880</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>and overlay they with <a class="reference internal" href="modules/sound.html#gensound.sound.overlay" title="gensound.sound.overlay"><code class="xref py py-func docutils literal"><span class="pre">overlay</span></code></a> function.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">overlay</span> <span class="o">=</span> <span class="n">gensound</span><span class="o">.</span><span class="n">overlay</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal"><span class="pre">overlay</span></code> is the same duration as <code class="docutils literal"><span class="pre">a</span></code> and <code class="docutils literal"><span class="pre">b</span></code>, and play both of 440 Hz and 880 Hz.</p>
+<p>Or, concatenate they with <a class="reference internal" href="modules/sound.html#gensound.sound.concat" title="gensound.sound.concat"><code class="xref py py-func docutils literal"><span class="pre">concat</span></code></a> function.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">concat</span> <span class="o">=</span> <span class="n">gensound</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal"><span class="pre">concat</span></code> is playing <code class="docutils literal"><span class="pre">a</span></code> then <code class="docutils literal"><span class="pre">b</span></code>.</p>
+</div>
+<div class="section" id="use-sound-effects">
+<h2>Use sound effects<a class="headerlink" href="#use-sound-effects" title="Permalink to this headline">¶</a></h2>
+<p>PyGenSound has some effects like <a class="reference internal" href="modules/effect.html#gensound.effect.LinearFadeIn" title="gensound.effect.LinearFadeIn"><code class="xref py py-class docutils literal"><span class="pre">fade-in</span></code></a>, <a class="reference internal" href="modules/effect.html#gensound.effect.LinearFadeOut" title="gensound.effect.LinearFadeOut"><code class="xref py py-class docutils literal"><span class="pre">fade-out</span></code></a>, <a class="reference internal" href="modules/effect.html#gensound.effect.HighPassFilter" title="gensound.effect.HighPassFilter"><code class="xref py py-class docutils literal"><span class="pre">high</span> <span class="pre">pass</span></code></a> or <a class="reference internal" href="modules/effect.html#gensound.effect.LowPassFilter" title="gensound.effect.LowPassFilter"><code class="xref py py-class docutils literal"><span class="pre">low</span> <span class="pre">pass</span> <span class="pre">filter</span></code></a>.
+In PyGenSound, <a class="reference internal" href="modules/effect.html#gensound.effect.Resampling" title="gensound.effect.Resampling"><code class="xref py py-class docutils literal"><span class="pre">resampling</span></code></a> and <a class="reference internal" href="modules/effect.html#gensound.effect.ChangeSpeed" title="gensound.effect.ChangeSpeed"><code class="xref py py-class docutils literal"><span class="pre">changing</span> <span class="pre">speed</span></code></a> is classified as an effect.</p>
+<p>This sample will apply <code class="xref py py-class docutils literal"><span class="pre">fade-out</span></code> effect to sound <code class="docutils literal"><span class="pre">a</span></code>.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">effect</span> <span class="o">=</span> <span class="n">gensound</span><span class="o">.</span><span class="n">FadeOut</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a_fadeout</span> <span class="o">=</span> <span class="n">effect</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Please see detail about effects to <a class="reference internal" href="modules/effect.html"><span class="doc">reference</span></a></p>
+</div>
+<div class="section" id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="make-nhk-time-signal-sound">
+<h3>Make NHK time signal sound<a class="headerlink" href="#make-nhk-time-signal-sound" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">gensound</span>
+
+
+<span class="n">wait</span> <span class="o">=</span> <span class="n">gensound</span><span class="o">.</span><span class="n">Sound</span><span class="o">.</span><span class="n">silence</span><span class="p">(</span><span class="n">duration</span><span class="o">=</span><span class="mf">0.9</span><span class="p">)</span>  <span class="c1"># Generate 0.9 seconds silence</span>
+<span class="n">a</span> <span class="o">=</span> <span class="n">gensound</span><span class="o">.</span><span class="n">Sound</span><span class="o">.</span><span class="n">from_sinwave</span><span class="p">(</span><span class="mi">440</span><span class="p">,</span> <span class="n">duration</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">volume</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">wait</span><span class="p">)</span>  <span class="c1"># Generate 440Hz sin wave 0.1 seconds, and 0.9 seconds silence</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">gensound</span><span class="o">.</span><span class="n">Sound</span><span class="o">.</span><span class="n">from_sinwave</span><span class="p">(</span><span class="mi">880</span><span class="p">,</span> <span class="n">duration</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">volume</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>  <span class="c1"># Generate 880Hz sin wave 1 seconds</span>
+
+<span class="n">time_signal</span> <span class="o">=</span> <span class="n">gensound</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>  <span class="c1"># Concatenate those</span>
+
+<span class="n">time_signal</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;test.wav&#39;</span><span class="p">)</span>  <span class="c1"># Save to test.wav</span>
+<span class="n">time_signal</span><span class="o">.</span><span class="n">play</span><span class="p">()</span>  <span class="c1"># Play sound</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">PyGenSound</a></h1>
+
+
+
+<p class="blurb">The python library for generating sound and compute.</p>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Tutorial</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#make-simple-sound">Make simple sound</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#play-and-save">Play and save</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#overlay-or-concatenate">Overlay or concatenate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#use-sound-effects">Use sound effects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#examples">Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#make-nhk-time-signal-sound">Make NHK time signal sound</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial-commandline.html">Commandline Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules/index.html">Modules reference</a></li>
+</ul>
+
+
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, MacRat.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/tutorial.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+    <a href="https://github.com/macrat/PyGenSound" class="github">
+        <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"  class="github"/>
+    </a>
+    
+
+    
+  </body>
+</html>
