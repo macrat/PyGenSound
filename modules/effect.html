@@ -46,437 +46,7 @@
             
   <div class="section" id="module-gensound.effect">
 <span id="gensound-effect"></span><h1>gensound.effect<a class="headerlink" href="#module-gensound.effect" title="Permalink to this headline">¶</a></h1>
-<div class="contents local topic" id="contents">
-<ul class="simple">
-<li><a class="reference internal" href="#classes" id="id1">Classes</a></li>
-<li><a class="reference internal" href="#base-classes" id="id2">Base classes</a></li>
-</ul>
-</div>
-<div class="section" id="classes">
-<h2>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="gensound.effect.LinearFadeIn">
-<em class="property">class </em><code class="descclassname">gensound.effect.</code><code class="descname">LinearFadeIn</code><span class="sig-paren">(</span><em>duration: typing.Union[float</em>, <em>NoneType] = None</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/gensound/effect.html#LinearFadeIn"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.effect.LinearFadeIn" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#gensound.effect.MaskStartEffect" title="gensound.effect.MaskStartEffect"><code class="xref py py-class docutils literal"><span class="pre">gensound.effect.MaskStartEffect</span></code></a></p>
-<p>Linear fade-in effect</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>duration</strong> &#8211; Duration in seconds of mask. Mathing to sound duration if
-None.</td>
-</tr>
-</tbody>
-</table>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="n">Sound</span><span class="o">.</span><span class="n">from_array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="p">(</span><span class="n">LinearFadeIn</span><span class="p">()</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
-<span class="gp">... </span> <span class="o">==</span> <span class="n">Sound</span><span class="o">.</span><span class="n">from_array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.75</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span> <span class="mi">1</span><span class="p">))</span>
-<span class="go">True</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="p">(</span><span class="n">LinearFadeIn</span><span class="p">(</span><span class="n">duration</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
-<span class="gp">... </span> <span class="o">==</span> <span class="n">Sound</span><span class="o">.</span><span class="n">from_array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span> <span class="mi">1</span><span class="p">))</span>
-<span class="go">True</span>
-</pre></div>
-</div>
-<dl class="method">
-<dt id="gensound.effect.LinearFadeIn.gen_mask">
-<code class="descname">gen_mask</code><span class="sig-paren">(</span><em>length: int</em><span class="sig-paren">)</span> &#x2192; &lt;built-in function array&gt;<a class="reference internal" href="../_modules/gensound/effect.html#LinearFadeIn.gen_mask"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.effect.LinearFadeIn.gen_mask" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="gensound.effect.LinearFadeIn.apply">
-<code class="descname">apply</code><span class="sig-paren">(</span><em>sound: gensound.sound.Sound</em><span class="sig-paren">)</span> &#x2192; gensound.sound.Sound<a class="headerlink" href="#gensound.effect.LinearFadeIn.apply" title="Permalink to this definition">¶</a></dt>
-<dd><p>Apply effect to sound</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sound</strong> &#8211; <code class="xref py py-class docutils literal"><span class="pre">Sound</span></code> instance to appling effect.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A new <code class="xref py py-class docutils literal"><span class="pre">Sound</span></code> instance that applied effect.</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="gensound.effect.LinearFadeIn.then">
-<code class="descname">then</code><span class="sig-paren">(</span><em>effect: gensound.effect.Effect</em><span class="sig-paren">)</span> &#x2192; gensound.effect.Effect<a class="headerlink" href="#gensound.effect.LinearFadeIn.then" title="Permalink to this definition">¶</a></dt>
-<dd><p>Join effect</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Effect:</th><td class="field-body">Effect that will apply after this effect.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Joined effect.</td>
-</tr>
-</tbody>
-</table>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">in_</span> <span class="o">=</span> <span class="n">LinearFadeIn</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">out</span> <span class="o">=</span> <span class="n">LinearFadeOut</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">sound</span> <span class="o">=</span> <span class="n">Sound</span><span class="o">.</span><span class="n">from_sinwave</span><span class="p">(</span><span class="mi">440</span><span class="p">)</span>
-</pre></div>
-</div>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">out</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">in_</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">sound</span><span class="p">))</span> <span class="o">==</span> <span class="n">in_</span><span class="o">.</span><span class="n">then</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">sound</span><span class="p">)</span>
-<span class="go">True</span>
-</pre></div>
-</div>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="gensound.effect.LinearFadeOut">
-<em class="property">class </em><code class="descclassname">gensound.effect.</code><code class="descname">LinearFadeOut</code><span class="sig-paren">(</span><em>duration: typing.Union[float</em>, <em>NoneType] = None</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/gensound/effect.html#LinearFadeOut"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.effect.LinearFadeOut" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#gensound.effect.MaskEndEffect" title="gensound.effect.MaskEndEffect"><code class="xref py py-class docutils literal"><span class="pre">gensound.effect.MaskEndEffect</span></code></a></p>
-<p>Linear fade-out effect</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>duration</strong> &#8211; Duration in seconds of mask. Mathing to sound duration if
-None.</td>
-</tr>
-</tbody>
-</table>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="n">Sound</span><span class="o">.</span><span class="n">from_array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="p">(</span><span class="n">LinearFadeOut</span><span class="p">()</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
-<span class="gp">... </span> <span class="o">==</span> <span class="n">Sound</span><span class="o">.</span><span class="n">from_array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.75</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="mi">1</span><span class="p">))</span>
-<span class="go">True</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="p">(</span><span class="n">LinearFadeOut</span><span class="p">(</span><span class="n">duration</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
-<span class="gp">... </span> <span class="o">==</span> <span class="n">Sound</span><span class="o">.</span><span class="n">from_array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="mi">1</span><span class="p">))</span>
-<span class="go">True</span>
-</pre></div>
-</div>
-<dl class="method">
-<dt id="gensound.effect.LinearFadeOut.gen_mask">
-<code class="descname">gen_mask</code><span class="sig-paren">(</span><em>length: int</em><span class="sig-paren">)</span> &#x2192; &lt;built-in function array&gt;<a class="reference internal" href="../_modules/gensound/effect.html#LinearFadeOut.gen_mask"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.effect.LinearFadeOut.gen_mask" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="gensound.effect.LinearFadeOut.apply">
-<code class="descname">apply</code><span class="sig-paren">(</span><em>sound: gensound.sound.Sound</em><span class="sig-paren">)</span> &#x2192; gensound.sound.Sound<a class="headerlink" href="#gensound.effect.LinearFadeOut.apply" title="Permalink to this definition">¶</a></dt>
-<dd><p>Apply effect to sound</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sound</strong> &#8211; <code class="xref py py-class docutils literal"><span class="pre">Sound</span></code> instance to appling effect.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A new <code class="xref py py-class docutils literal"><span class="pre">Sound</span></code> instance that applied effect.</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="gensound.effect.LinearFadeOut.then">
-<code class="descname">then</code><span class="sig-paren">(</span><em>effect: gensound.effect.Effect</em><span class="sig-paren">)</span> &#x2192; gensound.effect.Effect<a class="headerlink" href="#gensound.effect.LinearFadeOut.then" title="Permalink to this definition">¶</a></dt>
-<dd><p>Join effect</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Effect:</th><td class="field-body">Effect that will apply after this effect.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Joined effect.</td>
-</tr>
-</tbody>
-</table>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">in_</span> <span class="o">=</span> <span class="n">LinearFadeIn</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">out</span> <span class="o">=</span> <span class="n">LinearFadeOut</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">sound</span> <span class="o">=</span> <span class="n">Sound</span><span class="o">.</span><span class="n">from_sinwave</span><span class="p">(</span><span class="mi">440</span><span class="p">)</span>
-</pre></div>
-</div>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">out</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">in_</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">sound</span><span class="p">))</span> <span class="o">==</span> <span class="n">in_</span><span class="o">.</span><span class="n">then</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">sound</span><span class="p">)</span>
-<span class="go">True</span>
-</pre></div>
-</div>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="gensound.effect.LowPassFilter">
-<em class="property">class </em><code class="descclassname">gensound.effect.</code><code class="descname">LowPassFilter</code><span class="sig-paren">(</span><em>freq: float</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/gensound/effect.html#LowPassFilter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.effect.LowPassFilter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#gensound.effect.Effect" title="gensound.effect.Effect"><code class="xref py py-class docutils literal"><span class="pre">gensound.effect.Effect</span></code></a></p>
-<p>Low pass filter</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>freq</strong> &#8211; A threshold frequency.</td>
-</tr>
-</tbody>
-</table>
-<dl class="method">
-<dt id="gensound.effect.LowPassFilter.apply">
-<code class="descname">apply</code><span class="sig-paren">(</span><em>sound: gensound.sound.Sound</em><span class="sig-paren">)</span> &#x2192; gensound.sound.Sound<a class="reference internal" href="../_modules/gensound/effect.html#LowPassFilter.apply"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.effect.LowPassFilter.apply" title="Permalink to this definition">¶</a></dt>
-<dd><p>Apply effect to sound</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sound</strong> &#8211; <code class="xref py py-class docutils literal"><span class="pre">Sound</span></code> instance to appling effect.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A new <code class="xref py py-class docutils literal"><span class="pre">Sound</span></code> instance that applied effect.</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="gensound.effect.LowPassFilter.then">
-<code class="descname">then</code><span class="sig-paren">(</span><em>effect: gensound.effect.Effect</em><span class="sig-paren">)</span> &#x2192; gensound.effect.Effect<a class="headerlink" href="#gensound.effect.LowPassFilter.then" title="Permalink to this definition">¶</a></dt>
-<dd><p>Join effect</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Effect:</th><td class="field-body">Effect that will apply after this effect.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Joined effect.</td>
-</tr>
-</tbody>
-</table>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">in_</span> <span class="o">=</span> <span class="n">LinearFadeIn</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">out</span> <span class="o">=</span> <span class="n">LinearFadeOut</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">sound</span> <span class="o">=</span> <span class="n">Sound</span><span class="o">.</span><span class="n">from_sinwave</span><span class="p">(</span><span class="mi">440</span><span class="p">)</span>
-</pre></div>
-</div>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">out</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">in_</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">sound</span><span class="p">))</span> <span class="o">==</span> <span class="n">in_</span><span class="o">.</span><span class="n">then</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">sound</span><span class="p">)</span>
-<span class="go">True</span>
-</pre></div>
-</div>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="gensound.effect.HighPassFilter">
-<em class="property">class </em><code class="descclassname">gensound.effect.</code><code class="descname">HighPassFilter</code><span class="sig-paren">(</span><em>freq: float</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/gensound/effect.html#HighPassFilter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.effect.HighPassFilter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#gensound.effect.Effect" title="gensound.effect.Effect"><code class="xref py py-class docutils literal"><span class="pre">gensound.effect.Effect</span></code></a></p>
-<p>High pass filter</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>freq</strong> &#8211; A threshold frequency.</td>
-</tr>
-</tbody>
-</table>
-<dl class="method">
-<dt id="gensound.effect.HighPassFilter.apply">
-<code class="descname">apply</code><span class="sig-paren">(</span><em>sound: gensound.sound.Sound</em><span class="sig-paren">)</span> &#x2192; gensound.sound.Sound<a class="reference internal" href="../_modules/gensound/effect.html#HighPassFilter.apply"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.effect.HighPassFilter.apply" title="Permalink to this definition">¶</a></dt>
-<dd><p>Apply effect to sound</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sound</strong> &#8211; <code class="xref py py-class docutils literal"><span class="pre">Sound</span></code> instance to appling effect.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A new <code class="xref py py-class docutils literal"><span class="pre">Sound</span></code> instance that applied effect.</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="gensound.effect.HighPassFilter.then">
-<code class="descname">then</code><span class="sig-paren">(</span><em>effect: gensound.effect.Effect</em><span class="sig-paren">)</span> &#x2192; gensound.effect.Effect<a class="headerlink" href="#gensound.effect.HighPassFilter.then" title="Permalink to this definition">¶</a></dt>
-<dd><p>Join effect</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Effect:</th><td class="field-body">Effect that will apply after this effect.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Joined effect.</td>
-</tr>
-</tbody>
-</table>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">in_</span> <span class="o">=</span> <span class="n">LinearFadeIn</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">out</span> <span class="o">=</span> <span class="n">LinearFadeOut</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">sound</span> <span class="o">=</span> <span class="n">Sound</span><span class="o">.</span><span class="n">from_sinwave</span><span class="p">(</span><span class="mi">440</span><span class="p">)</span>
-</pre></div>
-</div>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">out</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">in_</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">sound</span><span class="p">))</span> <span class="o">==</span> <span class="n">in_</span><span class="o">.</span><span class="n">then</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">sound</span><span class="p">)</span>
-<span class="go">True</span>
-</pre></div>
-</div>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="gensound.effect.Resampling">
-<em class="property">class </em><code class="descclassname">gensound.effect.</code><code class="descname">Resampling</code><span class="sig-paren">(</span><em>samplerate: float</em>, <em>kind: str = 'cubic'</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/gensound/effect.html#Resampling"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.effect.Resampling" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#gensound.effect.Effect" title="gensound.effect.Effect"><code class="xref py py-class docutils literal"><span class="pre">gensound.effect.Effect</span></code></a></p>
-<p>Resampling effect</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>samplerate</strong> &#8211; New sampling rate.</li>
-<li><strong>kind</strong> &#8211; The way to interpolating data. Please see document of
-scipy.interpolate.interp1d.</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-<p>Change sampling rate without changes sound duration.</p>
-<p>If the sampling rate of passed sound is same as target sampling rate, will
-return the same instance without re-sampling process.</p>
-<p>This example does resampling from 44100 Hz to 88200 Hz.</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">original</span> <span class="o">=</span> <span class="n">Sound</span><span class="o">.</span><span class="n">from_sinwave</span><span class="p">(</span><span class="mi">440</span><span class="p">,</span> <span class="n">duration</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">samplerate</span><span class="o">=</span><span class="mi">44100</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">original</span><span class="o">.</span><span class="n">samplerate</span>
-<span class="go">44100</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">abs</span><span class="p">(</span><span class="n">original</span><span class="o">.</span><span class="n">duration</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">0.01</span>
-<span class="go">True</span>
-</pre></div>
-</div>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">resampled</span> <span class="o">=</span> <span class="n">Resampling</span><span class="p">(</span><span class="mi">88200</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">original</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">resampled</span><span class="o">.</span><span class="n">samplerate</span>
-<span class="go">88200</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">abs</span><span class="p">(</span><span class="n">resampled</span><span class="o">.</span><span class="n">duration</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">0.01</span>
-<span class="go">True</span>
-</pre></div>
-</div>
-<dl class="method">
-<dt id="gensound.effect.Resampling.apply">
-<code class="descname">apply</code><span class="sig-paren">(</span><em>sound: gensound.sound.Sound</em><span class="sig-paren">)</span> &#x2192; gensound.sound.Sound<a class="reference internal" href="../_modules/gensound/effect.html#Resampling.apply"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.effect.Resampling.apply" title="Permalink to this definition">¶</a></dt>
-<dd><p>Apply effect to sound</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sound</strong> &#8211; <code class="xref py py-class docutils literal"><span class="pre">Sound</span></code> instance to appling effect.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A new <code class="xref py py-class docutils literal"><span class="pre">Sound</span></code> instance that applied effect.</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="gensound.effect.Resampling.then">
-<code class="descname">then</code><span class="sig-paren">(</span><em>effect: gensound.effect.Effect</em><span class="sig-paren">)</span> &#x2192; gensound.effect.Effect<a class="headerlink" href="#gensound.effect.Resampling.then" title="Permalink to this definition">¶</a></dt>
-<dd><p>Join effect</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Effect:</th><td class="field-body">Effect that will apply after this effect.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Joined effect.</td>
-</tr>
-</tbody>
-</table>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">in_</span> <span class="o">=</span> <span class="n">LinearFadeIn</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">out</span> <span class="o">=</span> <span class="n">LinearFadeOut</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">sound</span> <span class="o">=</span> <span class="n">Sound</span><span class="o">.</span><span class="n">from_sinwave</span><span class="p">(</span><span class="mi">440</span><span class="p">)</span>
-</pre></div>
-</div>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">out</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">in_</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">sound</span><span class="p">))</span> <span class="o">==</span> <span class="n">in_</span><span class="o">.</span><span class="n">then</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">sound</span><span class="p">)</span>
-<span class="go">True</span>
-</pre></div>
-</div>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="gensound.effect.ChangeSpeed">
-<em class="property">class </em><code class="descclassname">gensound.effect.</code><code class="descname">ChangeSpeed</code><span class="sig-paren">(</span><em>speed_rate: float</em>, <em>kind: str = 'cubic'</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/gensound/effect.html#ChangeSpeed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.effect.ChangeSpeed" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#gensound.effect.Effect" title="gensound.effect.Effect"><code class="xref py py-class docutils literal"><span class="pre">gensound.effect.Effect</span></code></a></p>
-<p>Change sound speed effect</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>speed_rate</strong> &#8211; Speed rate of new sound. 1.0 means don&#8217;t change speed.</li>
-<li><strong>kind</strong> &#8211; The way to interpolating data. Please see document of
-scipy.interpolate.interp1d.</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-<p>Change sound duration without changes sampling rate.</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">original</span> <span class="o">=</span> <span class="n">Sound</span><span class="o">.</span><span class="n">from_sinwave</span><span class="p">(</span><span class="mi">440</span><span class="p">,</span> <span class="n">duration</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">smooth_end</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">original</span><span class="o">.</span><span class="n">duration</span> <span class="o">==</span> <span class="mf">1.0</span>
-<span class="go">True</span>
-</pre></div>
-</div>
-<p>This example changes duration from 1sec to 2sec.</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">slow</span> <span class="o">=</span> <span class="n">ChangeSpeed</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">original</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">slow</span><span class="o">.</span><span class="n">duration</span> <span class="o">==</span> <span class="mf">0.5</span>
-<span class="go">True</span>
-</pre></div>
-</div>
-<p>And, changes duration to 0.5sec.</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">fast</span> <span class="o">=</span> <span class="n">ChangeSpeed</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">original</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">fast</span><span class="o">.</span><span class="n">duration</span> <span class="o">==</span> <span class="mf">2.0</span>
-<span class="go">True</span>
-</pre></div>
-</div>
-<p>Sampling rate will not be changed.</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">original</span><span class="o">.</span><span class="n">samplerate</span> <span class="o">==</span> <span class="n">slow</span><span class="o">.</span><span class="n">samplerate</span>
-<span class="go">True</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">original</span><span class="o">.</span><span class="n">samplerate</span> <span class="o">==</span> <span class="n">fast</span><span class="o">.</span><span class="n">samplerate</span>
-<span class="go">True</span>
-</pre></div>
-</div>
-<dl class="method">
-<dt id="gensound.effect.ChangeSpeed.apply">
-<code class="descname">apply</code><span class="sig-paren">(</span><em>sound: gensound.sound.Sound</em><span class="sig-paren">)</span> &#x2192; gensound.sound.Sound<a class="reference internal" href="../_modules/gensound/effect.html#ChangeSpeed.apply"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.effect.ChangeSpeed.apply" title="Permalink to this definition">¶</a></dt>
-<dd><p>Apply effect to sound</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sound</strong> &#8211; <code class="xref py py-class docutils literal"><span class="pre">Sound</span></code> instance to appling effect.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A new <code class="xref py py-class docutils literal"><span class="pre">Sound</span></code> instance that applied effect.</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="gensound.effect.ChangeSpeed.then">
-<code class="descname">then</code><span class="sig-paren">(</span><em>effect: gensound.effect.Effect</em><span class="sig-paren">)</span> &#x2192; gensound.effect.Effect<a class="headerlink" href="#gensound.effect.ChangeSpeed.then" title="Permalink to this definition">¶</a></dt>
-<dd><p>Join effect</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Effect:</th><td class="field-body">Effect that will apply after this effect.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Joined effect.</td>
-</tr>
-</tbody>
-</table>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">in_</span> <span class="o">=</span> <span class="n">LinearFadeIn</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">out</span> <span class="o">=</span> <span class="n">LinearFadeOut</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">sound</span> <span class="o">=</span> <span class="n">Sound</span><span class="o">.</span><span class="n">from_sinwave</span><span class="p">(</span><span class="mi">440</span><span class="p">)</span>
-</pre></div>
-</div>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">out</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">in_</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">sound</span><span class="p">))</span> <span class="o">==</span> <span class="n">in_</span><span class="o">.</span><span class="n">then</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">sound</span><span class="p">)</span>
-<span class="go">True</span>
-</pre></div>
-</div>
-</dd></dl>
-
-</dd></dl>
-
-</div>
-<div class="section" id="base-classes">
-<h2>Base classes<a class="headerlink" href="#base-classes" title="Permalink to this headline">¶</a></h2>
-<p>Base classes for effects. Haven&#8217;t to care about those if you don&#8217;t make new Effect.</p>
+<p>The module of audio effects</p>
 <dl class="class">
 <dt id="gensound.effect.Effect">
 <em class="property">class </em><code class="descclassname">gensound.effect.</code><code class="descname">Effect</code><a class="reference internal" href="../_modules/gensound/effect.html#Effect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.effect.Effect" title="Permalink to this definition">¶</a></dt>
@@ -570,9 +140,41 @@ scipy.interpolate.interp1d.</li>
 </dd></dl>
 
 <dl class="class">
+<dt id="gensound.effect.MaskEffect">
+<em class="property">class </em><code class="descclassname">gensound.effect.</code><code class="descname">MaskEffect</code><span class="sig-paren">(</span><em>duration: typing.Union[float</em>, <em>NoneType] = None</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/gensound/effect.html#MaskEffect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.effect.MaskEffect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#gensound.effect.Effect" title="gensound.effect.Effect"><code class="xref py py-class docutils literal"><span class="pre">gensound.effect.Effect</span></code></a></p>
+<p>Masking effect</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>duration</strong> &#8211; Duration in seconds of mask. Mathing to sound duration if
+None.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="gensound.effect.MaskEffect.gen_mask">
+<code class="descname">gen_mask</code><span class="sig-paren">(</span><em>length: int</em><span class="sig-paren">)</span> &#x2192; &lt;built-in function array&gt;<a class="reference internal" href="../_modules/gensound/effect.html#MaskEffect.gen_mask"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.effect.MaskEffect.gen_mask" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate mask</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>length</strong> &#8211; Length of mask array.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Mask value.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="gensound.effect.MaskStartEffect">
 <em class="property">class </em><code class="descclassname">gensound.effect.</code><code class="descname">MaskStartEffect</code><span class="sig-paren">(</span><em>duration: typing.Union[float</em>, <em>NoneType] = None</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/gensound/effect.html#MaskStartEffect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.effect.MaskStartEffect" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">gensound.effect.MaskEffect</span></code></p>
+<dd><p>Bases: <a class="reference internal" href="#gensound.effect.MaskEffect" title="gensound.effect.MaskEffect"><code class="xref py py-class docutils literal"><span class="pre">gensound.effect.MaskEffect</span></code></a></p>
 <p>Effect that masking start of sound</p>
 <dl class="method">
 <dt id="gensound.effect.MaskStartEffect.apply">
@@ -595,7 +197,7 @@ scipy.interpolate.interp1d.</li>
 <dl class="class">
 <dt id="gensound.effect.MaskEndEffect">
 <em class="property">class </em><code class="descclassname">gensound.effect.</code><code class="descname">MaskEndEffect</code><span class="sig-paren">(</span><em>duration: typing.Union[float</em>, <em>NoneType] = None</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/gensound/effect.html#MaskEndEffect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.effect.MaskEndEffect" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">gensound.effect.MaskEffect</span></code></p>
+<dd><p>Bases: <a class="reference internal" href="#gensound.effect.MaskEffect" title="gensound.effect.MaskEffect"><code class="xref py py-class docutils literal"><span class="pre">gensound.effect.MaskEffect</span></code></a></p>
 <p>Effect that masking end of sound</p>
 <dl class="method">
 <dt id="gensound.effect.MaskEndEffect.apply">
@@ -615,7 +217,269 @@ scipy.interpolate.interp1d.</li>
 
 </dd></dl>
 
+<dl class="class">
+<dt id="gensound.effect.LinearFadeIn">
+<em class="property">class </em><code class="descclassname">gensound.effect.</code><code class="descname">LinearFadeIn</code><span class="sig-paren">(</span><em>duration: typing.Union[float</em>, <em>NoneType] = None</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/gensound/effect.html#LinearFadeIn"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.effect.LinearFadeIn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#gensound.effect.MaskStartEffect" title="gensound.effect.MaskStartEffect"><code class="xref py py-class docutils literal"><span class="pre">gensound.effect.MaskStartEffect</span></code></a></p>
+<p>Linear fade-in effect</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>duration</strong> &#8211; Duration in seconds of mask. Mathing to sound duration if
+None.</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="n">Sound</span><span class="o">.</span><span class="n">from_array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">(</span><span class="n">LinearFadeIn</span><span class="p">()</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+<span class="gp">... </span> <span class="o">==</span> <span class="n">Sound</span><span class="o">.</span><span class="n">from_array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.75</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span> <span class="mi">1</span><span class="p">))</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">(</span><span class="n">LinearFadeIn</span><span class="p">(</span><span class="n">duration</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+<span class="gp">... </span> <span class="o">==</span> <span class="n">Sound</span><span class="o">.</span><span class="n">from_array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span> <span class="mi">1</span><span class="p">))</span>
+<span class="go">True</span>
+</pre></div>
 </div>
+<dl class="method">
+<dt id="gensound.effect.LinearFadeIn.gen_mask">
+<code class="descname">gen_mask</code><span class="sig-paren">(</span><em>length: int</em><span class="sig-paren">)</span> &#x2192; &lt;built-in function array&gt;<a class="reference internal" href="../_modules/gensound/effect.html#LinearFadeIn.gen_mask"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.effect.LinearFadeIn.gen_mask" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="gensound.effect.LinearFadeOut">
+<em class="property">class </em><code class="descclassname">gensound.effect.</code><code class="descname">LinearFadeOut</code><span class="sig-paren">(</span><em>duration: typing.Union[float</em>, <em>NoneType] = None</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/gensound/effect.html#LinearFadeOut"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.effect.LinearFadeOut" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#gensound.effect.MaskEndEffect" title="gensound.effect.MaskEndEffect"><code class="xref py py-class docutils literal"><span class="pre">gensound.effect.MaskEndEffect</span></code></a></p>
+<p>Linear fade-out effect</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>duration</strong> &#8211; Duration in seconds of mask. Mathing to sound duration if
+None.</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="n">Sound</span><span class="o">.</span><span class="n">from_array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">(</span><span class="n">LinearFadeOut</span><span class="p">()</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+<span class="gp">... </span> <span class="o">==</span> <span class="n">Sound</span><span class="o">.</span><span class="n">from_array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.75</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="mi">1</span><span class="p">))</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">(</span><span class="n">LinearFadeOut</span><span class="p">(</span><span class="n">duration</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+<span class="gp">... </span> <span class="o">==</span> <span class="n">Sound</span><span class="o">.</span><span class="n">from_array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="mi">1</span><span class="p">))</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<dl class="method">
+<dt id="gensound.effect.LinearFadeOut.gen_mask">
+<code class="descname">gen_mask</code><span class="sig-paren">(</span><em>length: int</em><span class="sig-paren">)</span> &#x2192; &lt;built-in function array&gt;<a class="reference internal" href="../_modules/gensound/effect.html#LinearFadeOut.gen_mask"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.effect.LinearFadeOut.gen_mask" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="gensound.effect.LowPassFilter">
+<em class="property">class </em><code class="descclassname">gensound.effect.</code><code class="descname">LowPassFilter</code><span class="sig-paren">(</span><em>freq: float</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/gensound/effect.html#LowPassFilter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.effect.LowPassFilter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#gensound.effect.Effect" title="gensound.effect.Effect"><code class="xref py py-class docutils literal"><span class="pre">gensound.effect.Effect</span></code></a></p>
+<p>Low pass filter</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>freq</strong> &#8211; A threshold frequency.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="gensound.effect.LowPassFilter.apply">
+<code class="descname">apply</code><span class="sig-paren">(</span><em>sound: gensound.sound.Sound</em><span class="sig-paren">)</span> &#x2192; gensound.sound.Sound<a class="reference internal" href="../_modules/gensound/effect.html#LowPassFilter.apply"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.effect.LowPassFilter.apply" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply effect to sound</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sound</strong> &#8211; <code class="xref py py-class docutils literal"><span class="pre">Sound</span></code> instance to appling effect.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A new <code class="xref py py-class docutils literal"><span class="pre">Sound</span></code> instance that applied effect.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="gensound.effect.HighPassFilter">
+<em class="property">class </em><code class="descclassname">gensound.effect.</code><code class="descname">HighPassFilter</code><span class="sig-paren">(</span><em>freq: float</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/gensound/effect.html#HighPassFilter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.effect.HighPassFilter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#gensound.effect.Effect" title="gensound.effect.Effect"><code class="xref py py-class docutils literal"><span class="pre">gensound.effect.Effect</span></code></a></p>
+<p>High pass filter</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>freq</strong> &#8211; A threshold frequency.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="gensound.effect.HighPassFilter.apply">
+<code class="descname">apply</code><span class="sig-paren">(</span><em>sound: gensound.sound.Sound</em><span class="sig-paren">)</span> &#x2192; gensound.sound.Sound<a class="reference internal" href="../_modules/gensound/effect.html#HighPassFilter.apply"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.effect.HighPassFilter.apply" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply effect to sound</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sound</strong> &#8211; <code class="xref py py-class docutils literal"><span class="pre">Sound</span></code> instance to appling effect.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A new <code class="xref py py-class docutils literal"><span class="pre">Sound</span></code> instance that applied effect.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="gensound.effect.Resampling">
+<em class="property">class </em><code class="descclassname">gensound.effect.</code><code class="descname">Resampling</code><span class="sig-paren">(</span><em>samplerate: float</em>, <em>kind: str = 'cubic'</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/gensound/effect.html#Resampling"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.effect.Resampling" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#gensound.effect.Effect" title="gensound.effect.Effect"><code class="xref py py-class docutils literal"><span class="pre">gensound.effect.Effect</span></code></a></p>
+<p>Resampling effect</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>samplerate</strong> &#8211; New sampling rate.</li>
+<li><strong>kind</strong> &#8211; The way to interpolating data. Please see document of
+scipy.interpolate.interp1d.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Change sampling rate without changes sound duration.</p>
+<p>If the sampling rate of passed sound is same as target sampling rate, will
+return the same instance without re-sampling process.</p>
+<p>This example does resampling from 44100 Hz to 88200 Hz.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">original</span> <span class="o">=</span> <span class="n">Sound</span><span class="o">.</span><span class="n">from_sinwave</span><span class="p">(</span><span class="mi">440</span><span class="p">,</span> <span class="n">duration</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">samplerate</span><span class="o">=</span><span class="mi">44100</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">original</span><span class="o">.</span><span class="n">samplerate</span>
+<span class="go">44100</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">abs</span><span class="p">(</span><span class="n">original</span><span class="o">.</span><span class="n">duration</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">0.01</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">resampled</span> <span class="o">=</span> <span class="n">Resampling</span><span class="p">(</span><span class="mi">88200</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">original</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">resampled</span><span class="o">.</span><span class="n">samplerate</span>
+<span class="go">88200</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">abs</span><span class="p">(</span><span class="n">resampled</span><span class="o">.</span><span class="n">duration</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">0.01</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<dl class="method">
+<dt id="gensound.effect.Resampling.apply">
+<code class="descname">apply</code><span class="sig-paren">(</span><em>sound: gensound.sound.Sound</em><span class="sig-paren">)</span> &#x2192; gensound.sound.Sound<a class="reference internal" href="../_modules/gensound/effect.html#Resampling.apply"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.effect.Resampling.apply" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply effect to sound</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sound</strong> &#8211; <code class="xref py py-class docutils literal"><span class="pre">Sound</span></code> instance to appling effect.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A new <code class="xref py py-class docutils literal"><span class="pre">Sound</span></code> instance that applied effect.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="gensound.effect.ChangeSpeed">
+<em class="property">class </em><code class="descclassname">gensound.effect.</code><code class="descname">ChangeSpeed</code><span class="sig-paren">(</span><em>speed_rate: float</em>, <em>kind: str = 'cubic'</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/gensound/effect.html#ChangeSpeed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.effect.ChangeSpeed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#gensound.effect.Effect" title="gensound.effect.Effect"><code class="xref py py-class docutils literal"><span class="pre">gensound.effect.Effect</span></code></a></p>
+<p>Change sound speed effect</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>speed_rate</strong> &#8211; Speed rate of new sound. 1.0 means don&#8217;t change speed.</li>
+<li><strong>kind</strong> &#8211; The way to interpolating data. Please see document of
+scipy.interpolate.interp1d.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Change sound duration without changes sampling rate.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">original</span> <span class="o">=</span> <span class="n">Sound</span><span class="o">.</span><span class="n">from_sinwave</span><span class="p">(</span><span class="mi">440</span><span class="p">,</span> <span class="n">duration</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">smooth_end</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">original</span><span class="o">.</span><span class="n">duration</span> <span class="o">==</span> <span class="mf">1.0</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<p>This example changes duration from 1sec to 2sec.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">slow</span> <span class="o">=</span> <span class="n">ChangeSpeed</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">original</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">slow</span><span class="o">.</span><span class="n">duration</span> <span class="o">==</span> <span class="mf">0.5</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<p>And, changes duration to 0.5sec.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">fast</span> <span class="o">=</span> <span class="n">ChangeSpeed</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">original</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fast</span><span class="o">.</span><span class="n">duration</span> <span class="o">==</span> <span class="mf">2.0</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<p>Automatically use ReversePlay if speed_rate was lower than 0.
+&gt;&gt;&gt; ChangeSpeed(-1).apply(original) == ReversePlay().apply(original)
+True</p>
+<p>Sampling rate will not be changed.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">original</span><span class="o">.</span><span class="n">samplerate</span> <span class="o">==</span> <span class="n">slow</span><span class="o">.</span><span class="n">samplerate</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">original</span><span class="o">.</span><span class="n">samplerate</span> <span class="o">==</span> <span class="n">fast</span><span class="o">.</span><span class="n">samplerate</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<dl class="method">
+<dt id="gensound.effect.ChangeSpeed.apply">
+<code class="descname">apply</code><span class="sig-paren">(</span><em>sound: gensound.sound.Sound</em><span class="sig-paren">)</span> &#x2192; gensound.sound.Sound<a class="reference internal" href="../_modules/gensound/effect.html#ChangeSpeed.apply"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.effect.ChangeSpeed.apply" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply effect to sound</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sound</strong> &#8211; <code class="xref py py-class docutils literal"><span class="pre">Sound</span></code> instance to appling effect.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A new <code class="xref py py-class docutils literal"><span class="pre">Sound</span></code> instance that applied effect.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="gensound.effect.ReversePlay">
+<em class="property">class </em><code class="descclassname">gensound.effect.</code><code class="descname">ReversePlay</code><a class="reference internal" href="../_modules/gensound/effect.html#ReversePlay"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.effect.ReversePlay" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#gensound.effect.Effect" title="gensound.effect.Effect"><code class="xref py py-class docutils literal"><span class="pre">gensound.effect.Effect</span></code></a></p>
+<p>Reverse play effect</p>
+<dl class="method">
+<dt id="gensound.effect.ReversePlay.apply">
+<code class="descname">apply</code><span class="sig-paren">(</span><em>sound: gensound.sound.Sound</em><span class="sig-paren">)</span> &#x2192; gensound.sound.Sound<a class="reference internal" href="../_modules/gensound/effect.html#ReversePlay.apply"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.effect.ReversePlay.apply" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply effect to sound</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sound</strong> &#8211; <code class="xref py py-class docutils literal"><span class="pre">Sound</span></code> instance to appling effect.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A new <code class="xref py py-class docutils literal"><span class="pre">Sound</span></code> instance that applied effect.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 
 
@@ -643,11 +507,7 @@ scipy.interpolate.interp1d.</li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorial-commandline.html">Commandline Tutorial</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Modules reference</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="sound.html">gensound.sound</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">gensound.effect</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#classes">Classes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#base-classes">Base classes</a></li>
-</ul>
-</li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">gensound.effect</a></li>
 <li class="toctree-l2"><a class="reference internal" href="exceptions.html">gensound.exceptions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="index.html#submodules">Submodules</a></li>
 </ul>

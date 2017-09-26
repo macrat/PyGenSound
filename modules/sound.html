@@ -46,14 +46,7 @@
             
   <div class="section" id="module-gensound.sound">
 <span id="gensound-sound"></span><h1>gensound.sound<a class="headerlink" href="#module-gensound.sound" title="Permalink to this headline">¶</a></h1>
-<div class="contents local topic" id="contents">
-<ul class="simple">
-<li><a class="reference internal" href="#classes" id="id1">Classes</a></li>
-<li><a class="reference internal" href="#functions" id="id2">Functions</a></li>
-</ul>
-</div>
-<div class="section" id="classes">
-<h2>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h2>
+<p>The module of Sound class for handling sound</p>
 <dl class="class">
 <dt id="gensound.sound.Sound">
 <em class="property">class </em><code class="descclassname">gensound.sound.</code><code class="descname">Sound</code><span class="sig-paren">(</span><em>data: &lt;built-in function array&gt;</em>, <em>samplerate: float</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/gensound/sound.html#Sound"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.sound.Sound" title="Permalink to this definition">¶</a></dt>
@@ -143,6 +136,38 @@ be careful, may make noise in end of sound if disable smooth_end.</p>
 <dt id="gensound.sound.Sound.from_sawtoothwave">
 <em class="property">classmethod </em><code class="descname">from_sawtoothwave</code><span class="sig-paren">(</span><em>frequency: float</em>, <em>duration: float = 1.0</em>, <em>volume: float = 1.0</em>, <em>samplerate: float = 44100</em><span class="sig-paren">)</span> &#x2192; gensound.sound.Sound<a class="reference internal" href="../_modules/gensound/sound.html#Sound.from_sawtoothwave"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.sound.Sound.from_sawtoothwave" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate sawtooth wave sound</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>frequency</strong> &#8211; Frequency of new sound.</li>
+<li><strong>duration</strong> &#8211; Duration in seconds of new sound.</li>
+<li><strong>volume</strong> &#8211; The volume of new sound.</li>
+<li><strong>samplerate</strong> &#8211; Sampling rate of new sound.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A new <a class="reference internal" href="#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a> instance.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="exceptions.html#gensound.exceptions.InvalidDurationError" title="gensound.exceptions.InvalidDurationError"><strong>InvalidDurationError</strong></a> &#8211; Duration was 0 or less.</li>
+<li><a class="reference internal" href="exceptions.html#gensound.exceptions.InvalidFrequencyError" title="gensound.exceptions.InvalidFrequencyError"><strong>InvalidFrequencyError</strong></a> &#8211; Frequency was 0 or less.</li>
+<li><a class="reference internal" href="exceptions.html#gensound.exceptions.InvalidSamplerateError" title="gensound.exceptions.InvalidSamplerateError"><strong>InvalidSamplerateError</strong></a> &#8211; Samplerate was 0 or less.</li>
+<li><a class="reference internal" href="exceptions.html#gensound.exceptions.InvalidVolumeError" title="gensound.exceptions.InvalidVolumeError"><strong>InvalidVolumeError</strong></a> &#8211; Volume was lower than 0.0 or higher
+than 1.0.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="gensound.sound.Sound.from_squarewave">
+<em class="property">classmethod </em><code class="descname">from_squarewave</code><span class="sig-paren">(</span><em>frequency: float</em>, <em>duration: float = 1.0</em>, <em>volume: float = 1.0</em>, <em>samplerate: float = 44100</em><span class="sig-paren">)</span> &#x2192; gensound.sound.Sound<a class="reference internal" href="../_modules/gensound/sound.html#Sound.from_squarewave"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.sound.Sound.from_squarewave" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate square wave sound</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -556,9 +581,6 @@ detect from file name if None.</li>
 
 </dd></dl>
 
-</div>
-<div class="section" id="functions">
-<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="gensound.sound.concat">
 <code class="descclassname">gensound.sound.</code><code class="descname">concat</code><span class="sig-paren">(</span><em>*sounds: gensound.sound.Sound</em><span class="sig-paren">)</span> &#x2192; gensound.sound.Sound<a class="reference internal" href="../_modules/gensound/sound.html#concat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.sound.concat" title="Permalink to this definition">¶</a></dt>
@@ -640,7 +662,6 @@ different.</td>
 </dd></dl>
 
 </div>
-</div>
 
 
           </div>
@@ -666,11 +687,7 @@ different.</td>
 <li class="toctree-l1"><a class="reference internal" href="../tutorial.html">Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorial-commandline.html">Commandline Tutorial</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Modules reference</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">gensound.sound</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#classes">Classes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#functions">Functions</a></li>
-</ul>
-</li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">gensound.sound</a></li>
 <li class="toctree-l2"><a class="reference internal" href="effect.html">gensound.effect</a></li>
 <li class="toctree-l2"><a class="reference internal" href="exceptions.html">gensound.exceptions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="index.html#submodules">Submodules</a></li>

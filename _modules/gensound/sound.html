@@ -272,6 +272,38 @@
         <span class="k">return</span> <span class="bp">cls</span><span class="p">((</span><span class="n">data</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">volume</span><span class="p">,</span> <span class="n">samplerate</span><span class="p">)</span></div>
 
     <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="Sound.from_squarewave"><a class="viewcode-back" href="../../modules/sound.html#gensound.sound.Sound.from_squarewave">[docs]</a>    <span class="k">def</span> <span class="nf">from_squarewave</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span>
+                        <span class="n">frequency</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                        <span class="n">duration</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
+                        <span class="n">volume</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
+                        <span class="n">samplerate</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">44100</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Sound&#39;</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; Generate square wave sound</span>
+
+<span class="sd">        :param frequency:  Frequency of new sound.</span>
+<span class="sd">        :param duration:   Duration in seconds of new sound.</span>
+<span class="sd">        :param volume:     The volume of new sound.</span>
+<span class="sd">        :param samplerate: Sampling rate of new sound.</span>
+
+<span class="sd">        :return: A new :class:`Sound` instance.</span>
+
+<span class="sd">        :exception InvalidDurationError:   Duration was 0 or less.</span>
+<span class="sd">        :exception InvalidFrequencyError:  Frequency was 0 or less.</span>
+<span class="sd">        :exception InvalidSamplerateError: Samplerate was 0 or less.</span>
+<span class="sd">        :exception InvalidVolumeError:     Volume was lower than 0.0 or higher</span>
+<span class="sd">                                           than 1.0.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">_assertDuration</span><span class="p">(</span><span class="n">duration</span><span class="p">)</span>
+        <span class="n">_assertFrequency</span><span class="p">(</span><span class="n">frequency</span><span class="p">)</span>
+        <span class="n">_assertSamplerate</span><span class="p">(</span><span class="n">samplerate</span><span class="p">)</span>
+        <span class="n">_assertVolume</span><span class="p">(</span><span class="n">volume</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span>
+            <span class="n">numpy</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">samplerate</span> <span class="o">/</span> <span class="n">frequency</span> <span class="o">/</span> <span class="mi">2</span><span class="p">))),</span>
+            <span class="o">-</span><span class="n">numpy</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">samplerate</span> <span class="o">/</span> <span class="n">frequency</span> <span class="o">/</span> <span class="mi">2</span><span class="p">))),</span>
+        <span class="p">])</span> <span class="o">*</span> <span class="n">volume</span><span class="p">,</span> <span class="n">samplerate</span><span class="p">)</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">duration</span><span class="p">)</span></div>
+
+    <span class="nd">@classmethod</span>
 <div class="viewcode-block" id="Sound.silence"><a class="viewcode-back" href="../../modules/sound.html#gensound.sound.Sound.silence">[docs]</a>    <span class="k">def</span> <span class="nf">silence</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span>
                 <span class="n">duration</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
                 <span class="n">samplerate</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">44100</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Sound&#39;</span><span class="p">:</span>

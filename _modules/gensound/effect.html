@@ -119,7 +119,7 @@
         <span class="k">return</span> <span class="n">sound</span></div></div>
 
 
-<span class="k">class</span> <span class="nc">MaskEffect</span><span class="p">(</span><span class="n">Effect</span><span class="p">):</span>
+<div class="viewcode-block" id="MaskEffect"><a class="viewcode-back" href="../../modules/effect.html#gensound.effect.MaskEffect">[docs]</a><span class="k">class</span> <span class="nc">MaskEffect</span><span class="p">(</span><span class="n">Effect</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Masking effect</span>
 
 <span class="sd">    :param duration: Duration in seconds of mask. Mathing to sound duration if</span>
@@ -129,7 +129,7 @@
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">duration</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">duration</span> <span class="o">=</span> <span class="n">duration</span>
 
-    <span class="k">def</span> <span class="nf">gen_mask</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">length</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">:</span>
+<div class="viewcode-block" id="MaskEffect.gen_mask"><a class="viewcode-back" href="../../modules/effect.html#gensound.effect.MaskEffect.gen_mask">[docs]</a>    <span class="k">def</span> <span class="nf">gen_mask</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">length</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot; Generate mask</span>
 
 <span class="sd">        :param length: Length of mask array.</span>
@@ -137,7 +137,7 @@
 <span class="sd">        :return: Mask value.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div></div>
 
 
 <div class="viewcode-block" id="MaskStartEffect"><a class="viewcode-back" href="../../modules/effect.html#gensound.effect.MaskStartEffect">[docs]</a><span class="k">class</span> <span class="nc">MaskStartEffect</span><span class="p">(</span><span class="n">MaskEffect</span><span class="p">):</span>
@@ -366,6 +366,10 @@
 <span class="sd">    &gt;&gt;&gt; fast.duration == 2.0</span>
 <span class="sd">    True</span>
 
+<span class="sd">    Automatically use ReversePlay if speed_rate was lower than 0.</span>
+<span class="sd">    &gt;&gt;&gt; ChangeSpeed(-1).apply(original) == ReversePlay().apply(original)</span>
+<span class="sd">    True</span>
+
 <span class="sd">    Sampling rate will not be changed.</span>
 
 <span class="sd">    &gt;&gt;&gt; original.samplerate == slow.samplerate</span>
@@ -375,6 +379,9 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">speed_rate</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">kind</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;cubic&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">speed_rate</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;speed_rate must not 0&#39;</span><span class="p">)</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">speed_rate</span> <span class="o">=</span> <span class="n">speed_rate</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">kind</span> <span class="o">=</span> <span class="n">kind</span>
 
@@ -386,9 +393,26 @@
 <span class="sd">        :return: A new :class:`Sound` instance that applied effect.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">resampler</span> <span class="o">=</span> <span class="n">Resampling</span><span class="p">(</span><span class="n">sound</span><span class="o">.</span><span class="n">samplerate</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed_rate</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed_rate</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">sound</span> <span class="o">=</span> <span class="n">ReversePlay</span><span class="p">()</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">sound</span><span class="p">)</span>
+
+        <span class="n">resampler</span> <span class="o">=</span> <span class="n">Resampling</span><span class="p">(</span><span class="n">sound</span><span class="o">.</span><span class="n">samplerate</span> <span class="o">/</span> <span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">speed_rate</span><span class="p">))</span>
 
         <span class="k">return</span> <span class="n">Sound</span><span class="p">(</span><span class="n">resampler</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">sound</span><span class="p">)</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">sound</span><span class="o">.</span><span class="n">samplerate</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="ReversePlay"><a class="viewcode-back" href="../../modules/effect.html#gensound.effect.ReversePlay">[docs]</a><span class="k">class</span> <span class="nc">ReversePlay</span><span class="p">(</span><span class="n">Effect</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Reverse play effect &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ReversePlay.apply"><a class="viewcode-back" href="../../modules/effect.html#gensound.effect.ReversePlay.apply">[docs]</a>    <span class="k">def</span> <span class="nf">apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sound</span><span class="p">:</span> <span class="n">Sound</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sound</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; Apply effect to sound</span>
+
+<span class="sd">        :param sound: :class:`Sound` instance to appling effect.</span>
+
+<span class="sd">        :return: A new :class:`Sound` instance that applied effect.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">Sound</span><span class="p">(</span><span class="n">sound</span><span class="o">.</span><span class="n">data</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">sound</span><span class="o">.</span><span class="n">samplerate</span><span class="p">)</span></div></div>
 </pre></div>
 
           </div>
