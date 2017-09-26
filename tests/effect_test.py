@@ -136,3 +136,29 @@ class ChangeSpeedTest(unittest.TestCase):
 
         self.assertEqual(ChangeSpeed(5 / 3).apply(sound),
                          Sound.from_array([-0.4, 0.0, 0.4], 5))
+
+    def test_change_speed_minus(self):
+        sound = Sound.from_array([-0.4, -0.2, 0.0, 0.2, 0.4], 5)
+
+        self.assertEqual(ChangeSpeed(-5 / 9).apply(sound),
+                         Sound.from_array([0.4, 0.3, 0.2, 0.1, 0.0, -0.1, -0.2,
+                                           -0.3, -0.4], 5))
+
+        self.assertEqual(ChangeSpeed(-5 / 3).apply(sound),
+                         Sound.from_array([0.4, 0.0, -0.4], 5))
+
+    def test_change_speed_invalid(self):
+        with self.assertRaises(ValueError, msg='speed_rate must not 0'):
+            ChangeSpeed(0)
+
+
+class ReversePlayTest(unittest.TestCase):
+    def test_reverse_play(self):
+        sound = Sound.from_array([-0.1, 0.0, 0.1, 0.2], 4)
+        reverse = ReversePlay().apply(sound)
+
+        self.assertEqual(reverse.samplerate, sound.samplerate)
+        self.assertEqual(reverse.duration, sound.duration)
+        self.assertEqual(tuple(reverse.data[:, 0]), (0.2, 0.1, 0.0, -0.1))
+
+        self.assertEqual(ReversePlay().then(ReversePlay()).apply(sound), sound)

@@ -321,6 +321,10 @@ class ChangeSpeed(Effect):
     >>> fast.duration == 2.0
     True
 
+    Automatically use ReversePlay if speed_rate was lower than 0.
+    >>> ChangeSpeed(-1).apply(original) == ReversePlay().apply(original)
+    True
+
     Sampling rate will not be changed.
 
     >>> original.samplerate == slow.samplerate
@@ -330,6 +334,9 @@ class ChangeSpeed(Effect):
     """
 
     def __init__(self, speed_rate: float, kind: str = 'cubic') -> None:
+        if speed_rate == 0:
+            raise ValueError('speed_rate must not 0')
+
         self.speed_rate = speed_rate
         self.kind = kind
 
@@ -341,6 +348,23 @@ class ChangeSpeed(Effect):
         :return: A new :class:`Sound` instance that applied effect.
         """
 
-        resampler = Resampling(sound.samplerate / self.speed_rate)
+        if self.speed_rate < 0:
+            sound = ReversePlay().apply(sound)
+
+        resampler = Resampling(sound.samplerate / abs(self.speed_rate))
 
         return Sound(resampler.apply(sound).data, sound.samplerate)
+
+
+class ReversePlay(Effect):
+    """ Reverse play effect """
+
+    def apply(self, sound: Sound) -> Sound:
+        """ Apply effect to sound
+
+        :param sound: :class:`Sound` instance to appling effect.
+
+        :return: A new :class:`Sound` instance that applied effect.
+        """
+
+        return Sound(sound.data[::-1], sound.samplerate)
