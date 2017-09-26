@@ -59,6 +59,15 @@ def command_sawtooth(args: argparse.Namespace):
     ), args)
 
 
+def command_square(args: argparse.Namespace):
+    save(gensound.Sound.from_squarewave(
+        args.frequency,
+        duration=args.duration,
+        volume=args.volume / 100,
+        samplerate=args.samplerate,
+    ), args)
+
+
 def command_silence(args: argparse.Namespace):
     save(gensound.Sound.silence(args.samplerate).repeat(args.duration), args)
 
@@ -221,6 +230,14 @@ def make_parser(prog: str = 'gensound'):
     )
     _setup_gencommand(sawtooth)
     sawtooth.set_defaults(handler=command_sawtooth)
+
+    square = subparsers.add_parser(
+        'square',
+        help='Generate square wave sound.',
+        description='Generate square wave sound.',
+    )
+    _setup_gencommand(square)
+    square.set_defaults(handler=command_square)
 
     silence = subparsers.add_parser('silence',
                                     help='Generate cilence sound.',

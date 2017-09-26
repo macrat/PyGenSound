@@ -227,6 +227,38 @@ class Sound:
         return cls((data * 2 - 1) * volume, samplerate)
 
     @classmethod
+    def from_squarewave(cls,
+                        frequency: float,
+                        duration: float = 1.0,
+                        volume: float = 1.0,
+                        samplerate: float = 44100) -> 'Sound':
+        """ Generate square wave sound
+
+        :param frequency:  Frequency of new sound.
+        :param duration:   Duration in seconds of new sound.
+        :param volume:     The volume of new sound.
+        :param samplerate: Sampling rate of new sound.
+
+        :return: A new :class:`Sound` instance.
+
+        :exception InvalidDurationError:   Duration was 0 or less.
+        :exception InvalidFrequencyError:  Frequency was 0 or less.
+        :exception InvalidSamplerateError: Samplerate was 0 or less.
+        :exception InvalidVolumeError:     Volume was lower than 0.0 or higher
+                                           than 1.0.
+        """
+
+        _assertDuration(duration)
+        _assertFrequency(frequency)
+        _assertSamplerate(samplerate)
+        _assertVolume(volume)
+
+        return cls(numpy.hstack([
+            numpy.ones(int(numpy.round(samplerate / frequency / 2))),
+            -numpy.ones(int(numpy.round(samplerate / frequency / 2))),
+        ]) * volume, samplerate).repeat(duration)
+
+    @classmethod
     def silence(cls,
                 duration: float = 1.0,
                 samplerate: float = 44100) -> 'Sound':

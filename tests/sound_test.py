@@ -344,6 +344,59 @@ class SoundTest(unittest.TestCase):
 
         self.assertEqual(cm.exception.frequency, 0)
 
+    def test_from_squarewave(self):
+        sound = Sound.from_squarewave(440,
+                                      duration=1,
+                                      volume=0.5,
+                                      samplerate=44100)
+
+        self.assertEqual(sound.samplerate, 44100)
+        self.assertEqual(sound.duration, 1.0)
+        self.assertTrue((-0.5 <= sound.data).all())
+        self.assertTrue((sound.data <= 0.5).all())
+        self.assertEqual(sound.volume, 0.5)
+
+        sound = Sound.from_squarewave(880,
+                                      duration=2,
+                                      volume=0.8,
+                                      samplerate=88200)
+
+        self.assertEqual(sound.samplerate, 88200)
+        self.assertTrue(sound.duration, 2.0)
+        self.assertTrue((-0.8 <= sound.data).all())
+        self.assertTrue((sound.data <= 0.8).all())
+        self.assertTrue(sound.volume, 0.8)
+
+        sound = Sound.from_squarewave(1, duration=2, samplerate=4)
+        self.assertTrue(numpy.allclose(sound.data[:, 0],
+                                       (1, 1, -1, -1, 1, 1, -1, -1)))
+
+    def test_from_squarewave_invalid(self):
+        with self.assertRaises(InvalidFrequencyError) as cm:
+            Sound.from_squarewave(0)
+
+        self.assertEqual(cm.exception.frequency, 0)
+
+        with self.assertRaises(InvalidDurationError) as cm:
+            Sound.from_squarewave(440, duration=0)
+
+        self.assertEqual(cm.exception.duration, 0)
+
+        with self.assertRaises(InvalidVolumeError) as cm:
+            Sound.from_squarewave(440, volume=-0.1)
+
+        self.assertEqual(cm.exception.volume, -0.1)
+
+        with self.assertRaises(InvalidVolumeError) as cm:
+            Sound.from_squarewave(440, volume=1.1)
+
+        self.assertEqual(cm.exception.volume, 1.1)
+
+        with self.assertRaises(InvalidSamplerateError) as cm:
+            Sound.from_squarewave(440, samplerate=0)
+
+        self.assertEqual(cm.exception.frequency, 0)
+
     def test_silence(self):
         sound = Sound.silence(duration=1.0, samplerate=100)
 
