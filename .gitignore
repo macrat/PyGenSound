@@ -1,9 +1,11 @@
 *.egg-info/
 .cache/
 .coverage
+.mypy_cache/
 __pycache__/
 build/
 dist/
+doc/_build/
 htmlcov/
 pip/
 

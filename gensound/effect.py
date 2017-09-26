@@ -1,4 +1,4 @@
-""" Audio effects """
+""" The module of audio effects """
 
 import typing
 
@@ -14,9 +14,9 @@ class Effect:
     def apply(self, sound: Sound) -> Sound:
         """ Apply effect to sound
 
-        sound -- Sound instance to appling effect.
+        :param sound: :class:`Sound` instance to appling effect.
 
-        return -- A new Sound instance that applied effect.
+        :return: A new :class:`Sound` instance that applied effect.
         """
 
         raise NotImplementedError()
@@ -24,17 +24,17 @@ class Effect:
     def then(self, effect: 'Effect') -> 'Effect':
         """ Join effect
 
+        :effect: Effect that will apply after this effect.
+
+        :return: Joined effect.
+
+
         >>> in_ = LinearFadeIn()
         >>> out = LinearFadeOut()
         >>> sound = Sound.from_sinwave(440)
 
         >>> out.apply(in_.apply(sound)) == in_.then(out).apply(sound)
         True
-
-
-        effect -- Effect that will apply after this effect.
-
-        return -- Joined effect.
         """
 
         return JoinedEffect(self, effect)
@@ -42,6 +42,9 @@ class Effect:
 
 class JoinedEffect(Effect):
     """ Joined multiple effects
+
+    :param effects: Effect instances to joint.
+
 
     >>> in_ = LinearFadeIn()
     >>> out = LinearFadeOut()
@@ -60,9 +63,9 @@ class JoinedEffect(Effect):
     def apply(self, sound: Sound) -> Sound:
         """ Apply all effects
 
-        sound -- Sound instance to appling effect.
+        :param sound: :class:`Sound` instance to appling effect.
 
-        return -- A new Sound instance that applied all effects.
+        :return: A new :class:`Sound` instance that applied all effects.
         """
 
         for e in self.effects:
@@ -72,22 +75,21 @@ class JoinedEffect(Effect):
 
 
 class MaskEffect(Effect):
-    """ Masking effect """
+    """ Masking effect
+
+    :param duration: Duration in seconds of mask. Mathing to sound duration if
+                     None.
+    """
 
     def __init__(self, duration: typing.Optional[float] = None) -> None:
-        """ Initialize
-
-        duration -- Duration in seconds of mask.
-        """
-
         self.duration = duration
 
     def gen_mask(self, length: int) -> numpy.array:
         """ Generate mask
 
-        length -- Length of mask array.
+        :param length: Length of mask array.
 
-        return -- Mask value.
+        :return: Mask value.
         """
 
         raise NotImplementedError()
@@ -97,6 +99,13 @@ class MaskStartEffect(MaskEffect):
     """ Effect that masking start of sound """
 
     def apply(self, sound: Sound) -> Sound:
+        """ Apply effect to sound
+
+        :param sound: :class:`Sound` instance to appling effect.
+
+        :return: A new :class:`Sound` instance that applied effect.
+        """
+
         length = len(sound.data)
         if self.duration is not None:
             length = int(numpy.round(self.duration * sound.samplerate))
@@ -115,6 +124,13 @@ class MaskEndEffect(MaskEffect):
     """ Effect that masking end of sound """
 
     def apply(self, sound: Sound) -> Sound:
+        """ Apply effect to sound
+
+        :param sound: :class:`Sound` instance to appling effect.
+
+        :return: A new :class:`Sound` instance that applied effect.
+        """
+
         length = sound.data.shape[0]
         if self.duration is not None:
             length = int(numpy.round(self.duration * sound.samplerate))
@@ -133,6 +149,10 @@ class MaskEndEffect(MaskEffect):
 class LinearFadeIn(MaskStartEffect):
     """ Linear fade-in effect
 
+    :param duration: Duration in seconds of mask. Mathing to sound duration if
+                     None.
+
+
     >>> s = Sound.from_array([1, 1, 1, 1, 1], 1)
     >>> (LinearFadeIn().apply(s)
     ...  == Sound.from_array([0.0, 0.25, 0.5, 0.75, 1.0], 1))
@@ -149,6 +169,10 @@ class LinearFadeIn(MaskStartEffect):
 class LinearFadeOut(MaskEndEffect):
     """ Linear fade-out effect
 
+    :param duration: Duration in seconds of mask. Mathing to sound duration if
+                     None.
+
+
     >>> s = Sound.from_array([1, 1, 1, 1, 1], 1)
     >>> (LinearFadeOut().apply(s)
     ...  == Sound.from_array([1.0, 0.75, 0.5, 0.25, 0.0], 1))
@@ -163,32 +187,44 @@ class LinearFadeOut(MaskEndEffect):
 
 
 class LowPassFilter(Effect):
-    """ Low pass filter """
+    """ Low pass filter
+
+    :param freq: A threshold frequency.
+    """
 
     def __init__(self, freq: float) -> None:
-        """
-        freq -- A threshold frequency.
-        """
-
         self.freq = freq
 
     def apply(self, sound: Sound) -> Sound:
+        """ Apply effect to sound
+
+        :param sound: :class:`Sound` instance to appling effect.
+
+        :return: A new :class:`Sound` instance that applied effect.
+        """
+
         f = sound.fft()
         f[f[:, :, 0] > self.freq, 1] = 0
         return Sound.from_fft(f, sound.samplerate)
 
 
 class HighPassFilter(Effect):
-    """ High pass filter """
+    """ High pass filter
+
+    :param freq: A threshold frequency.
+    """
 
     def __init__(self, freq: float) -> None:
-        """
-        freq -- A threshold frequency.
-        """
-
         self.freq = freq
 
     def apply(self, sound: Sound) -> Sound:
+        """ Apply effect to sound
+
+        :param sound: :class:`Sound` instance to appling effect.
+
+        :return: A new :class:`Sound` instance that applied effect.
+        """
+
         f = sound.fft()
         f[f[:, :, 0] < self.freq, 1] = 0
         return Sound.from_fft(f, sound.samplerate)
@@ -196,6 +232,11 @@ class HighPassFilter(Effect):
 
 class Resampling(Effect):
     """ Resampling effect
+
+    :param samplerate: New sampling rate.
+    :param kind:       The way to interpolating data. Please see document of
+                       scipy.interpolate.interp1d.
+
 
     Change sampling rate without changes sound duration.
 
@@ -219,17 +260,19 @@ class Resampling(Effect):
     """
 
     def __init__(self, samplerate: float, kind: str = 'cubic') -> None:
-        """
-        samplerate -- New sampling rate.
-        kind       -- The way to interpolating data.
-                      Please see document of scipy.interpolate.interp1d.
-        """
         assert 0 < samplerate
 
         self.samplerate = samplerate
         self.kind = kind
 
     def apply(self, sound: Sound) -> Sound:
+        """ Apply effect to sound
+
+        :param sound: :class:`Sound` instance to appling effect.
+
+        :return: A new :class:`Sound` instance that applied effect.
+        """
+
         if sound.samplerate == self.samplerate:
             return sound
 
@@ -253,6 +296,11 @@ class Resampling(Effect):
 
 class ChangeSpeed(Effect):
     """ Change sound speed effect
+
+    :param speed_rate: Speed rate of new sound. 1.0 means don't change speed.
+    :param kind:       The way to interpolating data. Please see document of
+                       scipy.interpolate.interp1d.
+
 
     Change sound duration without changes sampling rate.
 
@@ -282,16 +330,17 @@ class ChangeSpeed(Effect):
     """
 
     def __init__(self, speed_rate: float, kind: str = 'cubic') -> None:
-        """
-        speed_rate -- Speed rate of new sound. 1.0 means don't change speed.
-        kind       -- The way to interpolating data.
-                      Please see document of scipy.interpolate.interp1d.
-        """
-
         self.speed_rate = speed_rate
         self.kind = kind
 
     def apply(self, sound: Sound) -> Sound:
+        """ Apply effect to sound
+
+        :param sound: :class:`Sound` instance to appling effect.
+
+        :return: A new :class:`Sound` instance that applied effect.
+        """
+
         resampler = Resampling(sound.samplerate / self.speed_rate)
 
         return Sound(resampler.apply(sound).data, sound.samplerate)
