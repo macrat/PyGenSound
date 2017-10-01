@@ -152,6 +152,38 @@ class ChangeSpeedTest(unittest.TestCase):
             ChangeSpeed(0)
 
 
+class ChangeVolumeTest(unittest.TestCase):
+    def test_volume(self):
+        sound = Sound.from_sinwave(440)
+
+        self.assertAlmostEqual(sound.volume, 1, places=4)
+
+        sound = ChangeVolume(0.8).apply(sound)
+
+        self.assertAlmostEqual(sound.volume, 0.8, places=4)
+
+        sound = ChangeVolume(0.3).apply(sound)
+
+        self.assertAlmostEqual(sound.volume, 0.3, places=4)
+
+        sound = ChangeVolume(1.0).apply(sound)
+
+        self.assertAlmostEqual(sound.volume, 1, places=4)
+
+    def test_volume_invalid(self):
+        sound = Sound.from_sinwave(440)
+
+        with self.assertRaises(InvalidVolumeError) as cm:
+            ChangeVolume(-0.1)
+
+        self.assertEqual(cm.exception.volume, -0.1)
+
+        with self.assertRaises(InvalidVolumeError) as cm:
+            ChangeVolume(1.1)
+
+        self.assertEqual(cm.exception.volume, 1.1)
+
+
 class ReversePlayTest(unittest.TestCase):
     def test_reverse_play(self):
         sound = Sound.from_array([-0.1, 0.0, 0.1, 0.2], 4)

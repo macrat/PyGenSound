@@ -357,6 +357,54 @@ class ChangeSpeed(Effect):
         return Sound(resampler.apply(sound).data, sound.samplerate)
 
 
+class ChangeVolume(Effect):
+    """ Change volume effect
+
+    :param new_volume: New target volume.
+
+    :exception InvalidVolumeError: Volume was lower than 0 or higher than 1.
+
+
+    This volume means the maximum value of the wave.
+    Please be careful that is not gain.
+
+    >>> sound = Sound.from_sinwave(440, volume=1.0)
+
+    >>> 0.999 <= sound.data.max() <= 1.0
+    True
+    >>> -0.999 >= sound.data.min() >= -1.0
+    True
+
+    >>> half = ChangeVolume(0.5).apply(sound)
+    >>> 0.499 <= half.volume <= 0.501
+    True
+
+
+    This effect will return the same instance if given sound had the same
+    volume as the target volume.
+    """
+
+    def __init__(self, new_volume: float) -> Sound:
+        if new_volume < 0.0 or 1.0 < new_volume:
+            raise InvalidVolumeError(new_volume)
+
+        self.volume = new_volume
+
+    def apply(self, sound: Sound) -> Sound:
+        """ Apply effect to sound
+
+        :param sound: :class:`Sound` instance to appling effect.
+
+        :return: A :class:`Sound` instance that applied effect.
+        """
+
+        if sound.volume == self.volume:
+            return sound
+
+        return Sound(sound.data * (self.volume / sound.volume),
+                     sound.samplerate)
+
+
 class ReversePlay(Effect):
     """ Reverse play effect """
 

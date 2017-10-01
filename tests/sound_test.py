@@ -456,7 +456,7 @@ class SoundTest(unittest.TestCase):
         f[0, 128, 1] = numpy.complex(0, -numpy.pi)
         f[1, 256, 1] = numpy.complex(0, -numpy.pi)
 
-        s = Sound.from_fft(f).change_volume(1.0)
+        s = Sound.from_fft(f)
 
         self.assertEqual(s.samplerate, 1024)
         self.assertEqual(s.n_channels, 2)
@@ -464,7 +464,8 @@ class SoundTest(unittest.TestCase):
 
         from_sin = merge_channels(Sound.from_sinwave(128, samplerate=1024),
                                   Sound.from_sinwave(256, samplerate=1024))
-        self.assertTrue(numpy.allclose(s.data, from_sin.data))
+        self.assertTrue(numpy.allclose(s.data / s.volume,
+                                       from_sin.data / from_sin.volume))
 
     def test_from_fft_invalid(self):
         f = numpy.zeros([1024 // 2 + 1, 2], numpy.complex)
@@ -497,36 +498,6 @@ class SoundTest(unittest.TestCase):
         self.assertLessEqual(f[:, :, 0].max(), sound.samplerate)
         self.assertEqual(f[0, :, 1].argmax(), abs(f[0, :, 0] - 440).argmin())
         self.assertEqual(f[1, :, 1].argmax(), abs(f[1, :, 0] - 220).argmin())
-
-    def test_volume(self):
-        sound = Sound.from_sinwave(440)
-
-        self.assertAlmostEqual(sound.volume, 1, places=4)
-
-        sound = sound.change_volume(0.8)
-
-        self.assertAlmostEqual(sound.volume, 0.8, places=4)
-
-        sound = sound.change_volume(0.3)
-
-        self.assertAlmostEqual(sound.volume, 0.3, places=4)
-
-        sound = sound.change_volume(1.0)
-
-        self.assertAlmostEqual(sound.volume, 1, places=4)
-
-    def test_volume_invalid(self):
-        sound = Sound.from_sinwave(440)
-
-        with self.assertRaises(InvalidVolumeError) as cm:
-            sound.change_volume(-0.1)
-
-        self.assertEqual(cm.exception.volume, -0.1)
-
-        with self.assertRaises(InvalidVolumeError) as cm:
-            sound.change_volume(1.1)
-
-        self.assertEqual(cm.exception.volume, 1.1)
 
     def test_repeat(self):
         sound = Sound.from_array([0.0, 0.1, 0.2], 3)

@@ -537,39 +537,6 @@ class Sound:
             for channel in range(self.n_channels)
         ])
 
-    def change_volume(self, volume: float) -> 'Sound':
-        """ Create a new instance that changed volume
-
-        :param volume: New volume.
-
-        :return: A new :class:`Sound` instance that changed volume.
-
-        :exception InvalidVolumeError: Volume was lower than 0.0 or higher than
-                                       1.0.
-
-
-        This volume means the maximum value of the wave.
-        Please be careful that is not gain.
-
-        >>> sound = Sound.from_sinwave(440, volume=1.0)
-
-        >>> 0.999 <= sound.data.max() <= 1.0
-        True
-        >>> -0.999 >= sound.data.min() >= -1.0
-        True
-
-        >>> half = sound.change_volume(0.5)
-        >>> 0.499 <= half.volume <= 0.501
-        True
-        """
-
-        _assertVolume(volume)
-
-        return Sound(
-            self.data * (volume / self.volume),
-            self.samplerate
-        )
-
     def repeat(self, duration: float) -> 'Sound':
         """ Create a new instance that repeated same sound
 
