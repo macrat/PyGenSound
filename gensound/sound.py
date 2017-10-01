@@ -446,6 +446,11 @@ class Sound:
         Traceback (most recent call last):
             ...
         ValueError: step is not supported
+
+
+        :class:`Trim effect<gensound.effect.Trim>` has the same function this.
+        You can use :class:`<Trim effect<gensound.effect.Trim>` when process
+        many sounds by :class:`JoinedEffect<gensound.effect.JoinedEffect>`.
         """
 
         if isinstance(position, (int, float)):

@@ -162,3 +162,142 @@ class ReversePlayTest(unittest.TestCase):
         self.assertEqual(tuple(reverse.data[:, 0]), (0.2, 0.1, 0.0, -0.1))
 
         self.assertEqual(ReversePlay().then(ReversePlay()).apply(sound), sound)
+
+
+class TrimTest(unittest.TestCase):
+    def test_trim_head(self):
+        sound = Sound.from_array([[0.0, 0.3], [0.1, 0.4], [0.2, 0.5]], 3)
+
+        self.assertEqual(sound.duration, 1)
+        self.assertEqual(sound.n_channels, 2)
+        self.assertEqual(tuple(sound.data[:, 0]), (0.0, 0.1, 0.2))
+        self.assertEqual(tuple(sound.data[:, 1]), (0.3, 0.4, 0.5))
+
+        sound = Trim(end=2 / 3).apply(sound)
+
+        self.assertEqual(sound.duration, 2 / 3)
+        self.assertEqual(sound.n_channels, 2)
+        self.assertEqual(tuple(sound.data[:, 0]), (0.0, 0.1))
+        self.assertEqual(tuple(sound.data[:, 1]), (0.3, 0.4))
+
+        sound = Trim(end=1 / 3).apply(sound)
+
+        self.assertEqual(sound.duration, 1 / 3)
+        self.assertEqual(sound.n_channels, 2)
+        self.assertEqual(tuple(sound.data[:, 0]), (0.0, ))
+        self.assertEqual(tuple(sound.data[:, 1]), (0.3, ))
+
+    def test_trim_head_by_end(self):
+        sound = Sound.from_array([[0.0, 0.3], [0.1, 0.4], [0.2, 0.5]], 3)
+
+        self.assertEqual(sound.duration, 1)
+        self.assertEqual(sound.n_channels, 2)
+        self.assertEqual(tuple(sound.data[:, 0]), (0.0, 0.1, 0.2))
+        self.assertEqual(tuple(sound.data[:, 1]), (0.3, 0.4, 0.5))
+
+        sound = Trim(end=-1 / 3).apply(sound)
+
+        self.assertEqual(sound.duration, 2 / 3)
+        self.assertEqual(sound.n_channels, 2)
+        self.assertEqual(tuple(sound.data[:, 0]), (0.0, 0.1))
+        self.assertEqual(tuple(sound.data[:, 1]), (0.3, 0.4))
+
+        sound = Trim(end=-1 / 3).apply(sound)
+
+        self.assertEqual(sound.duration, 1 / 3)
+        self.assertEqual(sound.n_channels, 2)
+        self.assertEqual(tuple(sound.data[:, 0]), (0.0, ))
+        self.assertEqual(tuple(sound.data[:, 1]), (0.3, ))
+
+    def test_trim_tail(self):
+        sound = Sound.from_array([[0.0, 0.3], [0.1, 0.4], [0.2, 0.5]], 3)
+
+        self.assertEqual(sound.duration, 1)
+        self.assertEqual(sound.n_channels, 2)
+        self.assertEqual(tuple(sound.data[:, 0]), (0.0, 0.1, 0.2))
+        self.assertEqual(tuple(sound.data[:, 1]), (0.3, 0.4, 0.5))
+
+        sound = Trim(start=1 / 3).apply(sound)
+
+        self.assertEqual(sound.duration, 2 / 3)
+        self.assertEqual(sound.n_channels, 2)
+        self.assertEqual(tuple(sound.data[:, 0]), (0.1, 0.2))
+        self.assertEqual(tuple(sound.data[:, 1]), (0.4, 0.5))
+
+        sound = Trim(start=1 / 3).apply(sound)
+
+        self.assertEqual(sound.duration, 1 / 3)
+        self.assertEqual(sound.n_channels, 2)
+        self.assertEqual(tuple(sound.data[:, 0]), (0.2, ))
+        self.assertEqual(tuple(sound.data[:, 1]), (0.5, ))
+
+    def test_trim_tail_by_end(self):
+        sound = Sound.from_array([[0.0, 0.3], [0.1, 0.4], [0.2, 0.5]], 3)
+
+        self.assertEqual(sound.duration, 1)
+        self.assertEqual(sound.n_channels, 2)
+        self.assertEqual(tuple(sound.data[:, 0]), (0.0, 0.1, 0.2))
+        self.assertEqual(tuple(sound.data[:, 1]), (0.3, 0.4, 0.5))
+
+        sound = Trim(start=-2 / 3).apply(sound)
+
+        self.assertEqual(sound.duration, 2 / 3)
+        self.assertEqual(sound.n_channels, 2)
+        self.assertEqual(tuple(sound.data[:, 0]), (0.1, 0.2))
+        self.assertEqual(tuple(sound.data[:, 1]), (0.4, 0.5))
+
+        sound = Trim(start=-1 / 3).apply(sound)
+
+        self.assertEqual(sound.duration, 1 / 3)
+        self.assertEqual(sound.n_channels, 2)
+        self.assertEqual(tuple(sound.data[:, 0]), (0.2, ))
+        self.assertEqual(tuple(sound.data[:, 1]), (0.5, ))
+
+    def test_trim_between(self):
+        sound = Sound.from_array([[0.0, 0.3], [0.1, 0.4], [0.2, 0.5]], 3)
+
+        self.assertEqual(sound.duration, 1)
+        self.assertEqual(sound.n_channels, 2)
+        self.assertEqual(tuple(sound.data[:, 0]), (0.0, 0.1, 0.2))
+        self.assertEqual(tuple(sound.data[:, 1]), (0.3, 0.4, 0.5))
+
+        sound = Trim(start=1 / 3, end=2 / 3).apply(sound)
+
+        self.assertEqual(sound.duration, 1 / 3)
+        self.assertEqual(sound.n_channels, 2)
+        self.assertEqual(tuple(sound.data[:, 0]), (0.1, ))
+        self.assertEqual(tuple(sound.data[:, 1]), (0.4, ))
+
+    def test_trim_between_by_end(self):
+        sound = Sound.from_array([[0.0, 0.3], [0.1, 0.4], [0.2, 0.5]], 3)
+
+        self.assertEqual(sound.duration, 1)
+        self.assertEqual(sound.n_channels, 2)
+        self.assertEqual(tuple(sound.data[:, 0]), (0.0, 0.1, 0.2))
+        self.assertEqual(tuple(sound.data[:, 1]), (0.3, 0.4, 0.5))
+
+        sound = Trim(start=-2 / 3, end=-1 / 3).apply(sound)
+
+        self.assertEqual(sound.duration, 1 / 3)
+        self.assertEqual(sound.n_channels, 2)
+        self.assertEqual(tuple(sound.data[:, 0]), (0.1, ))
+        self.assertEqual(tuple(sound.data[:, 1]), (0.4, ))
+
+    def test_trim_between_invalid(self):
+        sound = Sound.from_sinwave(440)
+
+        with self.assertRaises(InvalidDurationError) as cm:
+            Trim(start=0.6, end=0.5)
+
+        self.assertAlmostEqual(cm.exception.duration, -0.1)
+
+        with self.assertRaises(InvalidDurationError) as cm:
+            Trim(start=0.5, end=0.5)
+
+        self.assertAlmostEqual(cm.exception.duration, 0)
+
+        trim = Trim(start=2)
+        with self.assertRaises(InvalidDurationError) as cm:
+            trim.apply(sound)
+
+        self.assertAlmostEqual(cm.exception.duration, 0)

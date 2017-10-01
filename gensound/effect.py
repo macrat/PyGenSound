@@ -6,6 +6,7 @@ import numpy
 import scipy.interpolate
 
 from gensound.sound import Sound
+from gensound.exceptions import *
 
 
 class Effect:
@@ -368,3 +369,48 @@ class ReversePlay(Effect):
         """
 
         return Sound(sound.data[::-1], sound.samplerate)
+
+
+class Trim(Effect):
+    """ Trim sound
+
+    :param start: The start position of trimming in seconds.
+                  If None, won't trim start side. Default is None.
+    :param end:   The end position of trimming in seconds.
+                  If None, won't trim end side. Default is None.
+
+    :exception InvalidDurationError: If start was same or greater than end.
+
+
+    This is alias of
+    :func:`Sound.__getitem__<gensound.sound.Sound.__getitem__>`.
+
+    >>> sound = Sound.from_sinwave(440)
+
+    >>> Trim(end=0.5).apply(sound) == sound[:0.5]
+    True
+    >>> Trim(start=0.5).apply(sound) == sound[0.5:]
+    True
+    >>> Trim(start=0.3, end=0.7).apply(sound) == sound[0.3: 0.7]
+    True
+    """
+
+    def __init__(self,
+                 start: typing.Optional[float] = None,
+                 end: typing.Optional[float] = None) -> None:
+
+        self.start = start
+        self.end = end
+
+        if start is not None and end is not None and start >= end:
+            raise InvalidDurationError(end - start)
+
+    def apply(self, sound: Sound) -> Sound:
+        """ Apply effect to sound
+
+        :param sound: :class:`Sound` instance to appling effect.
+
+        :return: A new :class:`Sound` instance that applied effect.
+        """
+
+        return sound[self.start: self.end]
