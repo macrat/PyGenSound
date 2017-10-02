@@ -57,10 +57,10 @@
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>data</strong> &#8211; Sound data array. First dimension is time, second
+<li><strong>data</strong> (<em>&lt;built-in function array&gt;</em>) &#8211; Sound data array. First dimension is time, second
 dimension is channel. Will clipping if value were out of
 -1.0 to 1.0.</li>
-<li><strong>samplerate</strong> &#8211; Sampling rate of sound data.</li>
+<li><strong>samplerate</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">float</span></code></a>) &#8211; Sampling rate of sound data.</li>
 </ul>
 </td>
 </tr>
@@ -75,25 +75,28 @@ dimension is channel. Will clipping if value were out of
 </table>
 <dl class="classmethod">
 <dt id="gensound.sound.Sound.from_sinwave">
-<em class="property">classmethod </em><code class="descname">from_sinwave</code><span class="sig-paren">(</span><em>frequency: float</em>, <em>duration: float = 1.0</em>, <em>volume: float = 1.0</em>, <em>samplerate: float = 44100</em>, <em>smooth_end: bool = True</em><span class="sig-paren">)</span> &#x2192; gensound.sound.Sound<a class="reference internal" href="../_modules/gensound/sound.html#Sound.from_sinwave"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.sound.Sound.from_sinwave" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="descname">from_sinwave</code><span class="sig-paren">(</span><em>frequency</em>, <em>duration=1.0</em>, <em>volume=1.0</em>, <em>samplerate=44100</em>, <em>smooth_end=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gensound/sound.html#Sound.from_sinwave"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.sound.Sound.from_sinwave" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate sine wave sound</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>frequency</strong> &#8211; Frequency of new sound.</li>
-<li><strong>duration</strong> &#8211; Duration in seconds of new sound.</li>
-<li><strong>volume</strong> &#8211; The volume of new sound.</li>
-<li><strong>samplerate</strong> &#8211; Sampling rate of new sound.</li>
-<li><strong>smooth_end</strong> &#8211; Do make smooth end or not. Please see above.</li>
+<li><strong>frequency</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">float</span></code></a>) &#8211; Frequency of new sound.</li>
+<li><strong>duration</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">float</span></code></a>) &#8211; Duration in seconds of new sound.</li>
+<li><strong>volume</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">float</span></code></a>) &#8211; The volume of new sound.</li>
+<li><strong>samplerate</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">float</span></code></a>) &#8211; Sampling rate of new sound.</li>
+<li><strong>smooth_end</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#bool" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">bool</span></code></a>) &#8211; Do make smooth end or not. Please see above.</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A new <a class="reference internal" href="#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a> instance.</p>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference internal" href="#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a></p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A new <a class="reference internal" href="#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a> instance.</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
 <li><a class="reference internal" href="exceptions.html#gensound.exceptions.InvalidDurationError" title="gensound.exceptions.InvalidDurationError"><strong>InvalidDurationError</strong></a> &#8211; Duration was 0 or less.</li>
 <li><a class="reference internal" href="exceptions.html#gensound.exceptions.InvalidFrequencyError" title="gensound.exceptions.InvalidFrequencyError"><strong>InvalidFrequencyError</strong></a> &#8211; Frequency was 0 or less.</li>
 <li><a class="reference internal" href="exceptions.html#gensound.exceptions.InvalidSamplerateError" title="gensound.exceptions.InvalidSamplerateError"><strong>InvalidSamplerateError</strong></a> &#8211; Samplerate was 0 or less.</li>
@@ -134,24 +137,27 @@ be careful, may make noise in end of sound if disable smooth_end.</p>
 
 <dl class="classmethod">
 <dt id="gensound.sound.Sound.from_sawtoothwave">
-<em class="property">classmethod </em><code class="descname">from_sawtoothwave</code><span class="sig-paren">(</span><em>frequency: float</em>, <em>duration: float = 1.0</em>, <em>volume: float = 1.0</em>, <em>samplerate: float = 44100</em><span class="sig-paren">)</span> &#x2192; gensound.sound.Sound<a class="reference internal" href="../_modules/gensound/sound.html#Sound.from_sawtoothwave"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.sound.Sound.from_sawtoothwave" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="descname">from_sawtoothwave</code><span class="sig-paren">(</span><em>frequency</em>, <em>duration=1.0</em>, <em>volume=1.0</em>, <em>samplerate=44100</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gensound/sound.html#Sound.from_sawtoothwave"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.sound.Sound.from_sawtoothwave" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate sawtooth wave sound</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>frequency</strong> &#8211; Frequency of new sound.</li>
-<li><strong>duration</strong> &#8211; Duration in seconds of new sound.</li>
-<li><strong>volume</strong> &#8211; The volume of new sound.</li>
-<li><strong>samplerate</strong> &#8211; Sampling rate of new sound.</li>
+<li><strong>frequency</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">float</span></code></a>) &#8211; Frequency of new sound.</li>
+<li><strong>duration</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">float</span></code></a>) &#8211; Duration in seconds of new sound.</li>
+<li><strong>volume</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">float</span></code></a>) &#8211; The volume of new sound.</li>
+<li><strong>samplerate</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">float</span></code></a>) &#8211; Sampling rate of new sound.</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A new <a class="reference internal" href="#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a> instance.</p>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference internal" href="#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a></p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A new <a class="reference internal" href="#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a> instance.</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
 <li><a class="reference internal" href="exceptions.html#gensound.exceptions.InvalidDurationError" title="gensound.exceptions.InvalidDurationError"><strong>InvalidDurationError</strong></a> &#8211; Duration was 0 or less.</li>
 <li><a class="reference internal" href="exceptions.html#gensound.exceptions.InvalidFrequencyError" title="gensound.exceptions.InvalidFrequencyError"><strong>InvalidFrequencyError</strong></a> &#8211; Frequency was 0 or less.</li>
 <li><a class="reference internal" href="exceptions.html#gensound.exceptions.InvalidSamplerateError" title="gensound.exceptions.InvalidSamplerateError"><strong>InvalidSamplerateError</strong></a> &#8211; Samplerate was 0 or less.</li>
@@ -166,24 +172,27 @@ than 1.0.</li>
 
 <dl class="classmethod">
 <dt id="gensound.sound.Sound.from_squarewave">
-<em class="property">classmethod </em><code class="descname">from_squarewave</code><span class="sig-paren">(</span><em>frequency: float</em>, <em>duration: float = 1.0</em>, <em>volume: float = 1.0</em>, <em>samplerate: float = 44100</em><span class="sig-paren">)</span> &#x2192; gensound.sound.Sound<a class="reference internal" href="../_modules/gensound/sound.html#Sound.from_squarewave"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.sound.Sound.from_squarewave" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="descname">from_squarewave</code><span class="sig-paren">(</span><em>frequency</em>, <em>duration=1.0</em>, <em>volume=1.0</em>, <em>samplerate=44100</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gensound/sound.html#Sound.from_squarewave"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.sound.Sound.from_squarewave" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate square wave sound</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>frequency</strong> &#8211; Frequency of new sound.</li>
-<li><strong>duration</strong> &#8211; Duration in seconds of new sound.</li>
-<li><strong>volume</strong> &#8211; The volume of new sound.</li>
-<li><strong>samplerate</strong> &#8211; Sampling rate of new sound.</li>
+<li><strong>frequency</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">float</span></code></a>) &#8211; Frequency of new sound.</li>
+<li><strong>duration</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">float</span></code></a>) &#8211; Duration in seconds of new sound.</li>
+<li><strong>volume</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">float</span></code></a>) &#8211; The volume of new sound.</li>
+<li><strong>samplerate</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">float</span></code></a>) &#8211; Sampling rate of new sound.</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A new <a class="reference internal" href="#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a> instance.</p>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference internal" href="#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a></p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A new <a class="reference internal" href="#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a> instance.</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
 <li><a class="reference internal" href="exceptions.html#gensound.exceptions.InvalidDurationError" title="gensound.exceptions.InvalidDurationError"><strong>InvalidDurationError</strong></a> &#8211; Duration was 0 or less.</li>
 <li><a class="reference internal" href="exceptions.html#gensound.exceptions.InvalidFrequencyError" title="gensound.exceptions.InvalidFrequencyError"><strong>InvalidFrequencyError</strong></a> &#8211; Frequency was 0 or less.</li>
 <li><a class="reference internal" href="exceptions.html#gensound.exceptions.InvalidSamplerateError" title="gensound.exceptions.InvalidSamplerateError"><strong>InvalidSamplerateError</strong></a> &#8211; Samplerate was 0 or less.</li>
@@ -198,7 +207,7 @@ than 1.0.</li>
 
 <dl class="classmethod">
 <dt id="gensound.sound.Sound.silence">
-<em class="property">classmethod </em><code class="descname">silence</code><span class="sig-paren">(</span><em>duration: float = 1.0</em>, <em>samplerate: float = 44100</em><span class="sig-paren">)</span> &#x2192; gensound.sound.Sound<a class="reference internal" href="../_modules/gensound/sound.html#Sound.silence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.sound.Sound.silence" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="descname">silence</code><span class="sig-paren">(</span><em>duration=1.0</em>, <em>samplerate=44100</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gensound/sound.html#Sound.silence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.sound.Sound.silence" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate silent sound</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -210,10 +219,13 @@ than 1.0.</li>
 <tr class="field-even field"><th class="field-name">Samplerate:</th><td class="field-body"><p class="first">Sampling rate of new sound.</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A new <a class="reference internal" href="#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a> instance.</p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference internal" href="#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a></p>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A new <a class="reference internal" href="#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a> instance.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
 <li><a class="reference internal" href="exceptions.html#gensound.exceptions.InvalidDurationError" title="gensound.exceptions.InvalidDurationError"><strong>InvalidDurationError</strong></a> &#8211; Duration was 0 or less.</li>
 <li><a class="reference internal" href="exceptions.html#gensound.exceptions.InvalidSamplerateError" title="gensound.exceptions.InvalidSamplerateError"><strong>InvalidSamplerateError</strong></a> &#8211; Samplerate was 0 or less.</li>
 </ul>
@@ -225,23 +237,26 @@ than 1.0.</li>
 
 <dl class="classmethod">
 <dt id="gensound.sound.Sound.from_whitenoise">
-<em class="property">classmethod </em><code class="descname">from_whitenoise</code><span class="sig-paren">(</span><em>duration: float = 1.0</em>, <em>volume: float = 1.0</em>, <em>samplerate: float = 44100</em><span class="sig-paren">)</span> &#x2192; gensound.sound.Sound<a class="reference internal" href="../_modules/gensound/sound.html#Sound.from_whitenoise"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.sound.Sound.from_whitenoise" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="descname">from_whitenoise</code><span class="sig-paren">(</span><em>duration=1.0</em>, <em>volume=1.0</em>, <em>samplerate=44100</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gensound/sound.html#Sound.from_whitenoise"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.sound.Sound.from_whitenoise" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate white noise</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>duration</strong> &#8211; Duration in seconds of new sound.</li>
-<li><strong>volume</strong> &#8211; The volume of new sound.</li>
-<li><strong>samplerate</strong> &#8211; Sampling rate of new sound.</li>
+<li><strong>duration</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">float</span></code></a>) &#8211; Duration in seconds of new sound.</li>
+<li><strong>volume</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">float</span></code></a>) &#8211; The volume of new sound.</li>
+<li><strong>samplerate</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">float</span></code></a>) &#8211; Sampling rate of new sound.</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A new Sound instance.</p>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference internal" href="#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a></p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A new Sound instance.</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
 <li><a class="reference internal" href="exceptions.html#gensound.exceptions.InvalidDurationError" title="gensound.exceptions.InvalidDurationError"><strong>InvalidDurationError</strong></a> &#8211; Duration was 0 or less.</li>
 <li><a class="reference internal" href="exceptions.html#gensound.exceptions.InvalidSamplerateError" title="gensound.exceptions.InvalidSamplerateError"><strong>InvalidSamplerateError</strong></a> &#8211; Samplerate was 0 or less.</li>
 <li><a class="reference internal" href="exceptions.html#gensound.exceptions.InvalidVolumeError" title="gensound.exceptions.InvalidVolumeError"><strong>InvalidVolumeError</strong></a> &#8211; Volume was lower than 0.0 or higher
@@ -255,15 +270,17 @@ than 1.0.</li>
 
 <dl class="classmethod">
 <dt id="gensound.sound.Sound.from_file">
-<em class="property">classmethod </em><code class="descname">from_file</code><span class="sig-paren">(</span><em>file_: typing.Union[str, typing.BinaryIO]</em><span class="sig-paren">)</span> &#x2192; gensound.sound.Sound<a class="reference internal" href="../_modules/gensound/sound.html#Sound.from_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.sound.Sound.from_file" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="descname">from_file</code><span class="sig-paren">(</span><em>file_</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gensound/sound.html#Sound.from_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.sound.Sound.from_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read sound from file or file-like</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>file</strong> &#8211; File name or file-like object.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>file</strong> (<code class="xref py py-data docutils literal"><span class="pre">Union</span></code>[<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">str</span></code></a>, <code class="xref py py-class docutils literal"><span class="pre">BinaryIO</span></code>]) &#8211; File name or file-like object.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A new <a class="reference internal" href="#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a> instance.</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A new <a class="reference internal" href="#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a> instance.</td>
 </tr>
 </tbody>
 </table>
@@ -271,22 +288,25 @@ than 1.0.</li>
 
 <dl class="classmethod">
 <dt id="gensound.sound.Sound.from_array">
-<em class="property">classmethod </em><code class="descname">from_array</code><span class="sig-paren">(</span><em>array: typing.Sequence[float], samplerate: float</em><span class="sig-paren">)</span> &#x2192; gensound.sound.Sound<a class="reference internal" href="../_modules/gensound/sound.html#Sound.from_array"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.sound.Sound.from_array" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="descname">from_array</code><span class="sig-paren">(</span><em>array</em>, <em>samplerate</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gensound/sound.html#Sound.from_array"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.sound.Sound.from_array" title="Permalink to this definition">¶</a></dt>
 <dd><p>Make new sound from float array</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>array</strong> &#8211; Sound data. Elements must in between -1.0 to 1.0.</li>
-<li><strong>samplerate</strong> &#8211; Sampling rate of new sound.</li>
+<li><strong>array</strong> (<code class="xref py py-class docutils literal"><span class="pre">Sequence</span></code>[<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">float</span></code></a>]) &#8211; Sound data. Elements must in between -1.0 to 1.0.</li>
+<li><strong>samplerate</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">float</span></code></a>) &#8211; Sampling rate of new sound.</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A new <a class="reference internal" href="#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a> instance.</p>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference internal" href="#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a></p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A new <a class="reference internal" href="#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a> instance.</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
 <li><a class="reference internal" href="exceptions.html#gensound.exceptions.InvalidDurationError" title="gensound.exceptions.InvalidDurationError"><strong>InvalidDurationError</strong></a> &#8211; The array was empty.</li>
 <li><a class="reference internal" href="exceptions.html#gensound.exceptions.InvalidSamplerateError" title="gensound.exceptions.InvalidSamplerateError"><strong>InvalidSamplerateError</strong></a> &#8211; Samplerate was 0 or less.</li>
 </ul>
@@ -304,24 +324,27 @@ than 1.0.</li>
 
 <dl class="classmethod">
 <dt id="gensound.sound.Sound.from_fft">
-<em class="property">classmethod </em><code class="descname">from_fft</code><span class="sig-paren">(</span><em>spectrum: &lt;built-in function array&gt;</em>, <em>samplerate: float = None</em><span class="sig-paren">)</span> &#x2192; gensound.sound.Sound<a class="reference internal" href="../_modules/gensound/sound.html#Sound.from_fft"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.sound.Sound.from_fft" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="descname">from_fft</code><span class="sig-paren">(</span><em>spectrum</em>, <em>samplerate=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gensound/sound.html#Sound.from_fft"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.sound.Sound.from_fft" title="Permalink to this definition">¶</a></dt>
 <dd><p>Make new sound from spectrum data like a result from fft() method.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>spectrum</strong> &#8211; A spectrum data. Please see fft() method about a
+<li><strong>spectrum</strong> (<em>&lt;built-in function array&gt;</em>) &#8211; A spectrum data. Please see fft() method about a
 format.</li>
-<li><strong>samplerate</strong> &#8211; Sampling rate of new sound. Use spectrum data if
+<li><strong>samplerate</strong> (<code class="xref py py-data docutils literal"><span class="pre">Optional</span></code>[<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">float</span></code></a>]) &#8211; Sampling rate of new sound. Use spectrum data if
 None.</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A new <a class="reference internal" href="#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a> instance.</p>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference internal" href="#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a></p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A new <a class="reference internal" href="#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a> instance.</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
 <li><a class="reference internal" href="exceptions.html#gensound.exceptions.InvalidDurationError" title="gensound.exceptions.InvalidDurationError"><strong>InvalidDurationError</strong></a> &#8211; Duration was 0 or less.</li>
 <li><a class="reference internal" href="exceptions.html#gensound.exceptions.InvalidSamplerateError" title="gensound.exceptions.InvalidSamplerateError"><strong>InvalidSamplerateError</strong></a> &#8211; Samplerate was 0 or less.</li>
 </ul>
@@ -335,18 +358,42 @@ None.</li>
 <dt id="gensound.sound.Sound.duration">
 <code class="descname">duration</code><a class="headerlink" href="#gensound.sound.Sound.duration" title="Permalink to this definition">¶</a></dt>
 <dd><p>Duration in seconds of this sound</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">float</span></code></a></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="gensound.sound.Sound.samplerate">
 <code class="descname">samplerate</code><a class="headerlink" href="#gensound.sound.Sound.samplerate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sampling rate of this sound</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">float</span></code></a></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="gensound.sound.Sound.n_channels">
 <code class="descname">n_channels</code><a class="headerlink" href="#gensound.sound.Sound.n_channels" title="Permalink to this definition">¶</a></dt>
 <dd><p>Number of channels</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">int</span></code></a></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
@@ -355,6 +402,14 @@ None.</li>
 <dd><p>Volume of this dound</p>
 <p>This volume means the maximum value of the wave.
 Please be careful that is not gain.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">float</span></code></a></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
@@ -363,17 +418,27 @@ Please be careful that is not gain.</p>
 <dd><p>Raw data of sound</p>
 <p>This array is two dimensions. The first dimension means time, and the
 second dimension means channels.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">&lt;built-in function array&gt;</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="gensound.sound.Sound.split_channels">
-<code class="descname">split_channels</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; typing.Sequence[&lt;built-in function array&gt;]<a class="reference internal" href="../_modules/gensound/sound.html#Sound.split_channels"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.sound.Sound.split_channels" title="Permalink to this definition">¶</a></dt>
+<code class="descname">split_channels</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gensound/sound.html#Sound.split_channels"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.sound.Sound.split_channels" title="Permalink to this definition">¶</a></dt>
 <dd><p>Split channels into Sound</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list of <a class="reference internal" href="#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a> instances.</td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">Sequence</span></code>[&lt;built-in function array&gt;]</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of <a class="reference internal" href="#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a> instances.</td>
 </tr>
 </tbody>
 </table>
@@ -381,13 +446,15 @@ second dimension means channels.</p>
 
 <dl class="method">
 <dt id="gensound.sound.Sound.as_monaural">
-<code class="descname">as_monaural</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; gensound.sound.Sound<a class="reference internal" href="../_modules/gensound/sound.html#Sound.as_monaural"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.sound.Sound.as_monaural" title="Permalink to this definition">¶</a></dt>
+<code class="descname">as_monaural</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gensound/sound.html#Sound.as_monaural"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.sound.Sound.as_monaural" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a new instance that converted to monaural sound</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A <a class="reference internal" href="#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a> instance that monaural.</td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A <a class="reference internal" href="#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a> instance that monaural.</td>
 </tr>
 </tbody>
 </table>
@@ -396,15 +463,17 @@ second dimension means channels.</p>
 
 <dl class="method">
 <dt id="gensound.sound.Sound.as_stereo">
-<code class="descname">as_stereo</code><span class="sig-paren">(</span><em>channels: int = 2</em><span class="sig-paren">)</span> &#x2192; gensound.sound.Sound<a class="reference internal" href="../_modules/gensound/sound.html#Sound.as_stereo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.sound.Sound.as_stereo" title="Permalink to this definition">¶</a></dt>
+<code class="descname">as_stereo</code><span class="sig-paren">(</span><em>channels=2</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gensound/sound.html#Sound.as_stereo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.sound.Sound.as_stereo" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a new instance that converted to multi channel sound</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A new <a class="reference internal" href="#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a> instance that stereo or multi channel.</td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a></td>
 </tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><strong>ValueError</strong> &#8211; A given channels were lesser than a number of
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A new <a class="reference internal" href="#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a> instance that stereo or multi channel.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><strong>ValueError</strong> &#8211; A given channels were lesser than a number of
 channels of this sound.</td>
 </tr>
 </tbody>
@@ -415,13 +484,15 @@ same number of channels.</p>
 
 <dl class="method">
 <dt id="gensound.sound.Sound.fft">
-<code class="descname">fft</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; &lt;built-in function array&gt;<a class="reference internal" href="../_modules/gensound/sound.html#Sound.fft"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.sound.Sound.fft" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fft</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gensound/sound.html#Sound.fft"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.sound.Sound.fft" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate fft</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">An array that pair of frequency and value.</td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">&lt;built-in function array&gt;</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">An array that pair of frequency and value.</td>
 </tr>
 </tbody>
 </table>
@@ -429,17 +500,19 @@ same number of channels.</p>
 
 <dl class="method">
 <dt id="gensound.sound.Sound.repeat">
-<code class="descname">repeat</code><span class="sig-paren">(</span><em>duration: float</em><span class="sig-paren">)</span> &#x2192; gensound.sound.Sound<a class="reference internal" href="../_modules/gensound/sound.html#Sound.repeat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.sound.Sound.repeat" title="Permalink to this definition">¶</a></dt>
+<code class="descname">repeat</code><span class="sig-paren">(</span><em>duration</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gensound/sound.html#Sound.repeat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.sound.Sound.repeat" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a new instance that repeated same sound</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>duration</strong> &#8211; Duration in seconds to repeat.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>duration</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">float</span></code></a>) &#8211; Duration in seconds to repeat.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A new <a class="reference internal" href="#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a> instance that repeated same sound.</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a></td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><a class="reference internal" href="exceptions.html#gensound.exceptions.InvalidDurationError" title="gensound.exceptions.InvalidDurationError"><strong>InvalidDurationError</strong></a> &#8211; Duration was shorter than 0.</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A new <a class="reference internal" href="#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a> instance that repeated same sound.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><a class="reference internal" href="exceptions.html#gensound.exceptions.InvalidDurationError" title="gensound.exceptions.InvalidDurationError"><strong>InvalidDurationError</strong></a> &#8211; Duration was shorter than 0.</td>
 </tr>
 </tbody>
 </table>
@@ -461,16 +534,18 @@ for trimming.</p>
 
 <dl class="method">
 <dt id="gensound.sound.Sound.concat">
-<code class="descname">concat</code><span class="sig-paren">(</span><em>another: gensound.sound.Sound</em><span class="sig-paren">)</span> &#x2192; gensound.sound.Sound<a class="reference internal" href="../_modules/gensound/sound.html#Sound.concat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.sound.Sound.concat" title="Permalink to this definition">¶</a></dt>
+<code class="descname">concat</code><span class="sig-paren">(</span><em>another</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gensound/sound.html#Sound.concat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.sound.Sound.concat" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a new instance that concatenated another sound</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>another</strong> &#8211; The sound that concatenates after of self.
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>another</strong> (<a class="reference internal" href="#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a>) &#8211; The sound that concatenates after of self.
 Must it has same sampling rate.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A new <a class="reference internal" href="#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a> that concatenated self and other.</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A new <a class="reference internal" href="#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a> that concatenated self and other.</td>
 </tr>
 </tbody>
 </table>
@@ -492,15 +567,17 @@ sounds.</p>
 
 <dl class="method">
 <dt id="gensound.sound.Sound.overlay">
-<code class="descname">overlay</code><span class="sig-paren">(</span><em>another: gensound.sound.Sound</em><span class="sig-paren">)</span> &#x2192; gensound.sound.Sound<a class="reference internal" href="../_modules/gensound/sound.html#Sound.overlay"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.sound.Sound.overlay" title="Permalink to this definition">¶</a></dt>
+<code class="descname">overlay</code><span class="sig-paren">(</span><em>another</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gensound/sound.html#Sound.overlay"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.sound.Sound.overlay" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a new instance that was overlay another sound</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>another</strong> &#8211; The sound that overlay.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>another</strong> (<a class="reference internal" href="#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a>) &#8211; The sound that overlay.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A new <a class="reference internal" href="#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a> that overlay another sound.</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A new <a class="reference internal" href="#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a> that overlay another sound.</td>
 </tr>
 </tbody>
 </table>
@@ -522,17 +599,20 @@ sounds.</p>
 
 <dl class="method">
 <dt id="gensound.sound.Sound.write">
-<code class="descname">write</code><span class="sig-paren">(</span><em>file_: typing.Union[str, typing.BinaryIO], format_: typing.Union[str, NoneType] = None</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/gensound/sound.html#Sound.write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.sound.Sound.write" title="Permalink to this definition">¶</a></dt>
+<code class="descname">write</code><span class="sig-paren">(</span><em>file_</em>, <em>format_=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gensound/sound.html#Sound.write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.sound.Sound.write" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write sound into file or file-like</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>file</strong> &#8211; A file name or file-like object to write sound.</li>
-<li><strong>format</strong> &#8211; Format type of output like a &#8216;wav&#8217;. Automatically
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>file</strong> (<code class="xref py py-data docutils literal"><span class="pre">Union</span></code>[<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">str</span></code></a>, <code class="xref py py-class docutils literal"><span class="pre">BinaryIO</span></code>]) &#8211; A file name or file-like object to write sound.</li>
+<li><strong>format</strong> (<code class="xref py py-data docutils literal"><span class="pre">Optional</span></code>[<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">str</span></code></a>]) &#8211; Format type of output like a &#8216;wav&#8217;. Automatically
 detect from file name if None.</li>
 </ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><code class="docutils literal"><span class="pre">None</span></code></p>
 </td>
 </tr>
 </tbody>
@@ -541,26 +621,36 @@ detect from file name if None.</li>
 
 <dl class="method">
 <dt id="gensound.sound.Sound.play">
-<code class="descname">play</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/gensound/sound.html#Sound.play"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.sound.Sound.play" title="Permalink to this definition">¶</a></dt>
+<code class="descname">play</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gensound/sound.html#Sound.play"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.sound.Sound.play" title="Permalink to this definition">¶</a></dt>
 <dd><p>Play sound</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><code class="docutils literal"><span class="pre">None</span></code></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="function">
 <dt id="gensound.sound.concat">
-<code class="descclassname">gensound.sound.</code><code class="descname">concat</code><span class="sig-paren">(</span><em>*sounds: gensound.sound.Sound</em><span class="sig-paren">)</span> &#x2192; gensound.sound.Sound<a class="reference internal" href="../_modules/gensound/sound.html#concat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.sound.concat" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">gensound.sound.</code><code class="descname">concat</code><span class="sig-paren">(</span><em>*sounds</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gensound/sound.html#concat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.sound.concat" title="Permalink to this definition">¶</a></dt>
 <dd><p>Concatenate multiple sounds</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sounds</strong> &#8211; Sound instances to concatenate. Must they has some sampling
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sounds</strong> (<a class="reference internal" href="#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a>) &#8211; Sound instances to concatenate. Must they has some sampling
 rate.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A concatenated <a class="reference internal" href="#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a> instance.</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a></td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><a class="reference internal" href="exceptions.html#gensound.exceptions.DifferentSamplerateError" title="gensound.exceptions.DifferentSamplerateError"><strong>DifferentSamplerateError</strong></a> &#8211; The samplerate of sounds was
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A concatenated <a class="reference internal" href="#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a> instance.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><a class="reference internal" href="exceptions.html#gensound.exceptions.DifferentSamplerateError" title="gensound.exceptions.DifferentSamplerateError"><strong>DifferentSamplerateError</strong></a> &#8211; The samplerate of sounds was
 different.</td>
 </tr>
 </tbody>
@@ -576,18 +666,20 @@ different.</td>
 
 <dl class="function">
 <dt id="gensound.sound.overlay">
-<code class="descclassname">gensound.sound.</code><code class="descname">overlay</code><span class="sig-paren">(</span><em>*sounds: gensound.sound.Sound</em><span class="sig-paren">)</span> &#x2192; gensound.sound.Sound<a class="reference internal" href="../_modules/gensound/sound.html#overlay"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.sound.overlay" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">gensound.sound.</code><code class="descname">overlay</code><span class="sig-paren">(</span><em>*sounds</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gensound/sound.html#overlay"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.sound.overlay" title="Permalink to this definition">¶</a></dt>
 <dd><p>Overlay multiple sounds</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sounds</strong> &#8211; Sound instances to overlay.
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sounds</strong> (<a class="reference internal" href="#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a>) &#8211; Sound instances to overlay.
 Must they has some sampling rate.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A new <a class="reference internal" href="#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a> instance that overlay all sounds.</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a></td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><a class="reference internal" href="exceptions.html#gensound.exceptions.DifferentSamplerateError" title="gensound.exceptions.DifferentSamplerateError"><strong>DifferentSamplerateError</strong></a> &#8211; The samplerate of sounds was
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A new <a class="reference internal" href="#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a> instance that overlay all sounds.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><a class="reference internal" href="exceptions.html#gensound.exceptions.DifferentSamplerateError" title="gensound.exceptions.DifferentSamplerateError"><strong>DifferentSamplerateError</strong></a> &#8211; The samplerate of sounds was
 different.</td>
 </tr>
 </tbody>
@@ -609,17 +701,19 @@ an occurrence.</p>
 
 <dl class="function">
 <dt id="gensound.sound.merge_channels">
-<code class="descclassname">gensound.sound.</code><code class="descname">merge_channels</code><span class="sig-paren">(</span><em>*sounds: gensound.sound.Sound</em><span class="sig-paren">)</span> &#x2192; gensound.sound.Sound<a class="reference internal" href="../_modules/gensound/sound.html#merge_channels"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.sound.merge_channels" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">gensound.sound.</code><code class="descname">merge_channels</code><span class="sig-paren">(</span><em>*sounds</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gensound/sound.html#merge_channels"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.sound.merge_channels" title="Permalink to this definition">¶</a></dt>
 <dd><p>Merge multiple sounds as a sound that has multiple channels</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sounds</strong> &#8211; Sound instances to merge. Must they has some sampling rate.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sounds</strong> (<a class="reference internal" href="#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a>) &#8211; Sound instances to merge. Must they has some sampling rate.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A new <a class="reference internal" href="#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a> that merged sounds as channels.</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a></td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><a class="reference internal" href="exceptions.html#gensound.exceptions.DifferentSamplerateError" title="gensound.exceptions.DifferentSamplerateError"><strong>DifferentSamplerateError</strong></a> &#8211; The samplerate of sounds was
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A new <a class="reference internal" href="#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a> that merged sounds as channels.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><a class="reference internal" href="exceptions.html#gensound.exceptions.DifferentSamplerateError" title="gensound.exceptions.DifferentSamplerateError"><strong>DifferentSamplerateError</strong></a> &#8211; The samplerate of sounds was
 different.</td>
 </tr>
 </tbody>

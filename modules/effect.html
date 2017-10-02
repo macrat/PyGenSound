@@ -54,16 +54,18 @@
 <p>Base class of sound effect</p>
 <dl class="method">
 <dt id="gensound.effect.Effect.apply">
-<code class="descname">apply</code><span class="sig-paren">(</span><em>sound: gensound.sound.Sound</em><span class="sig-paren">)</span> &#x2192; gensound.sound.Sound<a class="reference internal" href="../_modules/gensound/effect.html#Effect.apply"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.effect.Effect.apply" title="Permalink to this definition">¶</a></dt>
+<code class="descname">apply</code><span class="sig-paren">(</span><em>sound</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gensound/effect.html#Effect.apply"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.effect.Effect.apply" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply effect to sound</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sound</strong> &#8211; <a class="reference internal" href="sound.html#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a> instance to appling
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sound</strong> (<a class="reference internal" href="sound.html#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a>) &#8211; <a class="reference internal" href="sound.html#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a> instance to appling
 effect.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A <a class="reference internal" href="sound.html#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a> instance that applied
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="sound.html#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A <a class="reference internal" href="sound.html#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a> instance that applied
 effect.</td>
 </tr>
 </tbody>
@@ -79,7 +81,7 @@ effect.</td>
 
 <dl class="method">
 <dt id="gensound.effect.Effect.then">
-<code class="descname">then</code><span class="sig-paren">(</span><em>effect: gensound.effect.Effect</em><span class="sig-paren">)</span> &#x2192; gensound.effect.Effect<a class="reference internal" href="../_modules/gensound/effect.html#Effect.then"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.effect.Effect.then" title="Permalink to this definition">¶</a></dt>
+<code class="descname">then</code><span class="sig-paren">(</span><em>effect</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gensound/effect.html#Effect.then"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.effect.Effect.then" title="Permalink to this definition">¶</a></dt>
 <dd><p>Join effect</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -87,7 +89,9 @@ effect.</td>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Effect:</th><td class="field-body">Effect that will apply after this effect.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Joined effect.</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#gensound.effect.Effect" title="gensound.effect.Effect"><code class="xref py py-class docutils literal"><span class="pre">Effect</span></code></a></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Joined effect.</td>
 </tr>
 </tbody>
 </table>
@@ -118,7 +122,7 @@ effect.</td>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>effects</strong> &#8211; Effect instances to joint.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>effects</strong> (<a class="reference internal" href="#gensound.effect.Effect" title="gensound.effect.Effect"><code class="xref py py-class docutils literal"><span class="pre">Effect</span></code></a>) &#8211; Effect instances to joint.</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><strong>ValueError</strong> &#8211; If effects not given.</td>
 </tr>
@@ -143,15 +147,17 @@ effect.</td>
 </div>
 <dl class="method">
 <dt id="gensound.effect.JoinedEffect.apply">
-<code class="descname">apply</code><span class="sig-paren">(</span><em>sound: gensound.sound.Sound</em><span class="sig-paren">)</span> &#x2192; gensound.sound.Sound<a class="reference internal" href="../_modules/gensound/effect.html#JoinedEffect.apply"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.effect.JoinedEffect.apply" title="Permalink to this definition">¶</a></dt>
+<code class="descname">apply</code><span class="sig-paren">(</span><em>sound</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gensound/effect.html#JoinedEffect.apply"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.effect.JoinedEffect.apply" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply all effects</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sound</strong> &#8211; <code class="xref py py-class docutils literal"><span class="pre">Sound</span></code> instance to appling effect.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sound</strong> (<a class="reference internal" href="sound.html#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a>) &#8211; <code class="xref py py-class docutils literal"><span class="pre">Sound</span></code> instance to appling effect.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A new <code class="xref py py-class docutils literal"><span class="pre">Sound</span></code> instance that applied all effects.</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="sound.html#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A new <code class="xref py py-class docutils literal"><span class="pre">Sound</span></code> instance that applied all effects.</td>
 </tr>
 </tbody>
 </table>
@@ -168,22 +174,24 @@ effect.</td>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>duration</strong> &#8211; Duration in seconds of mask. Mathing to sound duration if
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>duration</strong> (<code class="xref py py-data docutils literal"><span class="pre">Optional</span></code>[<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">float</span></code></a>]) &#8211; Duration in seconds of mask. Mathing to sound duration if
 None.</td>
 </tr>
 </tbody>
 </table>
 <dl class="method">
 <dt id="gensound.effect.MaskEffect.gen_mask">
-<code class="descname">gen_mask</code><span class="sig-paren">(</span><em>length: int</em><span class="sig-paren">)</span> &#x2192; &lt;built-in function array&gt;<a class="reference internal" href="../_modules/gensound/effect.html#MaskEffect.gen_mask"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.effect.MaskEffect.gen_mask" title="Permalink to this definition">¶</a></dt>
+<code class="descname">gen_mask</code><span class="sig-paren">(</span><em>length</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gensound/effect.html#MaskEffect.gen_mask"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.effect.MaskEffect.gen_mask" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate mask</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>length</strong> &#8211; Length of mask array.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>length</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">int</span></code></a>) &#8211; Length of mask array.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Mask value.</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">&lt;built-in function array&gt;</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Mask value.</td>
 </tr>
 </tbody>
 </table>
@@ -198,15 +206,17 @@ None.</td>
 <p>Effect that masking start of sound</p>
 <dl class="method">
 <dt id="gensound.effect.MaskStartEffect.apply">
-<code class="descname">apply</code><span class="sig-paren">(</span><em>sound: gensound.sound.Sound</em><span class="sig-paren">)</span> &#x2192; gensound.sound.Sound<a class="reference internal" href="../_modules/gensound/effect.html#MaskStartEffect.apply"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.effect.MaskStartEffect.apply" title="Permalink to this definition">¶</a></dt>
+<code class="descname">apply</code><span class="sig-paren">(</span><em>sound</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gensound/effect.html#MaskStartEffect.apply"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.effect.MaskStartEffect.apply" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply effect to sound</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sound</strong> &#8211; <code class="xref py py-class docutils literal"><span class="pre">Sound</span></code> instance to appling effect.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sound</strong> (<a class="reference internal" href="sound.html#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a>) &#8211; <code class="xref py py-class docutils literal"><span class="pre">Sound</span></code> instance to appling effect.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A new <code class="xref py py-class docutils literal"><span class="pre">Sound</span></code> instance that applied effect.</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="sound.html#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A new <code class="xref py py-class docutils literal"><span class="pre">Sound</span></code> instance that applied effect.</td>
 </tr>
 </tbody>
 </table>
@@ -221,15 +231,17 @@ None.</td>
 <p>Effect that masking end of sound</p>
 <dl class="method">
 <dt id="gensound.effect.MaskEndEffect.apply">
-<code class="descname">apply</code><span class="sig-paren">(</span><em>sound: gensound.sound.Sound</em><span class="sig-paren">)</span> &#x2192; gensound.sound.Sound<a class="reference internal" href="../_modules/gensound/effect.html#MaskEndEffect.apply"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.effect.MaskEndEffect.apply" title="Permalink to this definition">¶</a></dt>
+<code class="descname">apply</code><span class="sig-paren">(</span><em>sound</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gensound/effect.html#MaskEndEffect.apply"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.effect.MaskEndEffect.apply" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply effect to sound</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sound</strong> &#8211; <code class="xref py py-class docutils literal"><span class="pre">Sound</span></code> instance to appling effect.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sound</strong> (<a class="reference internal" href="sound.html#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a>) &#8211; <code class="xref py py-class docutils literal"><span class="pre">Sound</span></code> instance to appling effect.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A new <code class="xref py py-class docutils literal"><span class="pre">Sound</span></code> instance that applied effect.</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="sound.html#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A new <code class="xref py py-class docutils literal"><span class="pre">Sound</span></code> instance that applied effect.</td>
 </tr>
 </tbody>
 </table>
@@ -246,7 +258,7 @@ None.</td>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>duration</strong> &#8211; Duration in seconds of mask. Mathing to sound duration if
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>duration</strong> (<code class="xref py py-data docutils literal"><span class="pre">Optional</span></code>[<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">float</span></code></a>]) &#8211; Duration in seconds of mask. Mathing to sound duration if
 None.</td>
 </tr>
 </tbody>
@@ -262,8 +274,16 @@ None.</td>
 </div>
 <dl class="method">
 <dt id="gensound.effect.LinearFadeIn.gen_mask">
-<code class="descname">gen_mask</code><span class="sig-paren">(</span><em>length: int</em><span class="sig-paren">)</span> &#x2192; &lt;built-in function array&gt;<a class="reference internal" href="../_modules/gensound/effect.html#LinearFadeIn.gen_mask"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.effect.LinearFadeIn.gen_mask" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">gen_mask</code><span class="sig-paren">(</span><em>length</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gensound/effect.html#LinearFadeIn.gen_mask"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.effect.LinearFadeIn.gen_mask" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">&lt;built-in function array&gt;</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 </dd></dl>
 
@@ -276,7 +296,7 @@ None.</td>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>duration</strong> &#8211; Duration in seconds of mask. Mathing to sound duration if
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>duration</strong> (<code class="xref py py-data docutils literal"><span class="pre">Optional</span></code>[<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">float</span></code></a>]) &#8211; Duration in seconds of mask. Mathing to sound duration if
 None.</td>
 </tr>
 </tbody>
@@ -292,8 +312,16 @@ None.</td>
 </div>
 <dl class="method">
 <dt id="gensound.effect.LinearFadeOut.gen_mask">
-<code class="descname">gen_mask</code><span class="sig-paren">(</span><em>length: int</em><span class="sig-paren">)</span> &#x2192; &lt;built-in function array&gt;<a class="reference internal" href="../_modules/gensound/effect.html#LinearFadeOut.gen_mask"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.effect.LinearFadeOut.gen_mask" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">gen_mask</code><span class="sig-paren">(</span><em>length</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gensound/effect.html#LinearFadeOut.gen_mask"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.effect.LinearFadeOut.gen_mask" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">&lt;built-in function array&gt;</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 </dd></dl>
 
@@ -306,21 +334,23 @@ None.</td>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>freq</strong> &#8211; A threshold frequency.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>freq</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">float</span></code></a>) &#8211; A threshold frequency.</td>
 </tr>
 </tbody>
 </table>
 <dl class="method">
 <dt id="gensound.effect.LowPassFilter.apply">
-<code class="descname">apply</code><span class="sig-paren">(</span><em>sound: gensound.sound.Sound</em><span class="sig-paren">)</span> &#x2192; gensound.sound.Sound<a class="reference internal" href="../_modules/gensound/effect.html#LowPassFilter.apply"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.effect.LowPassFilter.apply" title="Permalink to this definition">¶</a></dt>
+<code class="descname">apply</code><span class="sig-paren">(</span><em>sound</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gensound/effect.html#LowPassFilter.apply"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.effect.LowPassFilter.apply" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply effect to sound</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sound</strong> &#8211; <code class="xref py py-class docutils literal"><span class="pre">Sound</span></code> instance to appling effect.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sound</strong> (<a class="reference internal" href="sound.html#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a>) &#8211; <code class="xref py py-class docutils literal"><span class="pre">Sound</span></code> instance to appling effect.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A new <code class="xref py py-class docutils literal"><span class="pre">Sound</span></code> instance that applied effect.</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="sound.html#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A new <code class="xref py py-class docutils literal"><span class="pre">Sound</span></code> instance that applied effect.</td>
 </tr>
 </tbody>
 </table>
@@ -337,21 +367,23 @@ None.</td>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>freq</strong> &#8211; A threshold frequency.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>freq</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">float</span></code></a>) &#8211; A threshold frequency.</td>
 </tr>
 </tbody>
 </table>
 <dl class="method">
 <dt id="gensound.effect.HighPassFilter.apply">
-<code class="descname">apply</code><span class="sig-paren">(</span><em>sound: gensound.sound.Sound</em><span class="sig-paren">)</span> &#x2192; gensound.sound.Sound<a class="reference internal" href="../_modules/gensound/effect.html#HighPassFilter.apply"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.effect.HighPassFilter.apply" title="Permalink to this definition">¶</a></dt>
+<code class="descname">apply</code><span class="sig-paren">(</span><em>sound</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gensound/effect.html#HighPassFilter.apply"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.effect.HighPassFilter.apply" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply effect to sound</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sound</strong> &#8211; <code class="xref py py-class docutils literal"><span class="pre">Sound</span></code> instance to appling effect.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sound</strong> (<a class="reference internal" href="sound.html#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a>) &#8211; <code class="xref py py-class docutils literal"><span class="pre">Sound</span></code> instance to appling effect.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A new <code class="xref py py-class docutils literal"><span class="pre">Sound</span></code> instance that applied effect.</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="sound.html#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A new <code class="xref py py-class docutils literal"><span class="pre">Sound</span></code> instance that applied effect.</td>
 </tr>
 </tbody>
 </table>
@@ -369,8 +401,8 @@ None.</td>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>samplerate</strong> &#8211; New sampling rate.</li>
-<li><strong>kind</strong> &#8211; The way to interpolating data. Please see document of
+<li><strong>samplerate</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">float</span></code></a>) &#8211; New sampling rate.</li>
+<li><strong>kind</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">str</span></code></a>) &#8211; The way to interpolating data. Please see document of
 scipy.interpolate.interp1d.</li>
 </ul>
 </td>
@@ -397,15 +429,17 @@ return the same instance without re-sampling process.</p>
 </div>
 <dl class="method">
 <dt id="gensound.effect.Resampling.apply">
-<code class="descname">apply</code><span class="sig-paren">(</span><em>sound: gensound.sound.Sound</em><span class="sig-paren">)</span> &#x2192; gensound.sound.Sound<a class="reference internal" href="../_modules/gensound/effect.html#Resampling.apply"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.effect.Resampling.apply" title="Permalink to this definition">¶</a></dt>
+<code class="descname">apply</code><span class="sig-paren">(</span><em>sound</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gensound/effect.html#Resampling.apply"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.effect.Resampling.apply" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply effect to sound</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sound</strong> &#8211; <code class="xref py py-class docutils literal"><span class="pre">Sound</span></code> instance to appling effect.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sound</strong> (<a class="reference internal" href="sound.html#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a>) &#8211; <code class="xref py py-class docutils literal"><span class="pre">Sound</span></code> instance to appling effect.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A new <code class="xref py py-class docutils literal"><span class="pre">Sound</span></code> instance that applied effect.</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="sound.html#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A new <code class="xref py py-class docutils literal"><span class="pre">Sound</span></code> instance that applied effect.</td>
 </tr>
 </tbody>
 </table>
@@ -423,8 +457,8 @@ return the same instance without re-sampling process.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>speed_rate</strong> &#8211; Speed rate of new sound. 1.0 means don&#8217;t change speed.</li>
-<li><strong>kind</strong> &#8211; The way to interpolating data. Please see document of
+<li><strong>speed_rate</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">float</span></code></a>) &#8211; Speed rate of new sound. 1.0 means don&#8217;t change speed.</li>
+<li><strong>kind</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#str" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">str</span></code></a>) &#8211; The way to interpolating data. Please see document of
 scipy.interpolate.interp1d.</li>
 </ul>
 </td>
@@ -461,15 +495,17 @@ True</p>
 </div>
 <dl class="method">
 <dt id="gensound.effect.ChangeSpeed.apply">
-<code class="descname">apply</code><span class="sig-paren">(</span><em>sound: gensound.sound.Sound</em><span class="sig-paren">)</span> &#x2192; gensound.sound.Sound<a class="reference internal" href="../_modules/gensound/effect.html#ChangeSpeed.apply"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.effect.ChangeSpeed.apply" title="Permalink to this definition">¶</a></dt>
+<code class="descname">apply</code><span class="sig-paren">(</span><em>sound</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gensound/effect.html#ChangeSpeed.apply"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.effect.ChangeSpeed.apply" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply effect to sound</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sound</strong> &#8211; <code class="xref py py-class docutils literal"><span class="pre">Sound</span></code> instance to appling effect.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sound</strong> (<a class="reference internal" href="sound.html#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a>) &#8211; <code class="xref py py-class docutils literal"><span class="pre">Sound</span></code> instance to appling effect.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A new <code class="xref py py-class docutils literal"><span class="pre">Sound</span></code> instance that applied effect.</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="sound.html#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A new <code class="xref py py-class docutils literal"><span class="pre">Sound</span></code> instance that applied effect.</td>
 </tr>
 </tbody>
 </table>
@@ -486,7 +522,7 @@ True</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>new_volume</strong> &#8211; New target volume.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>new_volume</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">float</span></code></a>) &#8211; New target volume.</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><a class="reference internal" href="exceptions.html#gensound.exceptions.InvalidVolumeError" title="gensound.exceptions.InvalidVolumeError"><strong>InvalidVolumeError</strong></a> &#8211; Volume was lower than 0 or higher than 1.</td>
 </tr>
@@ -512,15 +548,17 @@ Please be careful that is not gain.</p>
 volume as the target volume.</p>
 <dl class="method">
 <dt id="gensound.effect.ChangeVolume.apply">
-<code class="descname">apply</code><span class="sig-paren">(</span><em>sound: gensound.sound.Sound</em><span class="sig-paren">)</span> &#x2192; gensound.sound.Sound<a class="reference internal" href="../_modules/gensound/effect.html#ChangeVolume.apply"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.effect.ChangeVolume.apply" title="Permalink to this definition">¶</a></dt>
+<code class="descname">apply</code><span class="sig-paren">(</span><em>sound</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gensound/effect.html#ChangeVolume.apply"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.effect.ChangeVolume.apply" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply effect to sound</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sound</strong> &#8211; <code class="xref py py-class docutils literal"><span class="pre">Sound</span></code> instance to appling effect.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sound</strong> (<a class="reference internal" href="sound.html#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a>) &#8211; <code class="xref py py-class docutils literal"><span class="pre">Sound</span></code> instance to appling effect.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A <code class="xref py py-class docutils literal"><span class="pre">Sound</span></code> instance that applied effect.</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="sound.html#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A <code class="xref py py-class docutils literal"><span class="pre">Sound</span></code> instance that applied effect.</td>
 </tr>
 </tbody>
 </table>
@@ -535,15 +573,17 @@ volume as the target volume.</p>
 <p>Reverse play effect</p>
 <dl class="method">
 <dt id="gensound.effect.ReversePlay.apply">
-<code class="descname">apply</code><span class="sig-paren">(</span><em>sound: gensound.sound.Sound</em><span class="sig-paren">)</span> &#x2192; gensound.sound.Sound<a class="reference internal" href="../_modules/gensound/effect.html#ReversePlay.apply"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.effect.ReversePlay.apply" title="Permalink to this definition">¶</a></dt>
+<code class="descname">apply</code><span class="sig-paren">(</span><em>sound</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gensound/effect.html#ReversePlay.apply"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.effect.ReversePlay.apply" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply effect to sound</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sound</strong> &#8211; <code class="xref py py-class docutils literal"><span class="pre">Sound</span></code> instance to appling effect.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sound</strong> (<a class="reference internal" href="sound.html#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a>) &#8211; <code class="xref py py-class docutils literal"><span class="pre">Sound</span></code> instance to appling effect.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A new <code class="xref py py-class docutils literal"><span class="pre">Sound</span></code> instance that applied effect.</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="sound.html#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A new <code class="xref py py-class docutils literal"><span class="pre">Sound</span></code> instance that applied effect.</td>
 </tr>
 </tbody>
 </table>
@@ -561,9 +601,9 @@ volume as the target volume.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>start</strong> &#8211; The start position of trimming in seconds.
+<li><strong>start</strong> (<code class="xref py py-data docutils literal"><span class="pre">Optional</span></code>[<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">float</span></code></a>]) &#8211; The start position of trimming in seconds.
 If None, won&#8217;t trim start side. Default is None.</li>
-<li><strong>end</strong> &#8211; The end position of trimming in seconds.
+<li><strong>end</strong> (<code class="xref py py-data docutils literal"><span class="pre">Optional</span></code>[<a class="reference external" href="https://docs.python.org/2/library/functions.html#float" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">float</span></code></a>]) &#8211; The end position of trimming in seconds.
 If None, won&#8217;t trim end side. Default is None.</li>
 </ul>
 </td>
@@ -588,15 +628,17 @@ If None, won&#8217;t trim end side. Default is None.</li>
 </div>
 <dl class="method">
 <dt id="gensound.effect.Trim.apply">
-<code class="descname">apply</code><span class="sig-paren">(</span><em>sound: gensound.sound.Sound</em><span class="sig-paren">)</span> &#x2192; gensound.sound.Sound<a class="reference internal" href="../_modules/gensound/effect.html#Trim.apply"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.effect.Trim.apply" title="Permalink to this definition">¶</a></dt>
+<code class="descname">apply</code><span class="sig-paren">(</span><em>sound</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gensound/effect.html#Trim.apply"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.effect.Trim.apply" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply effect to sound</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sound</strong> &#8211; <code class="xref py py-class docutils literal"><span class="pre">Sound</span></code> instance to appling effect.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sound</strong> (<a class="reference internal" href="sound.html#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a>) &#8211; <code class="xref py py-class docutils literal"><span class="pre">Sound</span></code> instance to appling effect.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A new <code class="xref py py-class docutils literal"><span class="pre">Sound</span></code> instance that applied effect.</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="sound.html#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A new <code class="xref py py-class docutils literal"><span class="pre">Sound</span></code> instance that applied effect.</td>
 </tr>
 </tbody>
 </table>
