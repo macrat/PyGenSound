@@ -491,6 +491,11 @@
 <span class="sd">        Traceback (most recent call last):</span>
 <span class="sd">            ...</span>
 <span class="sd">        ValueError: step is not supported</span>
+
+
+<span class="sd">        :class:`Trim effect&lt;gensound.effect.Trim&gt;` has the same function this.</span>
+<span class="sd">        You can use :class:`&lt;Trim effect&lt;gensound.effect.Trim&gt;` when process</span>
+<span class="sd">        many sounds by :class:`JoinedEffect&lt;gensound.effect.JoinedEffect&gt;`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">position</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
@@ -531,7 +536,7 @@
 <div class="viewcode-block" id="Sound.as_monaural"><a class="viewcode-back" href="../../modules/sound.html#gensound.sound.Sound.as_monaural">[docs]</a>    <span class="k">def</span> <span class="nf">as_monaural</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Sound&#39;</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot; Create a new instance that converted to monaural sound</span>
 
-<span class="sd">        :return: A new :class:`Sound` instance that monaural.</span>
+<span class="sd">        :return: A :class:`Sound` instance that monaural.</span>
 
 
 <span class="sd">        If an instance already monaural sound, may returns the same instance.</span>
@@ -542,22 +547,27 @@
 
         <span class="k">return</span> <span class="n">Sound</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">samplerate</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Sound.as_stereo"><a class="viewcode-back" href="../../modules/sound.html#gensound.sound.Sound.as_stereo">[docs]</a>    <span class="k">def</span> <span class="nf">as_stereo</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Sound&#39;</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot; Create a new instance that converted to stereo sound</span>
+<div class="viewcode-block" id="Sound.as_stereo"><a class="viewcode-back" href="../../modules/sound.html#gensound.sound.Sound.as_stereo">[docs]</a>    <span class="k">def</span> <span class="nf">as_stereo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channels</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Sound&#39;</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; Create a new instance that converted to multi channel sound</span>
 
-<span class="sd">        :return: A new :class:`Sound` instance that stereo.</span>
+<span class="sd">        :return: A new :class:`Sound` instance that stereo or multi channel.</span>
 
-<span class="sd">        :exception ValueError: The sound wasn&#39;t monaural sound.</span>
+<span class="sd">        :exception ValueError: A given channels were lesser than a number of</span>
+<span class="sd">                               channels of this sound.</span>
 
 
-<span class="sd">        Must be used for monaural sound. If used for multiple channel sound,</span>
-<span class="sd">        raises ValueError.</span>
+<span class="sd">        This method will return the same instance if this sound already had the</span>
+<span class="sd">        same number of channels.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_channels</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Sound must be monaural&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_channels</span> <span class="o">==</span> <span class="n">channels</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span>
 
-        <span class="k">return</span> <span class="n">Sound</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_channels</span> <span class="o">&gt;</span> <span class="n">channels</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;channels must be </span><span class="si">{}</span><span class="s1"> or greater but got </span><span class="si">{}</span><span class="s1">&#39;</span>
+                             <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_channels</span><span class="p">,</span> <span class="n">channels</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">Sound</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">channels</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
                      <span class="bp">self</span><span class="o">.</span><span class="n">samplerate</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Sound.fft"><a class="viewcode-back" href="../../modules/sound.html#gensound.sound.Sound.fft">[docs]</a>    <span class="k">def</span> <span class="nf">fft</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">:</span>
@@ -576,39 +586,6 @@
             <span class="p">])</span>
             <span class="k">for</span> <span class="n">channel</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_channels</span><span class="p">)</span>
         <span class="p">])</span></div>
-
-<div class="viewcode-block" id="Sound.change_volume"><a class="viewcode-back" href="../../modules/sound.html#gensound.sound.Sound.change_volume">[docs]</a>    <span class="k">def</span> <span class="nf">change_volume</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">volume</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Sound&#39;</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot; Create a new instance that changed volume</span>
-
-<span class="sd">        :param volume: New volume.</span>
-
-<span class="sd">        :return: A new :class:`Sound` instance that changed volume.</span>
-
-<span class="sd">        :exception InvalidVolumeError: Volume was lower than 0.0 or higher than</span>
-<span class="sd">                                       1.0.</span>
-
-
-<span class="sd">        This volume means the maximum value of the wave.</span>
-<span class="sd">        Please be careful that is not gain.</span>
-
-<span class="sd">        &gt;&gt;&gt; sound = Sound.from_sinwave(440, volume=1.0)</span>
-
-<span class="sd">        &gt;&gt;&gt; 0.999 &lt;= sound.data.max() &lt;= 1.0</span>
-<span class="sd">        True</span>
-<span class="sd">        &gt;&gt;&gt; -0.999 &gt;= sound.data.min() &gt;= -1.0</span>
-<span class="sd">        True</span>
-
-<span class="sd">        &gt;&gt;&gt; half = sound.change_volume(0.5)</span>
-<span class="sd">        &gt;&gt;&gt; 0.499 &lt;= half.volume &lt;= 0.501</span>
-<span class="sd">        True</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="n">_assertVolume</span><span class="p">(</span><span class="n">volume</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">Sound</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">*</span> <span class="p">(</span><span class="n">volume</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">volume</span><span class="p">),</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">samplerate</span>
-        <span class="p">)</span></div>
 
 <div class="viewcode-block" id="Sound.repeat"><a class="viewcode-back" href="../../modules/sound.html#gensound.sound.Sound.repeat">[docs]</a>    <span class="k">def</span> <span class="nf">repeat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">duration</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Sound&#39;</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot; Create a new instance that repeated same sound</span>

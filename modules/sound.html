@@ -387,7 +387,7 @@ second dimension means channels.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A new <a class="reference internal" href="#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a> instance that monaural.</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A <a class="reference internal" href="#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a> instance that monaural.</td>
 </tr>
 </tbody>
 </table>
@@ -396,20 +396,21 @@ second dimension means channels.</p>
 
 <dl class="method">
 <dt id="gensound.sound.Sound.as_stereo">
-<code class="descname">as_stereo</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; gensound.sound.Sound<a class="reference internal" href="../_modules/gensound/sound.html#Sound.as_stereo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.sound.Sound.as_stereo" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a new instance that converted to stereo sound</p>
+<code class="descname">as_stereo</code><span class="sig-paren">(</span><em>channels: int = 2</em><span class="sig-paren">)</span> &#x2192; gensound.sound.Sound<a class="reference internal" href="../_modules/gensound/sound.html#Sound.as_stereo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.sound.Sound.as_stereo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a new instance that converted to multi channel sound</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A new <a class="reference internal" href="#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a> instance that stereo.</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A new <a class="reference internal" href="#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a> instance that stereo or multi channel.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><strong>ValueError</strong> &#8211; The sound wasn&#8217;t monaural sound.</td>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><strong>ValueError</strong> &#8211; A given channels were lesser than a number of
+channels of this sound.</td>
 </tr>
 </tbody>
 </table>
-<p>Must be used for monaural sound. If used for multiple channel sound,
-raises ValueError.</p>
+<p>This method will return the same instance if this sound already had the
+same number of channels.</p>
 </dd></dl>
 
 <dl class="method">
@@ -424,41 +425,6 @@ raises ValueError.</p>
 </tr>
 </tbody>
 </table>
-</dd></dl>
-
-<dl class="method">
-<dt id="gensound.sound.Sound.change_volume">
-<code class="descname">change_volume</code><span class="sig-paren">(</span><em>volume: float</em><span class="sig-paren">)</span> &#x2192; gensound.sound.Sound<a class="reference internal" href="../_modules/gensound/sound.html#Sound.change_volume"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.sound.Sound.change_volume" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a new instance that changed volume</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>volume</strong> &#8211; New volume.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A new <a class="reference internal" href="#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a> instance that changed volume.</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><a class="reference internal" href="exceptions.html#gensound.exceptions.InvalidVolumeError" title="gensound.exceptions.InvalidVolumeError"><strong>InvalidVolumeError</strong></a> &#8211; Volume was lower than 0.0 or higher than
-1.0.</td>
-</tr>
-</tbody>
-</table>
-<p>This volume means the maximum value of the wave.
-Please be careful that is not gain.</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sound</span> <span class="o">=</span> <span class="n">Sound</span><span class="o">.</span><span class="n">from_sinwave</span><span class="p">(</span><span class="mi">440</span><span class="p">,</span> <span class="n">volume</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
-</pre></div>
-</div>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="mf">0.999</span> <span class="o">&lt;=</span> <span class="n">sound</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="mf">1.0</span>
-<span class="go">True</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="o">-</span><span class="mf">0.999</span> <span class="o">&gt;=</span> <span class="n">sound</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="o">-</span><span class="mf">1.0</span>
-<span class="go">True</span>
-</pre></div>
-</div>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">half</span> <span class="o">=</span> <span class="n">sound</span><span class="o">.</span><span class="n">change_volume</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="mf">0.499</span> <span class="o">&lt;=</span> <span class="n">half</span><span class="o">.</span><span class="n">volume</span> <span class="o">&lt;=</span> <span class="mf">0.501</span>
-<span class="go">True</span>
-</pre></div>
-</div>
 </dd></dl>
 
 <dl class="method">

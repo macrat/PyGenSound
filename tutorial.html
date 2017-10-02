@@ -107,6 +107,13 @@ In PyGenSound, <a class="reference internal" href="modules/effect.html#gensound.
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a_fadeout</span> <span class="o">=</span> <span class="n">effect</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
 </pre></div>
 </div>
+<p>You can use effects as a like a stream operator of C++.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a_fade</span> <span class="o">=</span> <span class="n">a</span> <span class="o">&gt;&gt;</span> <span class="n">gensound</span><span class="o">.</span><span class="n">FadeOut</span><span class="p">()</span> <span class="o">&gt;&gt;</span> <span class="n">gensound</span><span class="o">.</span><span class="n">FadeIn</span><span class="p">()</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a_fade</span> <span class="o">==</span> <span class="n">gensounf</span><span class="o">.</span><span class="n">FadeIn</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">gensound</span><span class="o">.</span><span class="n">FadeOut</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">a</span>
+<span class="go">True</span>
+</pre></div>
+</div>
 <p>Please see detail about effects to <a class="reference internal" href="modules/effect.html"><span class="doc">reference</span></a></p>
 </div>
 <div class="section" id="examples">

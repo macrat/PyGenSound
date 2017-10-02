@@ -51,6 +51,7 @@
 <span class="kn">import</span> <span class="nn">scipy.interpolate</span>
 
 <span class="kn">from</span> <span class="nn">gensound.sound</span> <span class="k">import</span> <span class="n">Sound</span>
+<span class="kn">from</span> <span class="nn">gensound.exceptions</span> <span class="k">import</span> <span class="o">*</span>
 
 
 <div class="viewcode-block" id="Effect"><a class="viewcode-back" href="../../modules/effect.html#gensound.effect.Effect">[docs]</a><span class="k">class</span> <span class="nc">Effect</span><span class="p">:</span>
@@ -59,12 +60,69 @@
 <div class="viewcode-block" id="Effect.apply"><a class="viewcode-back" href="../../modules/effect.html#gensound.effect.Effect.apply">[docs]</a>    <span class="k">def</span> <span class="nf">apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sound</span><span class="p">:</span> <span class="n">Sound</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sound</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot; Apply effect to sound</span>
 
-<span class="sd">        :param sound: :class:`Sound` instance to appling effect.</span>
+<span class="sd">        :param sound: :class:`Sound&lt;gensound.sound.Sound&gt;` instance to appling</span>
+<span class="sd">                      effect.</span>
 
-<span class="sd">        :return: A new :class:`Sound` instance that applied effect.</span>
+<span class="sd">        :return: A :class:`Sound&lt;gensound.sound.Sound&gt;` instance that applied</span>
+<span class="sd">                 effect.</span>
+
+
+<span class="sd">        You can use shift operator as apply() like a streaming operator of C++.</span>
+
+<span class="sd">        &gt;&gt;&gt; effect = LinearFadeIn()</span>
+<span class="sd">        &gt;&gt;&gt; sound = Sound.from_sinwave(440)</span>
+<span class="sd">        &gt;&gt;&gt; effect.apply(sound) == (effect &lt;&lt; sound) == (sound &gt;&gt; effect)</span>
+<span class="sd">        True</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
+
+    <span class="k">def</span> <span class="nf">__lshift__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="n">Sound</span><span class="p">,</span> <span class="s1">&#39;Effect&#39;</span><span class="p">])</span> \
+            <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="n">Sound</span><span class="p">,</span> <span class="s1">&#39;Effect&#39;</span><span class="p">]:</span>
+
+        <span class="sd">&quot;&quot;&quot; Apply effect to sound or join effects</span>
+
+<span class="sd">        This method is alias of :func:`apply()&lt;Effect.apply&gt;` and</span>
+<span class="sd">        :func:`then()&lt;Effect.then&gt;`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">Sound</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">Effect</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">x</span><span class="o">.</span><span class="n">then</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                <span class="s1">&#39;right operand must be Sound or Effect instance but got </span><span class="si">{}</span><span class="s1">&#39;</span>
+                <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">),</span>
+            <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__rshift__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="s1">&#39;Effect&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Effect&#39;</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; Join effects</span>
+
+<span class="sd">        This method is alias of :func:`then()&lt;Effect.then&gt;`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">Effect</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">then</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                <span class="s1">&#39;left operand must be Sound or Effect instance but got </span><span class="si">{}</span><span class="s1">&#39;</span>
+                <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">),</span>
+            <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__rrshift__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Sound</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sound</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; Apply effect to sound</span>
+
+<span class="sd">        This method is alias of :func:`apply()&lt;Effect.apply&gt;`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">Sound</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                <span class="s1">&#39;left operand must be Sound or Effect instance but got </span><span class="si">{}</span><span class="s1">&#39;</span>
+                <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">),</span>
+            <span class="p">)</span>
 
 <div class="viewcode-block" id="Effect.then"><a class="viewcode-back" href="../../modules/effect.html#gensound.effect.Effect.then">[docs]</a>    <span class="k">def</span> <span class="nf">then</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">effect</span><span class="p">:</span> <span class="s1">&#39;Effect&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Effect&#39;</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot; Join effect</span>
@@ -80,6 +138,12 @@
 
 <span class="sd">        &gt;&gt;&gt; out.apply(in_.apply(sound)) == in_.then(out).apply(sound)</span>
 <span class="sd">        True</span>
+
+
+<span class="sd">        You can use shift operator as then() like a streaming operator of C++.</span>
+
+<span class="sd">        &gt;&gt;&gt; sound &gt;&gt; in_ &gt;&gt; out == in_.then(out).apply(sound)</span>
+<span class="sd">        True</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="n">JoinedEffect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">effect</span><span class="p">)</span></div></div>
@@ -89,6 +153,8 @@
     <span class="sd">&quot;&quot;&quot; Joined multiple effects</span>
 
 <span class="sd">    :param effects: Effect instances to joint.</span>
+
+<span class="sd">    :exception ValueError: If effects not given.</span>
 
 
 <span class="sd">    &gt;&gt;&gt; in_ = LinearFadeIn()</span>
@@ -100,9 +166,15 @@
 
 <span class="sd">    &gt;&gt;&gt; out.apply(in_.apply(sound)) == in_.then(out).apply(sound)</span>
 <span class="sd">    True</span>
+
+<span class="sd">    &gt;&gt;&gt; out &lt;&lt; in_ &lt;&lt; sound == JoinedEffect(in_, out).apply(sound)</span>
+<span class="sd">    True</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">effects</span><span class="p">:</span> <span class="n">Effect</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">effects</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;effects must give least one element&#39;</span><span class="p">)</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">effects</span> <span class="o">=</span> <span class="n">effects</span>
 
 <div class="viewcode-block" id="JoinedEffect.apply"><a class="viewcode-back" href="../../modules/effect.html#gensound.effect.JoinedEffect.apply">[docs]</a>    <span class="k">def</span> <span class="nf">apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sound</span><span class="p">:</span> <span class="n">Sound</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sound</span><span class="p">:</span>
@@ -401,6 +473,54 @@
         <span class="k">return</span> <span class="n">Sound</span><span class="p">(</span><span class="n">resampler</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">sound</span><span class="p">)</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">sound</span><span class="o">.</span><span class="n">samplerate</span><span class="p">)</span></div></div>
 
 
+<div class="viewcode-block" id="ChangeVolume"><a class="viewcode-back" href="../../modules/effect.html#gensound.effect.ChangeVolume">[docs]</a><span class="k">class</span> <span class="nc">ChangeVolume</span><span class="p">(</span><span class="n">Effect</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Change volume effect</span>
+
+<span class="sd">    :param new_volume: New target volume.</span>
+
+<span class="sd">    :exception InvalidVolumeError: Volume was lower than 0 or higher than 1.</span>
+
+
+<span class="sd">    This volume means the maximum value of the wave.</span>
+<span class="sd">    Please be careful that is not gain.</span>
+
+<span class="sd">    &gt;&gt;&gt; sound = Sound.from_sinwave(440, volume=1.0)</span>
+
+<span class="sd">    &gt;&gt;&gt; 0.999 &lt;= sound.data.max() &lt;= 1.0</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; -0.999 &gt;= sound.data.min() &gt;= -1.0</span>
+<span class="sd">    True</span>
+
+<span class="sd">    &gt;&gt;&gt; half = ChangeVolume(0.5).apply(sound)</span>
+<span class="sd">    &gt;&gt;&gt; 0.499 &lt;= half.volume &lt;= 0.501</span>
+<span class="sd">    True</span>
+
+
+<span class="sd">    This effect will return the same instance if given sound had the same</span>
+<span class="sd">    volume as the target volume.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_volume</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">new_volume</span> <span class="o">&lt;</span> <span class="mf">0.0</span> <span class="ow">or</span> <span class="mf">1.0</span> <span class="o">&lt;</span> <span class="n">new_volume</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">InvalidVolumeError</span><span class="p">(</span><span class="n">new_volume</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">volume</span> <span class="o">=</span> <span class="n">new_volume</span>
+
+<div class="viewcode-block" id="ChangeVolume.apply"><a class="viewcode-back" href="../../modules/effect.html#gensound.effect.ChangeVolume.apply">[docs]</a>    <span class="k">def</span> <span class="nf">apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sound</span><span class="p">:</span> <span class="n">Sound</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sound</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; Apply effect to sound</span>
+
+<span class="sd">        :param sound: :class:`Sound` instance to appling effect.</span>
+
+<span class="sd">        :return: A :class:`Sound` instance that applied effect.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">sound</span><span class="o">.</span><span class="n">volume</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">volume</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">sound</span>
+
+        <span class="k">return</span> <span class="n">Sound</span><span class="p">(</span><span class="n">sound</span><span class="o">.</span><span class="n">data</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">volume</span> <span class="o">/</span> <span class="n">sound</span><span class="o">.</span><span class="n">volume</span><span class="p">),</span>
+                     <span class="n">sound</span><span class="o">.</span><span class="n">samplerate</span><span class="p">)</span></div></div>
+
+
 <div class="viewcode-block" id="ReversePlay"><a class="viewcode-back" href="../../modules/effect.html#gensound.effect.ReversePlay">[docs]</a><span class="k">class</span> <span class="nc">ReversePlay</span><span class="p">(</span><span class="n">Effect</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Reverse play effect &quot;&quot;&quot;</span>
 
@@ -413,6 +533,51 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="n">Sound</span><span class="p">(</span><span class="n">sound</span><span class="o">.</span><span class="n">data</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">sound</span><span class="o">.</span><span class="n">samplerate</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="Trim"><a class="viewcode-back" href="../../modules/effect.html#gensound.effect.Trim">[docs]</a><span class="k">class</span> <span class="nc">Trim</span><span class="p">(</span><span class="n">Effect</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Trim sound</span>
+
+<span class="sd">    :param start: The start position of trimming in seconds.</span>
+<span class="sd">                  If None, won&#39;t trim start side. Default is None.</span>
+<span class="sd">    :param end:   The end position of trimming in seconds.</span>
+<span class="sd">                  If None, won&#39;t trim end side. Default is None.</span>
+
+<span class="sd">    :exception InvalidDurationError: If start was same or greater than end.</span>
+
+
+<span class="sd">    This is alias of</span>
+<span class="sd">    :func:`Sound.__getitem__&lt;gensound.sound.Sound.__getitem__&gt;`.</span>
+
+<span class="sd">    &gt;&gt;&gt; sound = Sound.from_sinwave(440)</span>
+
+<span class="sd">    &gt;&gt;&gt; Trim(end=0.5).apply(sound) == sound[:0.5]</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; Trim(start=0.5).apply(sound) == sound[0.5:]</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; Trim(start=0.3, end=0.7).apply(sound) == sound[0.3: 0.7]</span>
+<span class="sd">    True</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">start</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">end</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">start</span> <span class="o">=</span> <span class="n">start</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">end</span> <span class="o">=</span> <span class="n">end</span>
+
+        <span class="k">if</span> <span class="n">start</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">end</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">start</span> <span class="o">&gt;=</span> <span class="n">end</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">InvalidDurationError</span><span class="p">(</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Trim.apply"><a class="viewcode-back" href="../../modules/effect.html#gensound.effect.Trim.apply">[docs]</a>    <span class="k">def</span> <span class="nf">apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sound</span><span class="p">:</span> <span class="n">Sound</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sound</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; Apply effect to sound</span>
+
+<span class="sd">        :param sound: :class:`Sound` instance to appling effect.</span>
+
+<span class="sd">        :return: A new :class:`Sound` instance that applied effect.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">sound</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">end</span><span class="p">]</span></div></div>
 </pre></div>
 
           </div>

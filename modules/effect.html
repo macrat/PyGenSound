@@ -60,12 +60,21 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sound</strong> &#8211; <code class="xref py py-class docutils literal"><span class="pre">Sound</span></code> instance to appling effect.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sound</strong> &#8211; <a class="reference internal" href="sound.html#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a> instance to appling
+effect.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A new <code class="xref py py-class docutils literal"><span class="pre">Sound</span></code> instance that applied effect.</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A <a class="reference internal" href="sound.html#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a> instance that applied
+effect.</td>
 </tr>
 </tbody>
 </table>
+<p>You can use shift operator as apply() like a streaming operator of C++.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">effect</span> <span class="o">=</span> <span class="n">LinearFadeIn</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sound</span> <span class="o">=</span> <span class="n">Sound</span><span class="o">.</span><span class="n">from_sinwave</span><span class="p">(</span><span class="mi">440</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">effect</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">sound</span><span class="p">)</span> <span class="o">==</span> <span class="p">(</span><span class="n">effect</span> <span class="o">&lt;&lt;</span> <span class="n">sound</span><span class="p">)</span> <span class="o">==</span> <span class="p">(</span><span class="n">sound</span> <span class="o">&gt;&gt;</span> <span class="n">effect</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="method">
@@ -91,6 +100,11 @@
 <span class="go">True</span>
 </pre></div>
 </div>
+<p>You can use shift operator as then() like a streaming operator of C++.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sound</span> <span class="o">&gt;&gt;</span> <span class="n">in_</span> <span class="o">&gt;&gt;</span> <span class="n">out</span> <span class="o">==</span> <span class="n">in_</span><span class="o">.</span><span class="n">then</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">sound</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </dd></dl>
@@ -106,6 +120,8 @@
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>effects</strong> &#8211; Effect instances to joint.</td>
 </tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><strong>ValueError</strong> &#8211; If effects not given.</td>
+</tr>
 </tbody>
 </table>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">in_</span> <span class="o">=</span> <span class="n">LinearFadeIn</span><span class="p">()</span>
@@ -118,6 +134,10 @@
 </pre></div>
 </div>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">out</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">in_</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">sound</span><span class="p">))</span> <span class="o">==</span> <span class="n">in_</span><span class="o">.</span><span class="n">then</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">sound</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">out</span> <span class="o">&lt;&lt;</span> <span class="n">in_</span> <span class="o">&lt;&lt;</span> <span class="n">sound</span> <span class="o">==</span> <span class="n">JoinedEffect</span><span class="p">(</span><span class="n">in_</span><span class="p">,</span> <span class="n">out</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">sound</span><span class="p">)</span>
 <span class="go">True</span>
 </pre></div>
 </div>
@@ -458,6 +478,57 @@ True</p>
 </dd></dl>
 
 <dl class="class">
+<dt id="gensound.effect.ChangeVolume">
+<em class="property">class </em><code class="descclassname">gensound.effect.</code><code class="descname">ChangeVolume</code><span class="sig-paren">(</span><em>new_volume: float</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/gensound/effect.html#ChangeVolume"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.effect.ChangeVolume" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#gensound.effect.Effect" title="gensound.effect.Effect"><code class="xref py py-class docutils literal"><span class="pre">gensound.effect.Effect</span></code></a></p>
+<p>Change volume effect</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>new_volume</strong> &#8211; New target volume.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><a class="reference internal" href="exceptions.html#gensound.exceptions.InvalidVolumeError" title="gensound.exceptions.InvalidVolumeError"><strong>InvalidVolumeError</strong></a> &#8211; Volume was lower than 0 or higher than 1.</td>
+</tr>
+</tbody>
+</table>
+<p>This volume means the maximum value of the wave.
+Please be careful that is not gain.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sound</span> <span class="o">=</span> <span class="n">Sound</span><span class="o">.</span><span class="n">from_sinwave</span><span class="p">(</span><span class="mi">440</span><span class="p">,</span> <span class="n">volume</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="mf">0.999</span> <span class="o">&lt;=</span> <span class="n">sound</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="mf">1.0</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="o">-</span><span class="mf">0.999</span> <span class="o">&gt;=</span> <span class="n">sound</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="o">-</span><span class="mf">1.0</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">half</span> <span class="o">=</span> <span class="n">ChangeVolume</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">sound</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="mf">0.499</span> <span class="o">&lt;=</span> <span class="n">half</span><span class="o">.</span><span class="n">volume</span> <span class="o">&lt;=</span> <span class="mf">0.501</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<p>This effect will return the same instance if given sound had the same
+volume as the target volume.</p>
+<dl class="method">
+<dt id="gensound.effect.ChangeVolume.apply">
+<code class="descname">apply</code><span class="sig-paren">(</span><em>sound: gensound.sound.Sound</em><span class="sig-paren">)</span> &#x2192; gensound.sound.Sound<a class="reference internal" href="../_modules/gensound/effect.html#ChangeVolume.apply"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.effect.ChangeVolume.apply" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply effect to sound</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sound</strong> &#8211; <code class="xref py py-class docutils literal"><span class="pre">Sound</span></code> instance to appling effect.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A <code class="xref py py-class docutils literal"><span class="pre">Sound</span></code> instance that applied effect.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="gensound.effect.ReversePlay">
 <em class="property">class </em><code class="descclassname">gensound.effect.</code><code class="descname">ReversePlay</code><a class="reference internal" href="../_modules/gensound/effect.html#ReversePlay"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.effect.ReversePlay" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#gensound.effect.Effect" title="gensound.effect.Effect"><code class="xref py py-class docutils literal"><span class="pre">gensound.effect.Effect</span></code></a></p>
@@ -465,6 +536,59 @@ True</p>
 <dl class="method">
 <dt id="gensound.effect.ReversePlay.apply">
 <code class="descname">apply</code><span class="sig-paren">(</span><em>sound: gensound.sound.Sound</em><span class="sig-paren">)</span> &#x2192; gensound.sound.Sound<a class="reference internal" href="../_modules/gensound/effect.html#ReversePlay.apply"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.effect.ReversePlay.apply" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply effect to sound</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sound</strong> &#8211; <code class="xref py py-class docutils literal"><span class="pre">Sound</span></code> instance to appling effect.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A new <code class="xref py py-class docutils literal"><span class="pre">Sound</span></code> instance that applied effect.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="gensound.effect.Trim">
+<em class="property">class </em><code class="descclassname">gensound.effect.</code><code class="descname">Trim</code><span class="sig-paren">(</span><em>start: typing.Union[float</em>, <em>NoneType] = None</em>, <em>end: typing.Union[float</em>, <em>NoneType] = None</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/gensound/effect.html#Trim"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.effect.Trim" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#gensound.effect.Effect" title="gensound.effect.Effect"><code class="xref py py-class docutils literal"><span class="pre">gensound.effect.Effect</span></code></a></p>
+<p>Trim sound</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>start</strong> &#8211; The start position of trimming in seconds.
+If None, won&#8217;t trim start side. Default is None.</li>
+<li><strong>end</strong> &#8211; The end position of trimming in seconds.
+If None, won&#8217;t trim end side. Default is None.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><a class="reference internal" href="exceptions.html#gensound.exceptions.InvalidDurationError" title="gensound.exceptions.InvalidDurationError"><strong>InvalidDurationError</strong></a> &#8211; If start was same or greater than end.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>This is alias of
+<code class="xref py py-func docutils literal"><span class="pre">Sound.__getitem__</span></code>.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sound</span> <span class="o">=</span> <span class="n">Sound</span><span class="o">.</span><span class="n">from_sinwave</span><span class="p">(</span><span class="mi">440</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Trim</span><span class="p">(</span><span class="n">end</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">sound</span><span class="p">)</span> <span class="o">==</span> <span class="n">sound</span><span class="p">[:</span><span class="mf">0.5</span><span class="p">]</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Trim</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">sound</span><span class="p">)</span> <span class="o">==</span> <span class="n">sound</span><span class="p">[</span><span class="mf">0.5</span><span class="p">:]</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Trim</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">sound</span><span class="p">)</span> <span class="o">==</span> <span class="n">sound</span><span class="p">[</span><span class="mf">0.3</span><span class="p">:</span> <span class="mf">0.7</span><span class="p">]</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<dl class="method">
+<dt id="gensound.effect.Trim.apply">
+<code class="descname">apply</code><span class="sig-paren">(</span><em>sound: gensound.sound.Sound</em><span class="sig-paren">)</span> &#x2192; gensound.sound.Sound<a class="reference internal" href="../_modules/gensound/effect.html#Trim.apply"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gensound.effect.Trim.apply" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply effect to sound</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
