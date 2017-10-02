@@ -22,7 +22,7 @@ Play and save
 -------------
 Play made sound with :func:`play<gensound.sound.Sound.play>` method, like this.
 
-.. doctest::
+.. code-block:: python
 
 	>>> sound.play()
 
