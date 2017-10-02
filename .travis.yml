@@ -14,8 +14,8 @@ install:
   - pip install .
 
 script:
+  - cd ./doc/ && make doctest && cd ../
   - coverage run setup.py test
-  - cd ./doc/ && make doctest
 
 after_success:
   - coveralls
