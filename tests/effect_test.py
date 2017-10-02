@@ -24,16 +24,12 @@ class AbstractEffectClassesTest(unittest.TestCase):
             'left operand must be Sound or Effect instance but got int',
         )
 
-        class Dummy:
-            def __rshift__(self, x):
-                return None
-
         with self.assertRaises(TypeError) as cm:
-            effect >> Dummy()
+            effect >> 1.0
 
         self.assertEqual(
             str(cm.exception),
-            'left operand must be Sound or Effect instance but got Dummy',
+            'left operand must be Sound or Effect instance but got float',
         )
 
     def test_not_implemented_effect(self):

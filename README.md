@@ -53,7 +53,7 @@ $ gensound concat 440.wav silence.wav | gensound concat - - - 880.wav | mplayer 
 ```
 
 ## requirements
-- python3
+- python3.5+
 - numpy
 - scipy
 - PySoundFile
