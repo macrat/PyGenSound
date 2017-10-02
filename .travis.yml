@@ -8,13 +8,14 @@ before_install:
   - sudo apt-get update
   - sudo apt-get install -y portaudio19-dev libsndfile1
   - pip install coveralls
-  - pip install pep8
+  - pip install pep8 sphinx_autodoc_typehints
 
 install:
   - pip install .
 
 script:
   - coverage run setup.py test
+  - cd ./doc/ && make doctest
 
 after_success:
   - coveralls
