@@ -709,17 +709,26 @@ class SoundTest(unittest.TestCase):
 
         self.assertEqual(stereo.as_monaural(), monaural)
 
+        self.assertIs(monaural.as_monaural(), monaural)
+
     def test_as_stereo(self):
         monaural = Sound.from_array([0.1, 0.2], 2)
         stereo = Sound.from_array([[0.1, 0.1], [0.2, 0.2]], 2)
+        triple = Sound.from_array([[0.1, 0.1, 0.1], [0.2, 0.2, 0.2]], 2)
 
         self.assertEqual(monaural.as_stereo(), stereo)
+        self.assertEqual(monaural.as_stereo(channels=3), triple)
+
+        self.assertIs(stereo.as_stereo(), stereo)
 
     def test_as_stereo_invalid(self):
         stereo = Sound.from_array([[0.1, 0.1], [0.2, 0.2]], 2)
 
-        with self.assertRaises(ValueError, msg='Sound must be monaural'):
-            stereo.as_stereo()
+        with self.assertRaises(ValueError) as cm:
+            self.assertEqual(stereo.as_stereo(1), stereo)
+
+        self.assertEqual(str(cm.exception),
+                         'channels must be 2 or greater but got 1')
 
     def test_concat(self):
         a = Sound.from_array([0.0, 0.1], 2)

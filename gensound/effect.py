@@ -445,7 +445,7 @@ class ChangeVolume(Effect):
     volume as the target volume.
     """
 
-    def __init__(self, new_volume: float) -> Sound:
+    def __init__(self, new_volume: float) -> None:
         if new_volume < 0.0 or 1.0 < new_volume:
             raise InvalidVolumeError(new_volume)
 

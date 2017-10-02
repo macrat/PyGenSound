@@ -491,7 +491,7 @@ class Sound:
     def as_monaural(self) -> 'Sound':
         """ Create a new instance that converted to monaural sound
 
-        :return: A new :class:`Sound` instance that monaural.
+        :return: A :class:`Sound` instance that monaural.
 
 
         If an instance already monaural sound, may returns the same instance.
@@ -502,22 +502,27 @@ class Sound:
 
         return Sound(numpy.average(self.data, axis=1), self.samplerate)
 
-    def as_stereo(self) -> 'Sound':
-        """ Create a new instance that converted to stereo sound
+    def as_stereo(self, channels: int = 2) -> 'Sound':
+        """ Create a new instance that converted to multi channel sound
 
-        :return: A new :class:`Sound` instance that stereo.
+        :return: A new :class:`Sound` instance that stereo or multi channel.
 
-        :exception ValueError: The sound wasn't monaural sound.
+        :exception ValueError: A given channels were lesser than a number of
+                               channels of this sound.
 
 
-        Must be used for monaural sound. If used for multiple channel sound,
-        raises ValueError.
+        This method will return the same instance if this sound already had the
+        same number of channels.
         """
 
-        if self.n_channels != 1:
-            raise ValueError('Sound must be monaural')
+        if self.n_channels == channels:
+            return self
 
-        return Sound(self.data.reshape([-1, 1]).repeat(2, axis=1),
+        if self.n_channels > channels:
+            raise ValueError('channels must be {} or greater but got {}'
+                             .format(self.n_channels, channels))
+
+        return Sound(self.data.reshape([-1, 1]).repeat(channels, axis=1),
                      self.samplerate)
 
     def fft(self) -> numpy.array:
