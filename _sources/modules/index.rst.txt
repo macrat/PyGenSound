@@ -1,6 +1,10 @@
 Modules reference
 =================
 
+.. testsetup::
+
+	from gensound import *
+
 .. automodule:: gensound
     :members:
     :undoc-members:

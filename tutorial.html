@@ -61,7 +61,7 @@
 <div class="section" id="make-simple-sound">
 <h2>Make simple sound<a class="headerlink" href="#make-simple-sound" title="Permalink to this headline">¶</a></h2>
 <p>This example is make 440 Hz sine wave sound.</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">gensound</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">gensound</span>
 
 <span class="gp">&gt;&gt;&gt; </span><span class="n">sound</span> <span class="o">=</span> <span class="n">gensound</span><span class="o">.</span><span class="n">Sound</span><span class="o">.</span><span class="n">from_sinwave</span><span class="p">(</span><span class="mi">440</span><span class="p">)</span>
 </pre></div>
@@ -72,28 +72,28 @@ Please see <a class="reference internal" href="modules/sound.html"><span class="
 <div class="section" id="play-and-save">
 <h2>Play and save<a class="headerlink" href="#play-and-save" title="Permalink to this headline">¶</a></h2>
 <p>Play made sound with <a class="reference internal" href="modules/sound.html#gensound.sound.Sound.play" title="gensound.sound.Sound.play"><code class="xref py py-func docutils literal"><span class="pre">play</span></code></a> method, like this.</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sound</span><span class="o">.</span><span class="n">play</span><span class="p">()</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sound</span><span class="o">.</span><span class="n">play</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>Or, can write into disk with <a class="reference internal" href="modules/sound.html#gensound.sound.Sound.write" title="gensound.sound.Sound.write"><code class="xref py py-func docutils literal"><span class="pre">write</span></code></a> method.</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sound</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;out.wav&#39;</span><span class="p">)</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sound</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;out.wav&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="overlay-or-concatenate">
 <h2>Overlay or concatenate<a class="headerlink" href="#overlay-or-concatenate" title="Permalink to this headline">¶</a></h2>
 <p>Make two sounds,</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">gensound</span><span class="o">.</span><span class="n">Sound</span><span class="o">.</span><span class="n">from_sinwave</span><span class="p">(</span><span class="mi">440</span><span class="p">)</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">gensound</span><span class="o">.</span><span class="n">Sound</span><span class="o">.</span><span class="n">from_sinwave</span><span class="p">(</span><span class="mi">440</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="n">gensound</span><span class="o">.</span><span class="n">Sound</span><span class="o">.</span><span class="n">from_sinwave</span><span class="p">(</span><span class="mi">880</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>and overlay they with <a class="reference internal" href="modules/sound.html#gensound.sound.overlay" title="gensound.sound.overlay"><code class="xref py py-func docutils literal"><span class="pre">overlay</span></code></a> function.</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">overlay</span> <span class="o">=</span> <span class="n">gensound</span><span class="o">.</span><span class="n">overlay</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">overlay</span> <span class="o">=</span> <span class="n">gensound</span><span class="o">.</span><span class="n">overlay</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>The <code class="docutils literal"><span class="pre">overlay</span></code> is the same duration as <code class="docutils literal"><span class="pre">a</span></code> and <code class="docutils literal"><span class="pre">b</span></code>, and play both of 440 Hz and 880 Hz.</p>
 <p>Or, concatenate they with <a class="reference internal" href="modules/sound.html#gensound.sound.concat" title="gensound.sound.concat"><code class="xref py py-func docutils literal"><span class="pre">concat</span></code></a> function.</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">concat</span> <span class="o">=</span> <span class="n">gensound</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">concat</span> <span class="o">=</span> <span class="n">gensound</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>The <code class="docutils literal"><span class="pre">concat</span></code> is playing <code class="docutils literal"><span class="pre">a</span></code> then <code class="docutils literal"><span class="pre">b</span></code>.</p>
@@ -102,15 +102,15 @@ Please see <a class="reference internal" href="modules/sound.html"><span class="
 <h2>Use sound effects<a class="headerlink" href="#use-sound-effects" title="Permalink to this headline">¶</a></h2>
 <p>PyGenSound has some effects like <a class="reference internal" href="modules/effect.html#gensound.effect.LinearFadeIn" title="gensound.effect.LinearFadeIn"><code class="xref py py-class docutils literal"><span class="pre">fade-in</span></code></a>, <a class="reference internal" href="modules/effect.html#gensound.effect.LinearFadeOut" title="gensound.effect.LinearFadeOut"><code class="xref py py-class docutils literal"><span class="pre">fade-out</span></code></a>, <a class="reference internal" href="modules/effect.html#gensound.effect.HighPassFilter" title="gensound.effect.HighPassFilter"><code class="xref py py-class docutils literal"><span class="pre">high</span> <span class="pre">pass</span></code></a> or <a class="reference internal" href="modules/effect.html#gensound.effect.LowPassFilter" title="gensound.effect.LowPassFilter"><code class="xref py py-class docutils literal"><span class="pre">low</span> <span class="pre">pass</span> <span class="pre">filter</span></code></a>.
 In PyGenSound, <a class="reference internal" href="modules/effect.html#gensound.effect.Resampling" title="gensound.effect.Resampling"><code class="xref py py-class docutils literal"><span class="pre">resampling</span></code></a> and <a class="reference internal" href="modules/effect.html#gensound.effect.ChangeSpeed" title="gensound.effect.ChangeSpeed"><code class="xref py py-class docutils literal"><span class="pre">changing</span> <span class="pre">speed</span></code></a> is classified as an effect.</p>
-<p>This sample will apply <code class="xref py py-class docutils literal"><span class="pre">fade-out</span></code> effect to sound <code class="docutils literal"><span class="pre">a</span></code>.</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">effect</span> <span class="o">=</span> <span class="n">gensound</span><span class="o">.</span><span class="n">FadeOut</span><span class="p">()</span>
+<p>This sample will apply <a class="reference internal" href="modules/effect.html#gensound.effect.LinearFadeOut" title="gensound.effect.LinearFadeOut"><code class="xref py py-class docutils literal"><span class="pre">fade-out</span></code></a> effect to sound <code class="docutils literal"><span class="pre">a</span></code>.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">effect</span> <span class="o">=</span> <span class="n">gensound</span><span class="o">.</span><span class="n">LinearFadeOut</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a_fadeout</span> <span class="o">=</span> <span class="n">effect</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>You can use effects as a like a stream operator of C++.</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a_fade</span> <span class="o">=</span> <span class="n">a</span> <span class="o">&gt;&gt;</span> <span class="n">gensound</span><span class="o">.</span><span class="n">FadeOut</span><span class="p">()</span> <span class="o">&gt;&gt;</span> <span class="n">gensound</span><span class="o">.</span><span class="n">FadeIn</span><span class="p">()</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a_fade</span> <span class="o">=</span> <span class="n">a</span> <span class="o">&gt;&gt;</span> <span class="n">gensound</span><span class="o">.</span><span class="n">LinearFadeOut</span><span class="p">()</span> <span class="o">&gt;&gt;</span> <span class="n">gensound</span><span class="o">.</span><span class="n">LinearFadeIn</span><span class="p">()</span>
 
-<span class="gp">&gt;&gt;&gt; </span><span class="n">a_fade</span> <span class="o">==</span> <span class="n">gensounf</span><span class="o">.</span><span class="n">FadeIn</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">gensound</span><span class="o">.</span><span class="n">FadeOut</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">a</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a_fade</span> <span class="o">==</span> <span class="n">gensound</span><span class="o">.</span><span class="n">LinearFadeIn</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">gensound</span><span class="o">.</span><span class="n">LinearFadeOut</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">a</span>
 <span class="go">True</span>
 </pre></div>
 </div>

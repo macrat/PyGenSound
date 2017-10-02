@@ -9,7 +9,7 @@ Make simple sound
 -----------------
 This example is make 440 Hz sine wave sound.
 
-.. code-block:: python
+.. doctest::
 
 	>>> import gensound
 
@@ -22,28 +22,34 @@ Play and save
 -------------
 Play made sound with :func:`play<gensound.sound.Sound.play>` method, like this.
 
-.. code-block:: python
+.. doctest::
 
 	>>> sound.play()
 
 Or, can write into disk with :func:`write<gensound.sound.Sound.write>` method.
 
-.. code-block:: python
+.. doctest::
 
 	>>> sound.write('out.wav')
+
+.. testcleanup::
+
+	import os
+
+	os.remove('out.wav')
 
 Overlay or concatenate
 ----------------------
 Make two sounds,
 
-.. code-block:: python
+.. doctest::
 
 	>>> a = gensound.Sound.from_sinwave(440)
 	>>> b = gensound.Sound.from_sinwave(880)
 
 and overlay they with :func:`overlay<gensound.sound.overlay>` function.
 
-.. code-block:: python
+.. doctest::
 
 	>>> overlay = gensound.overlay(a, b)
 
@@ -51,7 +57,7 @@ The ``overlay`` is the same duration as ``a`` and ``b``, and play both of 440 Hz
 
 Or, concatenate they with :func:`concat<gensound.sound.concat>` function.
 
-.. code-block:: python
+.. doctest::
 
 	>>> concat = gensound.concat(a, b)
 
@@ -62,20 +68,20 @@ Use sound effects
 PyGenSound has some effects like :class:`fade-in<gensound.effect.LinearFadeIn>`, :class:`fade-out<gensound.effect.LinearFadeOut>`, :class:`high pass<gensound.effect.HighPassFilter>` or :class:`low pass filter<gensound.effect.LowPassFilter>`.
 In PyGenSound, :class:`resampling<gensound.effect.Resampling>` and :class:`changing speed<gensound.effect.ChangeSpeed>` is classified as an effect.
 
-This sample will apply :class:`fade-out<gensound.effect.FadeOut>` effect to sound ``a``.
+This sample will apply :class:`fade-out<gensound.effect.LinearFadeOut>` effect to sound ``a``.
 
-.. code-block:: python
+.. doctest::
 
-	>>> effect = gensound.FadeOut()
+	>>> effect = gensound.LinearFadeOut()
 	>>> a_fadeout = effect.apply(a)
 
 You can use effects as a like a stream operator of C++.
 
-.. code-block:: python
+.. doctest::
 
-	>>> a_fade = a >> gensound.FadeOut() >> gensound.FadeIn()
+	>>> a_fade = a >> gensound.LinearFadeOut() >> gensound.LinearFadeIn()
 
-	>>> a_fade == gensounf.FadeIn() << gensound.FadeOut() << a
+	>>> a_fade == gensound.LinearFadeIn() << gensound.LinearFadeOut() << a
 	True
 
 Please see detail about effects to :doc:`reference<modules/effect>`
