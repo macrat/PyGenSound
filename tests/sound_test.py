@@ -44,25 +44,33 @@ class SoundUtilsTest(unittest.TestCase):
         lessdimen = numpy.array([1, 2, 3])
         overdimen = numpy.array([[[1, 2]], [[3, 4]]])
 
-        with self.assertRaises(
-                ValueError,
-                msg='want_length must be greater than 0 but got -1'):
+        with self.assertRaises(ValueError) as cm:
             _repeat_array(array, 0)
 
-        with self.assertRaises(
-                ValueError,
-                msg='want_length must be greater than 0 but got -1'):
+        self.assertEqual(str(cm.exception),
+                         'want_length must be greater than 0 but got 0')
+
+        with self.assertRaises(ValueError) as cm:
             _repeat_array(array, -1)
 
-        with self.assertRaises(ValueError,
-                               msg='sound should have least one element'):
+        self.assertEqual(str(cm.exception),
+                         'want_length must be greater than 0 but got -1')
+
+        with self.assertRaises(ValueError) as cm:
             _repeat_array(null, 1)
 
-        with self.assertRaises(ValueError, msg='sound should two dimensions'):
+        self.assertEqual(str(cm.exception),
+                         'sound should have least one element')
+
+        with self.assertRaises(ValueError) as cm:
             _repeat_array(lessdimen, 1)
 
-        with self.assertRaises(ValueError, msg='sound should two dimensions'):
+        self.assertEqual(str(cm.exception), 'sound should two dimensions')
+
+        with self.assertRaises(ValueError) as cm:
             _repeat_array(overdimen, 1)
+
+        self.assertEqual(str(cm.exception), 'sound should two dimensions')
 
     def test_overlay(self):
         a = Sound.from_array([0.0, 0.1], 2)
@@ -191,8 +199,11 @@ class SoundTest(unittest.TestCase):
 
         self.assertEqual(cm.exception.duration, 0)
 
-        with self.assertRaises(ValueError):
+        with self.assertRaises(ValueError) as cm:
             Sound(numpy.array([[[1], [2]], [[3], [4]]]), 1)
+
+        self.assertEqual(str(cm.exception),
+                         'data dimensions must be 1 or 2 but got 3')
 
     def test_equals(self):
         a = Sound.from_array([0.1, 0.2, 0.3], 1)
@@ -691,8 +702,10 @@ class SoundTest(unittest.TestCase):
     def test_trim_step(self):
         sound = Sound.from_sinwave(440)
 
-        with self.assertRaises(ValueError, msg='step is not supported'):
+        with self.assertRaises(ValueError) as cm:
             sound[::1]
+
+        self.assertEqual(str(cm.exception), 'step is not supported')
 
     def test_split_channels(self):
         a = Sound.from_array([0.1, 0.2], 2)

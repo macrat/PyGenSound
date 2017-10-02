@@ -46,8 +46,10 @@ class Effect:
         elif isinstance(x, Effect):
             return x.then(self)
         else:
-            raise TypeError('x must be Sound or Effect instance but got {}'
-                            .format(type(x)))
+            raise TypeError(
+                'right operand must be Sound or Effect instance but got {}'
+                .format(type(x).__name__),
+            )
 
     def __rshift__(self, x: 'Effect') -> 'Effect':
         """ Join effects
@@ -55,24 +57,27 @@ class Effect:
         This method is alias of :func:`then()<Effect.then>`.
         """
 
-        return self.then(x)
+        if isinstance(x, Effect):
+            return self.then(x)
+        else:
+            raise TypeError(
+                'left operand must be Sound or Effect instance but got {}'
+                .format(type(x).__name__),
+            )
 
-    def __rrshift__(self, x: typing.Union[Sound, 'Effect']) \
-            -> typing.Union[Sound, 'Effect']:
+    def __rrshift__(self, x: Sound) -> Sound:
+        """ Apply effect to sound
 
-        """ Apply effect to sound or join effects
-
-        This method is alias of :func:`apply()<Effect.apply>` and
-        :func:`then()<Effect.then>`.
+        This method is alias of :func:`apply()<Effect.apply>`.
         """
 
         if isinstance(x, Sound):
             return self.apply(x)
-        elif isinstance(x, Effect):
-            return self.then(x)
         else:
-            raise TypeError('x must be Sound or Effect instance but got {}'
-                            .format(type(x)))
+            raise TypeError(
+                'left operand must be Sound or Effect instance but got {}'
+                .format(type(x).__name__),
+            )
 
     def then(self, effect: 'Effect') -> 'Effect':
         """ Join effect
@@ -104,6 +109,8 @@ class JoinedEffect(Effect):
 
     :param effects: Effect instances to joint.
 
+    :exception ValueError: If effects not given.
+
 
     >>> in_ = LinearFadeIn()
     >>> out = LinearFadeOut()
@@ -120,6 +127,9 @@ class JoinedEffect(Effect):
     """
 
     def __init__(self, *effects: Effect) -> None:
+        if len(effects) <= 0:
+            raise ValueError('effects must give least one element')
+
         self.effects = effects
 
     def apply(self, sound: Sound) -> Sound:

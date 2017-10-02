@@ -4,6 +4,56 @@ from gensound.sound import Sound, overlay
 from gensound.effect import *
 
 
+class AbstractEffectClassesTest(unittest.TestCase):
+    def test_stream_operator_invalid(self):
+        effect = LinearFadeIn()
+
+        with self.assertRaises(TypeError) as cm:
+            effect << True
+
+        self.assertEqual(
+            str(cm.exception),
+            'right operand must be Sound or Effect instance but got bool',
+        )
+
+        with self.assertRaises(TypeError) as cm:
+            1 >> effect
+
+        self.assertEqual(
+            str(cm.exception),
+            'left operand must be Sound or Effect instance but got int',
+        )
+
+        class Dummy:
+            def __rshift__(self, x):
+                return None
+
+        with self.assertRaises(TypeError) as cm:
+            effect >> Dummy()
+
+        self.assertEqual(
+            str(cm.exception),
+            'left operand must be Sound or Effect instance but got Dummy',
+        )
+
+    def test_not_implemented_effect(self):
+        sound = Sound.from_sinwave(440)
+        effect = Effect()
+
+        with self.assertRaises(NotImplementedError):
+            effect.apply(sound)
+
+    def test_not_implemented_mask_effect(self):
+        sound = Sound.from_sinwave(440)
+        effect = MaskEffect()
+
+        with self.assertRaises(NotImplementedError):
+            effect.apply(sound)
+
+        with self.assertRaises(NotImplementedError):
+            effect.gen_mask(1)
+
+
 class JoinedEffectTest(unittest.TestCase):
     def test_then_method(self):
         sound = Sound.from_sinwave(440)
@@ -22,6 +72,13 @@ class JoinedEffectTest(unittest.TestCase):
 
         self.assertEqual(in_.then(out).apply(sound),
                          JoinedEffect(in_, out).apply(sound))
+
+    def test_join_class_empty(self):
+        with self.assertRaises(ValueError) as cm:
+            JoinedEffect()
+
+        self.assertEqual(str(cm.exception),
+                         'effects must give least one element')
 
     def test_join_with_operator(self):
         sound = Sound.from_sinwave(440)
@@ -144,15 +201,12 @@ class ResamplingTest(unittest.TestCase):
     def test_twice_resampling(self):
         sound = Sound.from_sinwave(440, samplerate=44100)
 
-        twice_resampler = Resampling(48000).then(Resampling(sound.samplerate))
-        twice_resampled = twice_resampler.apply(sound)
+        resampled = sound >> Resampling(48000) >> Resampling(sound.samplerate)
 
-        self.assertEqual(twice_resampled.samplerate, sound.samplerate)
-        self.assertIsNot(twice_resampled, sound)
-        self.assertFalse((twice_resampled.data == sound.data).all())
-        self.assertTrue(numpy.allclose(twice_resampled.data,
-                                       sound.data,
-                                       atol=0.01))
+        self.assertEqual(resampled.samplerate, sound.samplerate)
+        self.assertIsNot(resampled, sound)
+        self.assertFalse((resampled.data == sound.data).all())
+        self.assertTrue(numpy.allclose(resampled.data, sound.data, atol=0.01))
 
 
 class ChangeSpeedTest(unittest.TestCase):
@@ -177,8 +231,10 @@ class ChangeSpeedTest(unittest.TestCase):
                          Sound.from_array([0.4, 0.0, -0.4], 5))
 
     def test_change_speed_invalid(self):
-        with self.assertRaises(ValueError, msg='speed_rate must not 0'):
+        with self.assertRaises(ValueError) as cm:
             ChangeSpeed(0)
+
+        self.assertEqual(str(cm.exception), 'speed_rate must not 0')
 
 
 class ChangeVolumeTest(unittest.TestCase):
@@ -198,6 +254,8 @@ class ChangeVolumeTest(unittest.TestCase):
         sound = ChangeVolume(1.0).apply(sound)
 
         self.assertAlmostEqual(sound.volume, 1, places=4)
+
+        self.assertIs(ChangeVolume(1.0).apply(sound), sound)
 
     def test_volume_invalid(self):
         sound = Sound.from_sinwave(440)
@@ -222,7 +280,7 @@ class ReversePlayTest(unittest.TestCase):
         self.assertEqual(reverse.duration, sound.duration)
         self.assertEqual(tuple(reverse.data[:, 0]), (0.2, 0.1, 0.0, -0.1))
 
-        self.assertEqual(ReversePlay().then(ReversePlay()).apply(sound), sound)
+        self.assertEqual(sound >> ReversePlay() >> ReversePlay(), sound)
 
 
 class TrimTest(unittest.TestCase):
