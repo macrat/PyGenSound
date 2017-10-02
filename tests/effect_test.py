@@ -23,6 +23,35 @@ class JoinedEffectTest(unittest.TestCase):
         self.assertEqual(in_.then(out).apply(sound),
                          JoinedEffect(in_, out).apply(sound))
 
+    def test_join_with_operator(self):
+        sound = Sound.from_sinwave(440)
+        a = Resampling(88200)
+        b = Resampling(44100)
+
+        resampled = b << a << sound
+        self.assertEqual(resampled.samplerate, sound.samplerate)
+
+        resampled = sound >> a >> b
+        self.assertEqual(resampled.samplerate, sound.samplerate)
+
+        resampled = sound >> a >> b
+        self.assertEqual(resampled.samplerate, sound.samplerate)
+
+        resampled = (a >> b) << sound
+        self.assertEqual(resampled.samplerate, sound.samplerate)
+
+        resampled = (b << a) << sound
+        self.assertEqual(resampled.samplerate, sound.samplerate)
+
+        resampled = sound >> (a >> b)
+        self.assertEqual(resampled.samplerate, sound.samplerate)
+
+        resampled = sound >> (b << a)
+        self.assertEqual(resampled.samplerate, sound.samplerate)
+
+        resampled = a << sound >> b
+        self.assertEqual(resampled.samplerate, sound.samplerate)
+
 
 class LinearFadeTest(unittest.TestCase):
     def setUp(self):

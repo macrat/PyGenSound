@@ -15,12 +15,64 @@ class Effect:
     def apply(self, sound: Sound) -> Sound:
         """ Apply effect to sound
 
-        :param sound: :class:`Sound` instance to appling effect.
+        :param sound: :class:`Sound<gensound.sound.Sound>` instance to appling
+                      effect.
 
-        :return: A new :class:`Sound` instance that applied effect.
+        :return: A :class:`Sound<gensound.sound.Sound>` instance that applied
+                 effect.
+
+
+        You can use shift operator as apply() like a streaming operator of C++.
+
+        >>> effect = LinearFadeIn()
+        >>> sound = Sound.from_sinwave(440)
+        >>> effect.apply(sound) == (effect << sound) == (sound >> effect)
+        True
         """
 
         raise NotImplementedError()
+
+    def __lshift__(self, x: typing.Union[Sound, 'Effect']) \
+            -> typing.Union[Sound, 'Effect']:
+
+        """ Apply effect to sound or join effects
+
+        This method is alias of :func:`apply()<Effect.apply>` and
+        :func:`then()<Effect.then>`.
+        """
+
+        if isinstance(x, Sound):
+            return self.apply(x)
+        elif isinstance(x, Effect):
+            return x.then(self)
+        else:
+            raise TypeError('x must be Sound or Effect instance but got {}'
+                            .format(type(x)))
+
+    def __rshift__(self, x: 'Effect') -> 'Effect':
+        """ Join effects
+
+        This method is alias of :func:`then()<Effect.then>`.
+        """
+
+        return self.then(x)
+
+    def __rrshift__(self, x: typing.Union[Sound, 'Effect']) \
+            -> typing.Union[Sound, 'Effect']:
+
+        """ Apply effect to sound or join effects
+
+        This method is alias of :func:`apply()<Effect.apply>` and
+        :func:`then()<Effect.then>`.
+        """
+
+        if isinstance(x, Sound):
+            return self.apply(x)
+        elif isinstance(x, Effect):
+            return self.then(x)
+        else:
+            raise TypeError('x must be Sound or Effect instance but got {}'
+                            .format(type(x)))
 
     def then(self, effect: 'Effect') -> 'Effect':
         """ Join effect
@@ -35,6 +87,12 @@ class Effect:
         >>> sound = Sound.from_sinwave(440)
 
         >>> out.apply(in_.apply(sound)) == in_.then(out).apply(sound)
+        True
+
+
+        You can use shift operator as then() like a streaming operator of C++.
+
+        >>> sound >> in_ >> out == in_.then(out).apply(sound)
         True
         """
 
@@ -55,6 +113,9 @@ class JoinedEffect(Effect):
     True
 
     >>> out.apply(in_.apply(sound)) == in_.then(out).apply(sound)
+    True
+
+    >>> out << in_ << sound == JoinedEffect(in_, out).apply(sound)
     True
     """
 

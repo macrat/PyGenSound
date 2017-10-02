@@ -69,6 +69,15 @@ This sample will apply :class:`fade-out<gensound.effect.FadeOut>` effect to soun
 	>>> effect = gensound.FadeOut()
 	>>> a_fadeout = effect.apply(a)
 
+You can use effects as a like a stream operator of C++.
+
+.. code-block:: python
+
+	>>> a_fade = a >> gensound.FadeOut() >> gensound.FadeIn()
+
+	>>> a_fade == gensounf.FadeIn() << gensound.FadeOut() << a
+	True
+
 Please see detail about effects to :doc:`reference<modules/effect>`
 
 Examples
