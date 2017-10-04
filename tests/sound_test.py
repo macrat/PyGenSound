@@ -103,7 +103,7 @@ class SoundUtilsTest(unittest.TestCase):
         self.assertEqual(overlay(a, b, c),
                          Sound.from_array([0.6, 0.9, 0.6, 0.7], 2))
 
-    def test_overlay_invalid(self):
+    def test_overlay_different_samplerate(self):
         a = Sound.from_array([0.0, 0.1], 2)
         b = Sound.from_array([0.2, 0.3], 2)
         c = Sound.from_array([0.4, 0.5], 3)
@@ -112,6 +112,16 @@ class SoundUtilsTest(unittest.TestCase):
             overlay(a, b, c)
 
         self.assertEqual(cm.exception.frequency, (2, 2, 3))
+
+    def test_overlay_different_channels(self):
+        a = Sound.from_sinwave(220)
+        b = Sound.from_sinwave(440)
+        c = Sound.from_sinwave(880).as_stereo()
+
+        with self.assertRaises(DifferentChannelsError) as cm:
+            overlay(a, b, c)
+
+        self.assertEqual(cm.exception.channels, (1, 1, 2))
 
     def test_concat(self):
         a = Sound.from_array([0.0, 0.1], 2)
@@ -145,7 +155,7 @@ class SoundUtilsTest(unittest.TestCase):
             0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7
         ], 2))
 
-    def test_concat_invalid(self):
+    def test_concat_different_samplerate(self):
         a = Sound.from_array([0.0, 0.1], 2)
         b = Sound.from_array([0.2, 0.3], 2)
         c = Sound.from_array([0.4, 0.5], 3)
@@ -154,6 +164,16 @@ class SoundUtilsTest(unittest.TestCase):
             concat(a, b, c)
 
         self.assertEqual(cm.exception.frequency, (2, 2, 3))
+
+    def test_concat_different_channels(self):
+        a = Sound.from_sinwave(220)
+        b = Sound.from_sinwave(440)
+        c = Sound.from_sinwave(880).as_stereo()
+
+        with self.assertRaises(DifferentChannelsError) as cm:
+            concat(a, b, c)
+
+        self.assertEqual(cm.exception.channels, (1, 1, 2))
 
     def test_merge_channels(self):
         a = Sound.from_array([0.0, 0.1], 2)
@@ -753,7 +773,7 @@ class SoundTest(unittest.TestCase):
         self.assertEqual(b.concat(a),
                          Sound.from_array([0.2, 0.3, 0.0, 0.1], 2))
 
-    def test_concat_invalid(self):
+    def test_concat_different_samplerate(self):
         a = Sound.from_array([0.0, 0.1], 2)
         b = Sound.from_array([0.2, 0.3], 3)
 
@@ -767,6 +787,20 @@ class SoundTest(unittest.TestCase):
 
         self.assertEqual(cm.exception.frequency, (3, 2))
 
+    def test_concat_different_channels(self):
+        a = Sound.from_sinwave(440)
+        b = Sound.from_sinwave(880).as_stereo()
+
+        with self.assertRaises(DifferentChannelsError) as cm:
+            a.concat(b)
+
+        self.assertEqual(cm.exception.channels, (1, 2))
+
+        with self.assertRaises(DifferentChannelsError) as cm:
+            b.concat(a)
+
+        self.assertEqual(cm.exception.channels, (2, 1))
+
     def test_overlay(self):
         a = Sound.from_array([0.0, 0.1], 2)
         b = Sound.from_array([0.2, 0.3, 0.4], 2)
@@ -777,7 +811,7 @@ class SoundTest(unittest.TestCase):
         self.assertEqual(b.overlay(a),
                          Sound.from_array([0.2, 0.4, 0.4], 2))
 
-    def test_overlay_invalid(self):
+    def test_overlay_different_samplerate(self):
         a = Sound.from_array([0.0, 0.1], 2)
         b = Sound.from_array([0.2, 0.3], 3)
 
@@ -790,6 +824,20 @@ class SoundTest(unittest.TestCase):
             b.overlay(a)
 
         self.assertEqual(cm.exception.frequency, (3, 2))
+
+    def test_overlay_different_channels(self):
+        a = Sound.from_sinwave(440)
+        b = Sound.from_sinwave(880).as_stereo()
+
+        with self.assertRaises(DifferentChannelsError) as cm:
+            a.overlay(b)
+
+        self.assertEqual(cm.exception.channels, (1, 2))
+
+        with self.assertRaises(DifferentChannelsError) as cm:
+            b.overlay(a)
+
+        self.assertEqual(cm.exception.channels, (2, 1))
 
     def test_save_and_load_file(self):
         original = Sound.from_sinwave(440).concat(Sound.from_sinwave(880))

@@ -78,6 +78,13 @@ def _assertSameSamplerate(samplerates: typing.Sequence[float]) -> None:
         raise DifferentSamplerateError(tuple(samplerates))
 
 
+def _assertSameChannels(channels: typing.Sequence[int]) -> None:
+    """ Check if all number of channels is same value """
+
+    if any(channels[0] != c for c in channels[1:]):
+        raise DifferentChannelsError(tuple(channels))
+
+
 def _assertDuration(duration: float) -> None:
     """ Check if the duration is longer than 0 """
 
@@ -582,6 +589,11 @@ class Sound:
 
         :return: A new :class:`Sound` that concatenated self and other.
 
+        :exception DifferentSamplerateError: The samplerate was different.
+        :exception DifferentChannelsError:   The number of channels was
+                                             different.
+
+
 
         >>> sound = Sound.from_sinwave(440, duration=3)
         >>> a, b = sound[:1], sound[1:]
@@ -605,6 +617,10 @@ class Sound:
         :param another: The sound that overlay.
 
         :return: A new :class:`Sound` that overlay another sound.
+
+        :exception DifferentSamplerateError: The samplerate was different.
+        :exception DifferentChannelsError:   The number of channels was
+                                             different.
 
 
         >>> a = Sound.from_array([0.1, 0.2], 1)
@@ -684,6 +700,8 @@ def concat(*sounds: Sound) -> Sound:
 
     :exception DifferentSamplerateError: The samplerate of sounds was
                                          different.
+    :exception DifferentChannelsError:   The number of channels of sounds was
+                                         different.
 
 
     >>> a = Sound.from_array([0.1, 0.2], 1)
@@ -694,6 +712,7 @@ def concat(*sounds: Sound) -> Sound:
     """
 
     _assertSameSamplerate([s.samplerate for s in sounds])
+    _assertSameChannels([s.n_channels for s in sounds])
 
     return Sound(numpy.vstack([x.data for x in sounds]), sounds[0].samplerate)
 
@@ -707,6 +726,8 @@ def overlay(*sounds: Sound) -> Sound:
     :return: A new :class:`Sound` instance that overlay all sounds.
 
     :exception DifferentSamplerateError: The samplerate of sounds was
+                                         different.
+    :exception DifferentChannelsError:   The number of channels of sounds was
                                          different.
 
 
@@ -724,6 +745,7 @@ def overlay(*sounds: Sound) -> Sound:
     """
 
     _assertSameSamplerate([s.samplerate for s in sounds])
+    _assertSameChannels([s.n_channels for s in sounds])
 
     longest = max(x.data.shape[0] for x in sounds)
     padded = numpy.array([

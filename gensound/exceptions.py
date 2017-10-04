@@ -44,6 +44,23 @@ class DifferentSamplerateError(InvalidSamplerateError):
         self.frequency = frequencies
 
 
+class DifferentChannelsError(ValueError):
+    """ The exception that raises when different number of channels of sounds
+    to joint
+
+    :var channels: List of n_channels of sounds.
+    """
+
+    def __init__(self, channels: typing.Tuple[int, ...]) -> None:
+        ValueError.__init__(
+            self,
+            'all sounds must has a same number of channels but got {}'.format(
+                str(x) for x in set(channels)
+            ),
+        )
+        self.channels = channels
+
+
 class InvalidDurationError(ValueError):
     """ The exception that raises when passed sound was invalid duration
 
