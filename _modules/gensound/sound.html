@@ -123,6 +123,13 @@
         <span class="k">raise</span> <span class="n">DifferentSamplerateError</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">samplerates</span><span class="p">))</span>
 
 
+<span class="k">def</span> <span class="nf">_assertSameChannels</span><span class="p">(</span><span class="n">channels</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot; Check if all number of channels is same value &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">channels</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">channels</span><span class="p">[</span><span class="mi">1</span><span class="p">:]):</span>
+        <span class="k">raise</span> <span class="n">DifferentChannelsError</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">channels</span><span class="p">))</span>
+
+
 <span class="k">def</span> <span class="nf">_assertDuration</span><span class="p">(</span><span class="n">duration</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot; Check if the duration is longer than 0 &quot;&quot;&quot;</span>
 
@@ -627,6 +634,11 @@
 
 <span class="sd">        :return: A new :class:`Sound` that concatenated self and other.</span>
 
+<span class="sd">        :exception DifferentSamplerateError: The samplerate was different.</span>
+<span class="sd">        :exception DifferentChannelsError:   The number of channels was</span>
+<span class="sd">                                             different.</span>
+
+
 
 <span class="sd">        &gt;&gt;&gt; sound = Sound.from_sinwave(440, duration=3)</span>
 <span class="sd">        &gt;&gt;&gt; a, b = sound[:1], sound[1:]</span>
@@ -650,6 +662,10 @@
 <span class="sd">        :param another: The sound that overlay.</span>
 
 <span class="sd">        :return: A new :class:`Sound` that overlay another sound.</span>
+
+<span class="sd">        :exception DifferentSamplerateError: The samplerate was different.</span>
+<span class="sd">        :exception DifferentChannelsError:   The number of channels was</span>
+<span class="sd">                                             different.</span>
 
 
 <span class="sd">        &gt;&gt;&gt; a = Sound.from_array([0.1, 0.2], 1)</span>
@@ -729,6 +745,8 @@
 
 <span class="sd">    :exception DifferentSamplerateError: The samplerate of sounds was</span>
 <span class="sd">                                         different.</span>
+<span class="sd">    :exception DifferentChannelsError:   The number of channels of sounds was</span>
+<span class="sd">                                         different.</span>
 
 
 <span class="sd">    &gt;&gt;&gt; a = Sound.from_array([0.1, 0.2], 1)</span>
@@ -739,6 +757,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">_assertSameSamplerate</span><span class="p">([</span><span class="n">s</span><span class="o">.</span><span class="n">samplerate</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">sounds</span><span class="p">])</span>
+    <span class="n">_assertSameChannels</span><span class="p">([</span><span class="n">s</span><span class="o">.</span><span class="n">n_channels</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">sounds</span><span class="p">])</span>
 
     <span class="k">return</span> <span class="n">Sound</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">x</span><span class="o">.</span><span class="n">data</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">sounds</span><span class="p">]),</span> <span class="n">sounds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">samplerate</span><span class="p">)</span></div>
 
@@ -752,6 +771,8 @@
 <span class="sd">    :return: A new :class:`Sound` instance that overlay all sounds.</span>
 
 <span class="sd">    :exception DifferentSamplerateError: The samplerate of sounds was</span>
+<span class="sd">                                         different.</span>
+<span class="sd">    :exception DifferentChannelsError:   The number of channels of sounds was</span>
 <span class="sd">                                         different.</span>
 
 
@@ -769,6 +790,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">_assertSameSamplerate</span><span class="p">([</span><span class="n">s</span><span class="o">.</span><span class="n">samplerate</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">sounds</span><span class="p">])</span>
+    <span class="n">_assertSameChannels</span><span class="p">([</span><span class="n">s</span><span class="o">.</span><span class="n">n_channels</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">sounds</span><span class="p">])</span>
 
     <span class="n">longest</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">sounds</span><span class="p">)</span>
     <span class="n">padded</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>

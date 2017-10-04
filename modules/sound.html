@@ -540,12 +540,22 @@ for trimming.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>another</strong> (<a class="reference internal" href="#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a>) &#8211; The sound that concatenates after of self.
-Must it has same sampling rate.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>another</strong> (<a class="reference internal" href="#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a>) &#8211; The sound that concatenates after of self.
+Must it has same sampling rate.</p>
+</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference internal" href="#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a></p>
+</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A new <a class="reference internal" href="#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a> that concatenated self and other.</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A new <a class="reference internal" href="#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a> that concatenated self and other.</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="exceptions.html#gensound.exceptions.DifferentSamplerateError" title="gensound.exceptions.DifferentSamplerateError"><strong>DifferentSamplerateError</strong></a> &#8211; The samplerate was different.</li>
+<li><a class="reference internal" href="exceptions.html#gensound.exceptions.DifferentChannelsError" title="gensound.exceptions.DifferentChannelsError"><strong>DifferentChannelsError</strong></a> &#8211; The number of channels was
+different.</li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
@@ -573,11 +583,21 @@ sounds.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>another</strong> (<a class="reference internal" href="#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a>) &#8211; The sound that overlay.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>another</strong> (<a class="reference internal" href="#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a>) &#8211; The sound that overlay.</p>
+</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference internal" href="#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a></p>
+</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A new <a class="reference internal" href="#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a> that overlay another sound.</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A new <a class="reference internal" href="#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a> that overlay another sound.</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="exceptions.html#gensound.exceptions.DifferentSamplerateError" title="gensound.exceptions.DifferentSamplerateError"><strong>DifferentSamplerateError</strong></a> &#8211; The samplerate was different.</li>
+<li><a class="reference internal" href="exceptions.html#gensound.exceptions.DifferentChannelsError" title="gensound.exceptions.DifferentChannelsError"><strong>DifferentChannelsError</strong></a> &#8211; The number of channels was
+different.</li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
@@ -643,15 +663,23 @@ detect from file name if None.</li>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sounds</strong> (<a class="reference internal" href="#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a>) &#8211; Sound instances to concatenate. Must they has some sampling
-rate.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>sounds</strong> (<a class="reference internal" href="#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a>) &#8211; Sound instances to concatenate. Must they has some sampling
+rate.</p>
+</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference internal" href="#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a></p>
+</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A concatenated <a class="reference internal" href="#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a> instance.</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A concatenated <a class="reference internal" href="#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a> instance.</p>
+</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><a class="reference internal" href="exceptions.html#gensound.exceptions.DifferentSamplerateError" title="gensound.exceptions.DifferentSamplerateError"><strong>DifferentSamplerateError</strong></a> &#8211; The samplerate of sounds was
-different.</td>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="exceptions.html#gensound.exceptions.DifferentSamplerateError" title="gensound.exceptions.DifferentSamplerateError"><strong>DifferentSamplerateError</strong></a> &#8211; The samplerate of sounds was
+different.</li>
+<li><a class="reference internal" href="exceptions.html#gensound.exceptions.DifferentChannelsError" title="gensound.exceptions.DifferentChannelsError"><strong>DifferentChannelsError</strong></a> &#8211; The number of channels of sounds was
+different.</li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
@@ -672,15 +700,23 @@ different.</td>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sounds</strong> (<a class="reference internal" href="#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a>) &#8211; Sound instances to overlay.
-Must they has some sampling rate.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>sounds</strong> (<a class="reference internal" href="#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a>) &#8211; Sound instances to overlay.
+Must they has some sampling rate.</p>
+</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference internal" href="#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a></p>
+</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A new <a class="reference internal" href="#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a> instance that overlay all sounds.</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A new <a class="reference internal" href="#gensound.sound.Sound" title="gensound.sound.Sound"><code class="xref py py-class docutils literal"><span class="pre">Sound</span></code></a> instance that overlay all sounds.</p>
+</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><a class="reference internal" href="exceptions.html#gensound.exceptions.DifferentSamplerateError" title="gensound.exceptions.DifferentSamplerateError"><strong>DifferentSamplerateError</strong></a> &#8211; The samplerate of sounds was
-different.</td>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="exceptions.html#gensound.exceptions.DifferentSamplerateError" title="gensound.exceptions.DifferentSamplerateError"><strong>DifferentSamplerateError</strong></a> &#8211; The samplerate of sounds was
+different.</li>
+<li><a class="reference internal" href="exceptions.html#gensound.exceptions.DifferentChannelsError" title="gensound.exceptions.DifferentChannelsError"><strong>DifferentChannelsError</strong></a> &#8211; The number of channels of sounds was
+different.</li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
