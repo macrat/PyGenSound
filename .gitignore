@@ -5,8 +5,8 @@
 __pycache__/
 build/
 dist/
-doc/_build/doctest/
-doc/_build/doctrees/
+doc/_build/
+!doc/_build/html/
 htmlcov/
 pip/
 
